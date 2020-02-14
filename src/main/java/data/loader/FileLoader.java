@@ -69,7 +69,7 @@ public class FileLoader {
             result = gson.fromJson(reader, type);
 
         } catch (FileNotFoundException | NullPointerException e) {
-            System.out.println(String.format("could not load data for file %s", file));
+//            System.out.println(String.format("could not load data for file %s", file));
         }
         return result;
     }

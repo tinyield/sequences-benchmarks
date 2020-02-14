@@ -51,6 +51,11 @@
             <version>1.16</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.2-jre</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.jayield</groupId>
             <artifactId>jayield</artifactId>
             <version>1.0.1</version>
