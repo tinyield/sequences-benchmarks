@@ -74,4 +74,9 @@ public class Artist {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

@@ -272,4 +272,8 @@ public class Country {
         this.cioc = cioc;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

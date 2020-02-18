@@ -1,6 +1,8 @@
 
 package model.track;
 
+import static java.lang.String.format;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -105,6 +107,11 @@ public class Track {
 
     public void setAttr(Attr attr) {
         this.attr = attr;
+    }
+
+    @Override
+    public String toString() {
+        return format("%s by %s", name, artist.getName());
     }
 
 }
