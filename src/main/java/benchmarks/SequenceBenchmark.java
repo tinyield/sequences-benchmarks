@@ -51,7 +51,7 @@ public class SequenceBenchmark {
 
 
     @Benchmark
-    public void streamWithArtistsIterator(Blackhole bh) {
+    public void zipWithIteratorAndFlatmap(Blackhole bh) {
         StreamWithIteratorBenchmark.query().forEach(bh::consume);
     }
 
