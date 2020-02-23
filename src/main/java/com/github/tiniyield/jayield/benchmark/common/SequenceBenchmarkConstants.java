@@ -9,5 +9,6 @@ public class SequenceBenchmarkConstants {
     public static final CountriesData COUNTRY_DATA = new CountriesData();
     public static final ArtistsData ARTISTS_DATA = new ArtistsData(COUNTRY_DATA);
     public static final TracksData TRACKS_DATA = new TracksData(COUNTRY_DATA);
+    public static final int TEN = 10;
 
 }

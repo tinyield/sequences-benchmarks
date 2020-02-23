@@ -4,6 +4,8 @@ package com.github.tiniyield.jayield.benchmark.model.track;
 import static java.lang.String.format;
 
 import java.util.List;
+
+import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -25,36 +25,36 @@ import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchm
 @State(Scope.Benchmark)
 @Warmup(iterations = 10)
 @Fork(value = 2, jvmArgs = {"-Xms2G", "-Xmx2G"})
-public class ZipTopArtistAndTrackByCountryBenchmark {
+public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
 
     @Setup
     public void setup() {
-        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity();
+        SequenceBenchmarkUtils.assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity();
     }
 
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
-        StreamBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        StreamBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Benchmark
     public void jayield(Blackhole bh) {
-        JayieldBenchmark.zipTopArtistAndTrackByCountry().traverse(bh::consume);
+        JayieldBenchmark.artistsInTopTenWithTopTenTracksByCountry().traverse(bh::consume);
     }
 
     @Benchmark
     public void streamUtils(Blackhole bh) {
-        StreamUtilsBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        StreamUtilsBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        GuavaBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Benchmark
     public void streamFlatMapWithIterator(Blackhole bh) {
-        StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        StreamFlatmapWithIteratorBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
 }

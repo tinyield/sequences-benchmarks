@@ -21,6 +21,7 @@ public class BenchmarkEntryPoint {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(ZipTopArtistAndTrackByCountryBenchmark.class.getSimpleName())
+                .include(ArtistsInTopTenWithTopTenTracksByCountryBenchmark.class.getSimpleName())
                 .forks(1)
                 .build();
 
