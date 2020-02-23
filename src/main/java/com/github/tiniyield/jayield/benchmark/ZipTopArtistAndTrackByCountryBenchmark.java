@@ -24,7 +24,7 @@ import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchm
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 @Warmup(iterations = 10)
-@Fork(value = 2, jvmArgs = {"-Xms2G", "-Xmx2G"})
+@Fork(value = 10, jvmArgs = {"-Xms2G", "-Xmx2G"})
 public class ZipTopArtistAndTrackByCountryBenchmark {
 
     @Setup
