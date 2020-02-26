@@ -9,7 +9,10 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
+import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.track.Track;
+
+import one.util.streamex.StreamEx;
 
 public class TracksData implements ICountryBasedDataProvider<Track> {
     private final Map<String, Track[]> data;
@@ -28,6 +31,10 @@ public class TracksData implements ICountryBasedDataProvider<Track> {
 
     public Stream<Track> asStream(String country) {
         return Stream.of(getTracksForCountry(country));
+    }
+
+    public StreamEx<Track> asStreamEx(String country) {
+        return StreamEx.of(getTracksForCountry(country));
     }
 
     public Query<Track> asQuery(String country) {

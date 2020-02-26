@@ -19,6 +19,7 @@ import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchmark;
+import com.github.tiniyield.jayield.benchmark.streamex.benchmark.StreamExBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -35,6 +36,11 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
         StreamBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void streamEx(Blackhole bh) {
+        StreamExBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Benchmark

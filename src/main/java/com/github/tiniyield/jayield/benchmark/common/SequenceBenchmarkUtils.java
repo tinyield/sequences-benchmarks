@@ -2,6 +2,7 @@ package com.github.tiniyield.jayield.benchmark.common;
 
 import static java.lang.String.format;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,6 +15,7 @@ import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchmark;
+import com.github.tiniyield.jayield.benchmark.streamex.benchmark.StreamExBenchmark;
 
 public class SequenceBenchmarkUtils {
 
@@ -23,7 +25,7 @@ public class SequenceBenchmarkUtils {
     }
 
     public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity() {
-        assertSameElements(
+        assertSameResults(
                 JayieldBenchmark.zipTopArtistAndTrackByCountry().toList(),
 
                 StreamBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
@@ -32,12 +34,14 @@ public class SequenceBenchmarkUtils {
 
                 GuavaBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList())
+                StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
+
+                StreamExBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList())
         );
     }
 
     public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity() {
-        assertSameElements(
+        assertSameResults(
                 JayieldBenchmark.artistsInTopTenWithTopTenTracksByCountry()
                                 .toList(),
 
@@ -51,41 +55,30 @@ public class SequenceBenchmarkUtils {
                               .collect(Collectors.toList()),
 
                 StreamFlatmapWithIteratorBenchmark.artistsInTopTenWithTopTenTracksByCountry()
-                                                  .collect(Collectors.toList())
+                                                  .collect(Collectors.toList()),
+
+                StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList())
         );
     }
 
-    private static <T> void assertSameElements(List<T> jayield,
-                                               List<T> stream,
-                                               List<T> streamUtils,
-                                               List<T> guava,
-                                               List<T> streamWithIterator) {
-        int size = jayield.size();
-        if (size != stream.size() || size != streamUtils.size() || size != guava.size() || size != streamWithIterator.size()) {
-            throw new RuntimeException("query results are not the same");
+    private static <T> void assertSameResults(List<T>... results) {
+        if (results.length < 1) {
+            throw new RuntimeException("Insufficient results");
+        }
+        List<T> first = results[0];
+        List<List<T>> otherResults = Arrays.asList(Arrays.copyOfRange(results, 1, results.length));
+        boolean sameResultSizes = otherResults.stream()
+                                              .map(List::size)
+                                              .allMatch(size -> first.size() == size);
+        if (!sameResultSizes) {
+            throw new RuntimeException("query results do not have the same size");
         }
 
-        jayield.forEach(triplet -> {
-            if (!stream.contains(triplet)) {
-                throw new RuntimeException(format(
-                        "query results are not the same, could not find triplet %s in streams results",
-                        triplet));
-            }
-            if (!streamUtils.contains(triplet)) {
-                throw new RuntimeException(format(
-                        "query results are not the same, could not find triplet %s in StreamUtils results",
-                        triplet));
-            }
-            if (!guava.contains(triplet)) {
-                throw new RuntimeException(format(
-                        "query results are not the same, could not find triplet %s in guava results",
-                        triplet));
-            }
-            if (!streamWithIterator.contains(triplet)) {
-                throw new RuntimeException(format(
-                        "query results are not the same, could not find triplet %s in stream with iterator results",
-                        triplet));
-            }
-        });
+        boolean sameElements = otherResults.stream().allMatch(result -> result.containsAll(first));
+
+        if (!sameElements) {
+            throw new RuntimeException("query results do not have the same elements");
+        }
+
     }
 }

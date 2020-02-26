@@ -11,6 +11,8 @@ import org.jayield.Query;
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
 import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 
+import one.util.streamex.StreamEx;
+
 public class ArtistsData implements ICountryBasedDataProvider<Artist> {
     private final Map<String, Artist[]> data;
 
@@ -29,6 +31,10 @@ public class ArtistsData implements ICountryBasedDataProvider<Artist> {
 
     public Stream<Artist> asStream(String country) {
         return Stream.of(getArtistsForCountry(country));
+    }
+
+    public StreamEx<Artist> asStreamEx(String country) {
+        return StreamEx.of(getArtistsForCountry(country));
     }
 
     public Query<Artist> asQuery(String country) {
