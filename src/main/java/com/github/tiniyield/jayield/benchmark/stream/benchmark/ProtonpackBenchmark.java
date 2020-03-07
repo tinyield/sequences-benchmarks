@@ -11,15 +11,13 @@ import java.util.stream.Stream;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
-import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils;
 import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.jayield.benchmark.model.track.Track;
-
 import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
+import com.github.tiniyield.jayield.benchmark.model.track.Track;
+import com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils;
 
-public class StreamUtilsBenchmark {
+public class ProtonpackBenchmark {
 
     public static Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry() {
         return zip(

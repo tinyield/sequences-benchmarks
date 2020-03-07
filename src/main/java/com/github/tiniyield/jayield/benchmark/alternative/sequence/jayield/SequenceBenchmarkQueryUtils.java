@@ -1,4 +1,4 @@
-package com.github.tiniyield.jayield.benchmark.query;
+package com.github.tiniyield.jayield.benchmark.alternative.sequence.query;
 
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.ARTISTS_DATA;
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.COUNTRY_DATA;
@@ -6,12 +6,9 @@ import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkCon
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.TRACKS_DATA;
 import static java.util.Locale.ENGLISH;
 
-
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
