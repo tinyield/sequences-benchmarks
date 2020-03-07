@@ -16,4 +16,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - run: mvn clean install
-      - run: java -jar target/jayield-benchmark-0.0.0-SNAPSHOT.jar
+      - run: java -jar target/jayield-benchmark-0.0.0-SNAPSHOT.jar -measurementIterations=10 -forks=10 -warmupIterations=10
