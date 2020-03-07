@@ -1,7 +1,5 @@
 package com.github.tiniyield.jayield.benchmark.common;
 
-import static java.lang.String.format;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -10,12 +8,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.github.tiniyield.jayield.benchmark.query.benchmark.JayieldBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.fluent.iterable.benchmark.FluentIterableBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.jayield.benchmark.QueryBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.jool.benchmark.JoolBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
+import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
-import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchmark;
-import com.github.tiniyield.jayield.benchmark.streamex.benchmark.StreamExBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark.StreamExBenchmark;
 
 public class SequenceBenchmarkUtils {
 
@@ -26,30 +26,34 @@ public class SequenceBenchmarkUtils {
 
     public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity() {
         assertSameResults(
-                JayieldBenchmark.zipTopArtistAndTrackByCountry().toList(),
+                QueryBenchmark.zipTopArtistAndTrackByCountry().toList(),
 
                 StreamBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                StreamUtilsBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
+                ProtonpackBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
                 GuavaBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
                 StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                StreamExBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList())
+                StreamExBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
+
+                FluentIterableBenchmark.zipTopArtistAndTrackByCountry().toList(),
+
+                JoolBenchmark.zipTopArtistAndTrackByCountry().toList()
         );
     }
 
     public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity() {
         assertSameResults(
-                JayieldBenchmark.artistsInTopTenWithTopTenTracksByCountry()
-                                .toList(),
+                QueryBenchmark.artistsInTopTenWithTopTenTracksByCountry()
+                              .toList(),
 
                 StreamBenchmark.artistsInTopTenWithTopTenTracksByCountry()
                                .collect(Collectors.toList()),
 
-                StreamUtilsBenchmark.artistsInTopTenWithTopTenTracksByCountry()
-                                    .collect(Collectors.toList()),
+                ProtonpackBenchmark.artistsInTopTenWithTopTenTracksByCountry()
+                                   .collect(Collectors.toList()),
 
                 GuavaBenchmark.artistsInTopTenWithTopTenTracksByCountry()
                               .collect(Collectors.toList()),
@@ -57,7 +61,11 @@ public class SequenceBenchmarkUtils {
                 StreamFlatmapWithIteratorBenchmark.artistsInTopTenWithTopTenTracksByCountry()
                                                   .collect(Collectors.toList()),
 
-                StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList())
+                StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList()),
+
+                FluentIterableBenchmark.artistsInTopTenWithTopTenTracksByCountry().toList(),
+
+                JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().toList()
         );
     }
 

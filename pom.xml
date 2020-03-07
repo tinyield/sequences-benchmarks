@@ -101,6 +101,11 @@
             <artifactId>streamex</artifactId>
             <version>0.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.14</version>
+        </dependency>
     </dependencies>
 
 </project>

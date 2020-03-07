@@ -11,13 +11,11 @@ import java.util.stream.Stream;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
-import com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils;
 import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
+import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
 import com.github.tiniyield.jayield.benchmark.model.track.Track;
-import com.google.common.collect.Streams;
-
-import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
+import com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils;
 
 public class GuavaBenchmark {
 

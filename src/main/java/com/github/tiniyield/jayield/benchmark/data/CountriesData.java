@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.jayield.Query;
+import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
+import com.google.common.collect.FluentIterable;
 
 import one.util.streamex.StreamEx;
 
@@ -26,8 +28,16 @@ public class CountriesData {
         return StreamEx.of(data);
     }
 
+    public Seq<Country> asSeq() {
+        return Seq.of(data);
+    }
+
     public Query<Country> asQuery() {
         return Query.of(data);
+    }
+
+    public FluentIterable<Country> asFluentIterable() {
+        return FluentIterable.from(data);
     }
 
 }

@@ -23,12 +23,10 @@ public class StreamFlatmapWithIteratorBenchmark {
         Iterator<Pair<Country, Stream<Artist>>> iter = getArtists().iterator();
 
         return getTracks()
-                .flatMap(r -> {
+                .map(r -> {
                     Track track = r.getValue1().findFirst().orElse(null);
-                    return of(iter.next())
-                            .map(l -> Triplet.with(l.getValue0(),
-                                                   l.getValue1().iterator().next(),
-                                                   track));
+                    Pair<Country, Stream<Artist>> l = iter.next();
+                    return Triplet.with(l.getValue0(), l.getValue1().iterator().next(), track);
                 })
                 .filter(SequenceBenchmarkUtils.distinctByKey(Triplet::getValue1));
     }
@@ -36,9 +34,12 @@ public class StreamFlatmapWithIteratorBenchmark {
     public static Stream<Pair<Country, List<Artist>>> artistsInTopTenWithTopTenTracksByCountry() {
         Iterator<Pair<Country, Stream<Artist>>> iter = getArtists().iterator();
 
-        return getTracks().flatMap(r -> of(iter.next()).map(l -> Triplet.with(l.getValue0(),
-                                                                              l.getValue1(),
-                                                                              r.getValue1())))
+        return getTracks().map(r -> {
+            Pair<Country, Stream<Artist>> l = iter.next();
+            return Triplet.with(l.getValue0(),
+                                l.getValue1(),
+                                r.getValue1());
+        })
                           .map(TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY);
     }
 }

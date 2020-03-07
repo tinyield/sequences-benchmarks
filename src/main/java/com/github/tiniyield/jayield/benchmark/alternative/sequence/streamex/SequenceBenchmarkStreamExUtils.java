@@ -1,4 +1,4 @@
-package com.github.tiniyield.jayield.benchmark.streamex;
+package com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex;
 
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.ARTISTS_DATA;
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.COUNTRY_DATA;
@@ -37,7 +37,7 @@ public class SequenceBenchmarkStreamExUtils {
     }
 
     public static boolean isNonEnglishSpeaking(Country country) {
-        return country.getLanguages().stream()
+        return StreamEx.of(country.getLanguages())
                       .map(Language::getIso6391)
                       .noneMatch(ENGLISH.getLanguage()::equals);
     }

@@ -13,19 +13,19 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.fluent.iterable.benchmark.FluentIterableBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.jool.benchmark.JoolBenchmark;
 import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.jayield.benchmark.query.benchmark.JayieldBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.jayield.benchmark.QueryBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
+import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
-import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamUtilsBenchmark;
-import com.github.tiniyield.jayield.benchmark.streamex.benchmark.StreamExBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark.StreamExBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-@Warmup(iterations = 10)
-@Fork(value = 10, jvmArgs = {"-Xms2G", "-Xmx2G"})
 public class ZipTopArtistAndTrackByCountryBenchmark {
 
     @Setup
@@ -33,24 +33,16 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
         SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity();
     }
 
+    // Stream Based benchmarks
+
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
         StreamBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Benchmark
-    public void streamEx(Blackhole bh) {
-        StreamExBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        JayieldBenchmark.zipTopArtistAndTrackByCountry().traverse(bh::consume);
-    }
-
-    @Benchmark
-    public void streamUtils(Blackhole bh) {
-        StreamUtilsBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    public void protonpack(Blackhole bh) {
+        ProtonpackBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Benchmark
@@ -61,6 +53,33 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     @Benchmark
     public void streamFlatMapWithIterator(Blackhole bh) {
         StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    }
+
+    // Other Sequences based benchmarks
+
+    @Benchmark
+    public void fluentIterable(Blackhole bh) {
+        FluentIterableBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void streamEx(Blackhole bh) {
+        StreamExBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void jayield(Blackhole bh) {
+        QueryBenchmark.zipTopArtistAndTrackByCountry().traverse(bh::consume);
+    }
+
+    @Benchmark
+    public void jool(Blackhole bh) {
+        JoolBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    }
+
+//    @Benchmark
+    public void vavr(Blackhole bh) {
+        throw new UnsupportedOperationException("not done yet");
     }
 
 }

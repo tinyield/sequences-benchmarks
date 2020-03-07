@@ -1,4 +1,4 @@
-package com.github.tiniyield.jayield.benchmark.alternative.sequence.query;
+package com.github.tiniyield.jayield.benchmark.alternative.sequence.jayield;
 
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.ARTISTS_DATA;
 import static com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkConstants.COUNTRY_DATA;

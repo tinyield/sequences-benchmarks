@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.jayield.Query;
+import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
 import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
+import com.google.common.collect.FluentIterable;
 
 import one.util.streamex.StreamEx;
 
@@ -25,20 +27,34 @@ public class ArtistsData implements ICountryBasedDataProvider<Artist> {
 
     }
 
+    @Override
     public List<Artist> asList(String country) {
         return Arrays.asList(getArtistsForCountry(country));
     }
 
+    @Override
     public Stream<Artist> asStream(String country) {
         return Stream.of(getArtistsForCountry(country));
     }
 
+    @Override
     public StreamEx<Artist> asStreamEx(String country) {
         return StreamEx.of(getArtistsForCountry(country));
     }
 
+    @Override
     public Query<Artist> asQuery(String country) {
         return Query.of(getArtistsForCountry(country));
+    }
+
+    @Override
+    public FluentIterable<Artist> asFluentIterable(String country) {
+        return FluentIterable.from(getArtistsForCountry(country));
+    }
+
+    @Override
+    public Seq<Artist> asSeq(String country) {
+        return Seq.of(getArtistsForCountry(country));
     }
 
     private Artist[] getArtistsForCountry(String country) {

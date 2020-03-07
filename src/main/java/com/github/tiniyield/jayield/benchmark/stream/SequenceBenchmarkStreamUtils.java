@@ -20,10 +20,10 @@ import java.util.stream.StreamSupport;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
-import com.github.tiniyield.jayield.benchmark.model.track.Track;
 import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
 import com.github.tiniyield.jayield.benchmark.model.country.Language;
+import com.github.tiniyield.jayield.benchmark.model.track.Track;
 
 public class SequenceBenchmarkStreamUtils {
 
