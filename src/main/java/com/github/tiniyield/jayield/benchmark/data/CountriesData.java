@@ -24,6 +24,11 @@ public class CountriesData {
         return Stream.of(data);
     }
 
+    public io.vavr.collection.Stream<Country> asVavrStream() {
+        return io.vavr.collection.Stream.of(data);
+    }
+
+
     public StreamEx<Country> asStreamEx() {
         return StreamEx.of(data);
     }
@@ -34,10 +39,6 @@ public class CountriesData {
 
     public Query<Country> asQuery() {
         return Query.of(data);
-    }
-
-    public FluentIterable<Country> asFluentIterable() {
-        return FluentIterable.from(data);
     }
 
 }

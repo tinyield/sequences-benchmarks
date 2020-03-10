@@ -4,24 +4,22 @@ import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.jayield.benchmark.alternative.sequence.fluent.iterable.benchmark.FluentIterableBenchmark;
-import com.github.tiniyield.jayield.benchmark.alternative.sequence.jool.benchmark.JoolBenchmark;
-import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.jayield.benchmark.alternative.sequence.jayield.benchmark.QueryBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.jool.benchmark.JoolBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark.StreamExBenchmark;
+import com.github.tiniyield.jayield.benchmark.alternative.sequence.vavr.benchmark.VavrBenchmark;
+import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
-import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark.StreamExBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -58,11 +56,6 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
     // Other Sequences based benchmarks
 
     @Benchmark
-    public void fluentIterable(Blackhole bh) {
-        FluentIterableBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
-    }
-
-    @Benchmark
     public void streamEx(Blackhole bh) {
         StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
@@ -77,9 +70,9 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
         JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
-    //    @Benchmark
+    @Benchmark
     public void vavr(Blackhole bh) {
-        throw new UnsupportedOperationException("not done yet");
+        VavrBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
 }

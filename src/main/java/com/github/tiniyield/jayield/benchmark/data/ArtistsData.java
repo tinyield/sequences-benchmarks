@@ -48,13 +48,13 @@ public class ArtistsData implements ICountryBasedDataProvider<Artist> {
     }
 
     @Override
-    public FluentIterable<Artist> asFluentIterable(String country) {
-        return FluentIterable.from(getArtistsForCountry(country));
+    public Seq<Artist> asSeq(String country) {
+        return Seq.of(getArtistsForCountry(country));
     }
 
     @Override
-    public Seq<Artist> asSeq(String country) {
-        return Seq.of(getArtistsForCountry(country));
+    public io.vavr.collection.Stream<Artist> asVavrStream(String country) {
+        return io.vavr.collection.Stream.of(getArtistsForCountry(country));
     }
 
     private Artist[] getArtistsForCountry(String country) {

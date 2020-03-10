@@ -48,13 +48,13 @@ public class TracksData implements ICountryBasedDataProvider<Track> {
     }
 
     @Override
-    public FluentIterable<Track> asFluentIterable(String country) {
-        return FluentIterable.from(getTracksForCountry(country));
+    public Seq<Track> asSeq(String country) {
+        return Seq.of(getTracksForCountry(country));
     }
 
     @Override
-    public Seq<Track> asSeq(String country) {
-        return Seq.of(getTracksForCountry(country));
+    public io.vavr.collection.Stream<Track> asVavrStream(String country) {
+        return io.vavr.collection.Stream.of(getTracksForCountry(country));
     }
 
     private Track[] getTracksForCountry(String country) {
