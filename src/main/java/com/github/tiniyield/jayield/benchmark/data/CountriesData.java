@@ -1,6 +1,5 @@
 package com.github.tiniyield.jayield.benchmark.data;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.jayield.Query;
@@ -8,7 +7,6 @@ import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
-import com.google.common.collect.FluentIterable;
 
 import one.util.streamex.StreamEx;
 

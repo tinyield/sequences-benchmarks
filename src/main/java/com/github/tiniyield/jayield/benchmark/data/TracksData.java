@@ -10,9 +10,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
-import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.track.Track;
-import com.google.common.collect.FluentIterable;
 
 import one.util.streamex.StreamEx;
 

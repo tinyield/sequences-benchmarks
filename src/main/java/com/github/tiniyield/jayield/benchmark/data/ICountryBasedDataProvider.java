@@ -6,8 +6,6 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
-import com.google.common.collect.FluentIterable;
-
 import one.util.streamex.StreamEx;
 
 public interface ICountryBasedDataProvider<T> {
