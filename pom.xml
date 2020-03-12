@@ -94,7 +94,7 @@
         <dependency>
             <groupId>com.github.jayield</groupId>
             <artifactId>jayield</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>one.util</groupId>

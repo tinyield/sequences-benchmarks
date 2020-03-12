@@ -20,8 +20,6 @@ import com.github.tiniyield.jayield.benchmark.model.artist.TopArtistsLastFmRespo
 
 public class ArtistsLoader {
 
-    private static final String TOP_ARTIST_BY_COUNTRY_TEMPLATE = "http://ws.audioscrobbler.com/2.0/?method=geo" +
-            ".gettopartists&country=%s&api_key=%s&format=json";
     private static final String TOP_ARTIST_BY_COUNTRY_QUERY_TEMPLATE = "method=geo.gettopartists&country=%s&api_key" +
             "=%s&format=json";
     private static final String ARTISTS_PATH_TEMPLATE = "artists/%s.json";
