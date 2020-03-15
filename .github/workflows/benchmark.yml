@@ -1,6 +1,9 @@
 name: Benchmark Java sequences
  
-on: [push]
+on:
+  push:
+    branches:
+      - master
  
 jobs:
   benchmark:
@@ -16,4 +19,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - run: mvn clean install
-      - run: java -jar target/benchmarks.jar -i 10 -wi 10 -f 4 -r 20 -w 20
+      - run: java -jar target/benchmarks.jar -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G"
