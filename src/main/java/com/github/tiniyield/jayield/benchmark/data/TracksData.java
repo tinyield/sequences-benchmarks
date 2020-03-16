@@ -50,11 +50,6 @@ public class TracksData implements ICountryBasedDataProvider<Track> {
         return Seq.of(getTracksForCountry(country));
     }
 
-    @Override
-    public io.vavr.collection.Stream<Track> asVavrStream(String country) {
-        return io.vavr.collection.Stream.of(getTracksForCountry(country));
-    }
-
     private Track[] getTracksForCountry(String country) {
         return this.data.computeIfAbsent(country, (name) -> new Track[0]);
     }

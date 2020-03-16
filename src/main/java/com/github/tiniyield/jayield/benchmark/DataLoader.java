@@ -4,17 +4,13 @@ import static java.lang.String.format;
 
 import java.util.stream.Stream;
 
-import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import com.github.tiniyield.jayield.benchmark.data.loader.ArtistsLoader;
 import com.github.tiniyield.jayield.benchmark.data.loader.FileLoader;
 import com.github.tiniyield.jayield.benchmark.data.loader.TracksLoader;
 import com.github.tiniyield.jayield.benchmark.model.ApiKey;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
-import com.google.common.collect.Streams;
 
 
 public class DataLoader {

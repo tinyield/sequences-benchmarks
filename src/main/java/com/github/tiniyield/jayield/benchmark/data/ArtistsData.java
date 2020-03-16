@@ -51,11 +51,6 @@ public class ArtistsData implements ICountryBasedDataProvider<Artist> {
         return Seq.of(getArtistsForCountry(country));
     }
 
-    @Override
-    public io.vavr.collection.Stream<Artist> asVavrStream(String country) {
-        return io.vavr.collection.Stream.of(getArtistsForCountry(country));
-    }
-
     private Artist[] getArtistsForCountry(String country) {
         return this.data.computeIfAbsent(country, (name) -> new Artist[0]);
     }

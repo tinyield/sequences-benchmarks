@@ -22,10 +22,6 @@ public class CountriesData {
         return Stream.of(data);
     }
 
-    public io.vavr.collection.Stream<Country> asVavrStream() {
-        return io.vavr.collection.Stream.of(data);
-    }
-
 
     public StreamEx<Country> asStreamEx() {
         return StreamEx.of(data);

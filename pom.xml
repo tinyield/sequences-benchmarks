@@ -13,7 +13,7 @@
     </name>
     <description>
         JMH benchmark comparing performance of jayield, StreamEx, Guava,
-        jOOL, vavr and protonpack in small data sets from Rest Countries and Last.fm.
+        jOOL and protonpack in small data sets from Rest Countries and Last.fm.
     </description>
     <properties>
         <jmh.version>1.23</jmh.version>
@@ -66,11 +66,6 @@
             <groupId>org.jooq</groupId>
             <artifactId>jool</artifactId>
             <version>0.9.14</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vavr</groupId>
-            <artifactId>vavr</artifactId>
-            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

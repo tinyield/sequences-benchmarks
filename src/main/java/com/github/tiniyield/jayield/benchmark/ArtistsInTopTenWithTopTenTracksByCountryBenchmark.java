@@ -14,7 +14,6 @@ import org.openjdk.jmh.infra.Blackhole;
 import com.github.tiniyield.jayield.benchmark.alternative.sequence.jayield.benchmark.QueryBenchmark;
 import com.github.tiniyield.jayield.benchmark.alternative.sequence.jool.benchmark.JoolBenchmark;
 import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark.StreamExBenchmark;
-import com.github.tiniyield.jayield.benchmark.alternative.sequence.vavr.benchmark.VavrBenchmark;
 import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
@@ -68,11 +67,6 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
     @Benchmark
     public void jool(Blackhole bh) {
         JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        VavrBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
 }
