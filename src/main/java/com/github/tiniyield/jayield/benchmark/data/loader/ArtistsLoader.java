@@ -12,11 +12,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import com.google.gson.Gson;
-
 import com.github.tiniyield.jayield.benchmark.model.ApiKey;
 import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.artist.TopArtistsLastFmResponse;
+import com.google.gson.Gson;
 
 public class ArtistsLoader {
 

@@ -18,7 +18,7 @@ import com.github.tiniyield.jayield.benchmark.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
-import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
+import com.github.tiniyield.jayield.benchmark.stream.benchmark.ZiplineBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -48,8 +48,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     }
 
     @Benchmark
-    public void streamFlatMapWithIterator(Blackhole bh) {
-        StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    public void zipline(Blackhole bh) {
+        ZiplineBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     // Other Sequences based benchmarks

@@ -14,7 +14,7 @@ import com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benc
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.GuavaBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.ProtonpackBenchmark;
 import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamBenchmark;
-import com.github.tiniyield.jayield.benchmark.stream.benchmark.StreamFlatmapWithIteratorBenchmark;
+import com.github.tiniyield.jayield.benchmark.stream.benchmark.ZiplineBenchmark;
 
 public class SequenceBenchmarkUtils {
 
@@ -33,7 +33,7 @@ public class SequenceBenchmarkUtils {
 
                 GuavaBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                StreamFlatmapWithIteratorBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
+                ZiplineBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
                 StreamExBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
@@ -56,8 +56,8 @@ public class SequenceBenchmarkUtils {
                 GuavaBenchmark.artistsInTopTenWithTopTenTracksByCountry()
                               .collect(Collectors.toList()),
 
-                StreamFlatmapWithIteratorBenchmark.artistsInTopTenWithTopTenTracksByCountry()
-                                                  .collect(Collectors.toList()),
+                ZiplineBenchmark.artistsInTopTenWithTopTenTracksByCountry()
+                                .collect(Collectors.toList()),
 
                 StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList()),
 

@@ -1,11 +1,11 @@
 package com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.benchmark;
 
 
-import static com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.SequenceBenchmarkStreamExUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.SequenceBenchmarkStreamExUtils.TO_TOP_BY_COUNTRY_TRIPLET;
 import static com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.SequenceBenchmarkStreamExUtils.getArtists;
 import static com.github.tiniyield.jayield.benchmark.alternative.sequence.streamex.SequenceBenchmarkStreamExUtils.getTracks;
+import static com.github.tiniyield.jayield.benchmark.stream.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 
 import java.util.List;
 

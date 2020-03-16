@@ -12,13 +12,12 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.github.tiniyield.jayield.benchmark.model.ApiKey;
+import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 import com.github.tiniyield.jayield.benchmark.model.country.Country;
 import com.github.tiniyield.jayield.benchmark.model.track.Track;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-
-import com.github.tiniyield.jayield.benchmark.model.artist.Artist;
 
 public class FileLoader {
 
