@@ -28,4 +28,10 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ArtistsInTopTenWithTopTenTracksByCountryBenchmark
+        run: java -jar target/benchmarks.jar -rf text -rff results_q2.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ArtistsInTopTenWithTopTenTracksByCountryBenchmark
+
+      - name: Upload results
+        uses: actions/upload-artifact@v1
+        with:
+          name: results
+          path: results_q2.log

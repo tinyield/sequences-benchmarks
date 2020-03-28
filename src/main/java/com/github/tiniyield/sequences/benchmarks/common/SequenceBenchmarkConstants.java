@@ -13,7 +13,7 @@ public class SequenceBenchmarkConstants {
     public static final TracksDataProvider TRACKS_DATA = new TracksDataProvider(COUNTRY_DATA);
     public static final PrimeNumbersDataProvider PRIME_NUMBERS_DATA_PROVIDER = new PrimeNumbersDataProvider();
     public static final ValueDataProvider VALUE_DATA_PROVIDER = new ValueDataProvider();
-    public static final int BENCHMARK_GENERATED_DATA_SIZE = 250;
+    public static final int BENCHMARK_GENERATED_DATA_SIZE = 10_000;
     public static final boolean SILENT = true;
     public static final int TEN = 10;
 

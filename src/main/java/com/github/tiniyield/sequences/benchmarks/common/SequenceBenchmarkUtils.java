@@ -94,6 +94,9 @@ public class SequenceBenchmarkUtils {
         }
         List<T> first = results[0];
         List<List<T>> otherResults = Arrays.asList(Arrays.copyOfRange(results, 1, results.length));
+        if(first.size() < 1) {
+            throw new RuntimeException("results are empty");
+        }
         boolean sameResultSizes = otherResults.stream()
                                               .map(List::size)
                                               .allMatch(size -> first.size() == size);

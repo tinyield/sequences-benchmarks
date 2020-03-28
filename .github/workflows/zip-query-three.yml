@@ -1,4 +1,4 @@
-name: Distinct Top Artist and Top Track by Country Benchmark
+name: Zip Primes with Values
  
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+      - uses: actions/checkout@master
 
       - name: Setup java
         uses: actions/setup-java@v1
@@ -28,10 +28,10 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -rf text -rff results_q1.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ZipTopArtistAndTrackByCountryBenchmark
+        run: java -jar target/benchmarks.jar -rf text -rff results_q3.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark
 
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
           name: results
-          path: results_q1.log
+          path: results_q3.log

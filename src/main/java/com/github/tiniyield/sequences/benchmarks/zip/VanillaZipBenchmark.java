@@ -27,7 +27,7 @@ public class VanillaZipBenchmark implements IZipBenchmark {
 
     @Setup
     public void setup() {
-
+        SequenceBenchmarkUtils.assertZipPrimeWithValueValidity();
     }
 
     // Stream Based benchmarks
