@@ -1,9 +1,12 @@
 package com.github.tiniyield.sequences.benchmarks.data.loader;
 
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.SILENT;
 import static java.lang.String.format;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Collections;
@@ -27,7 +30,7 @@ public class FileLoader {
     }.getType();
     private static final Type TRACK_REVIEW_TYPE = new TypeToken<List<Track>>() {
     }.getType();
-    private static final String COUNTRIES_JSON = "countries.json";
+    private static final String COUNTRIES_JSON = "/countries.json";
     private static final String LASTFM_KEY = "lastfm.json";
 
     public Stream<Country> loadCountries() {
@@ -37,25 +40,28 @@ public class FileLoader {
     public ApiKey loadKey() {
         try {
             Gson gson = new Gson();
+
             JsonReader reader = new JsonReader(new FileReader(Objects.requireNonNull(getClass().getClassLoader()
                                                                                                .getResource(
                                                                                                        LASTFM_KEY))
                                                                      .getFile()));
             return gson.fromJson(reader, ApiKey.class);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            if (!SILENT) {
+                System.out.println("could not load lastfm api key");
+            }
+            throw new RuntimeException(e);
         }
     }
 
 
     public Artist[] loadArtists(String name) {
-        return this.<Artist>loadData(format("artists/%s.json", name), ARTIST_REVIEW_TYPE)
+        return this.<Artist>loadData(format("/artists/%s.json", name), ARTIST_REVIEW_TYPE)
                 .toArray(Artist[]::new);
     }
 
     public Track[] loadTracks(String name) {
-        return this.<Track>loadData(format("tracks/%s.json", name), TRACK_REVIEW_TYPE)
+        return this.<Track>loadData(format("/tracks/%s.json", name), TRACK_REVIEW_TYPE)
                 .toArray(Track[]::new);
     }
 
@@ -63,12 +69,13 @@ public class FileLoader {
         List<T> result = Collections.emptyList();
         try {
             Gson gson = new Gson();
-            URL url = Objects.requireNonNull(getClass().getClassLoader().getResource(file));
-            JsonReader reader = new JsonReader(new FileReader(url.getFile()));
+            JsonReader reader = new JsonReader(new InputStreamReader(getClass().getResourceAsStream(file)));
             result = gson.fromJson(reader, type);
-
-        } catch (FileNotFoundException | NullPointerException e) {
-//            System.out.println(String.format("could not load data for file %s", file));
+        } catch (NullPointerException e) {
+            if (!SILENT) {
+                System.out.println(String.format("could not load data for file %s", file));
+            }
+            throw new RuntimeException(e);
         }
         return result;
     }

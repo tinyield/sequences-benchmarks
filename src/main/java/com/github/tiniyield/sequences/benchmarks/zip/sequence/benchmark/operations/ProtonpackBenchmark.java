@@ -3,6 +3,7 @@ package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operati
 import static com.codepoetics.protonpack.StreamUtils.zip;
 import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
 import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
+import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.*;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -24,16 +25,16 @@ public class ProtonpackBenchmark {
 
     public static Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry() {
         return zip(
-                SequenceBenchmarkStreamUtils.getArtists(),
-                SequenceBenchmarkStreamUtils.getTracks(),
+                getArtists(),
+                getTracks(),
                 TO_TOP_BY_COUNTRY_TRIPLET
         ).filter(SequenceBenchmarkUtils.distinctByKey(Triplet::getValue1));
     }
 
     public static Stream<Pair<Country, List<Artist>>> artistsInTopTenWithTopTenTracksByCountry() {
         return zip(
-                SequenceBenchmarkStreamUtils.getArtists(),
-                SequenceBenchmarkStreamUtils.getTracks(),
+                getArtists(),
+                getTracks(),
                 TO_DATA_TRIPLET_BY_COUNTRY
         ).map(TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY);
     }

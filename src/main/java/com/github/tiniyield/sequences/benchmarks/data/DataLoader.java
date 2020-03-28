@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.data;
 
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.SILENT;
 import static java.lang.String.format;
 
 import java.util.stream.Stream;
@@ -24,7 +25,9 @@ public class DataLoader {
         ArtistsLoader artistsLoader = new ArtistsLoader();
         TracksLoader trackLoader = new TracksLoader();
         loadCountries().forEach(country -> {
-            System.out.println(format("Loading for %s", country));
+            if (!SILENT) {
+                System.out.println(format("Loading for %s", country));
+            }
             try {
                 artistsLoader.fetch(apiKey, country);
                 trackLoader.fetch(apiKey, country);

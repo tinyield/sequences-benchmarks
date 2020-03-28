@@ -1,5 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.data.providers;
 
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.SILENT;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +15,15 @@ public class ArtistsDataProvider extends AbstractCountryBasedDataProvider<Artist
         data = new HashMap<>();
         countries.asStream().forEach(country -> {
             String name = country.getName();
-            data.put(name, new FileLoader().loadArtists(name));
+            Artist[] countryArtists = new Artist[0];
+            try {
+                countryArtists = new FileLoader().loadArtists(name);
+            } catch (RuntimeException e) {
+                if (!SILENT) {
+                    System.out.println(String.format("data for country %s was ignored.", name));
+                }
+            }
+            data.put(name, countryArtists);
         });
 
     }

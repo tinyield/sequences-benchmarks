@@ -1,0 +1,31 @@
+name: Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark
+ 
+on:
+  push:
+    branches:
+      - master
+ 
+jobs:
+  benchmark:
+    name: Benchmark
+
+    strategy:
+      matrix:
+        java: [ 11 ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@master
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Build artifacts
+        run: mvn clean install
+
+      - name: Run Benchmark
+        run: java -jar target/benchmarks.jar -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ArtistsInTopTenWithTopTenTracksByCountryBenchmark
