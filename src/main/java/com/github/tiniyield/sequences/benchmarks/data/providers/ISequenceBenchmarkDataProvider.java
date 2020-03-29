@@ -14,4 +14,5 @@ public interface ISequenceBenchmarkDataProvider<T> {
     StreamEx<T> asStreamEx();
     Query<T> asQuery();
     Seq<T> asSeq();
+    io.vavr.collection.Stream<T> asVavrStream();
 }

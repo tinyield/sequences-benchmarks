@@ -19,6 +19,7 @@ import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operatio
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamExBenchmark;
+import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
@@ -79,6 +80,12 @@ public class VanillaZipBenchmark implements IZipBenchmark {
     @Benchmark
     public void jool(Blackhole bh) {
         JoolBenchmark.zipPrimeWithValue().forEach(bh::consume);
+    }
+
+    @Override
+    @Benchmark
+    public void vavr(Blackhole bh) {
+        VavrBenchmark.zipPrimeWithValue().forEach(bh::consume);
     }
 
 }

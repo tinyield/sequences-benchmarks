@@ -18,6 +18,7 @@ import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.GuavaBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ProtonpackBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamBenchmark;
+import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
 
 @BenchmarkMode(Mode.Throughput)
@@ -74,6 +75,11 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark implements IZipBe
     @Benchmark
     public void jool(Blackhole bh) {
         JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void vavr(Blackhole bh) {
+        VavrBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
 }

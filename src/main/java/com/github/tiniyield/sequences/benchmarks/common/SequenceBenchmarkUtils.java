@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
 import com.github.tiniyield.sequences.benchmarks.data.providers.NumbersDataProvider;
 import com.github.tiniyield.sequences.benchmarks.data.providers.ValueDataProvider;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
@@ -47,7 +48,9 @@ public class SequenceBenchmarkUtils {
 
                 StreamExBenchmark.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                JoolBenchmark.zipTopArtistAndTrackByCountry().toList()
+                JoolBenchmark.zipTopArtistAndTrackByCountry().toList(),
+
+                VavrBenchmark.zipTopArtistAndTrackByCountry().toList().asJava()
 
         );
     }
@@ -71,7 +74,9 @@ public class SequenceBenchmarkUtils {
 
                 StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList()),
 
-                JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().toList()
+                JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().toList(),
+
+                VavrBenchmark.artistsInTopTenWithTopTenTracksByCountry().toList().asJava()
         );
     }
 

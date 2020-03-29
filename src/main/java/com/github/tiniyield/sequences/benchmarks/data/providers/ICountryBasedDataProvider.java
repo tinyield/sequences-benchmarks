@@ -17,4 +17,5 @@ public interface ICountryBasedDataProvider<T> {
     StreamEx<T> asStreamEx(String country);
     Query<T> asQuery(String country);
     Seq<T> asSeq(String country);
+    io.vavr.collection.Stream<T> asVavrStream(String country);
 }

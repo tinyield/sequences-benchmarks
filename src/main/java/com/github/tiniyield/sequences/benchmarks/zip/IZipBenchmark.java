@@ -21,4 +21,5 @@ public interface IZipBenchmark {
     void streamEx(Blackhole bh);
     void jayield(Blackhole bh);
     void jool(Blackhole bh);
+    void vavr(Blackhole bh);
 }

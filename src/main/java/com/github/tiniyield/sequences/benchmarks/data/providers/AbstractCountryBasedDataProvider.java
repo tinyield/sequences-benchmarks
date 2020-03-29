@@ -42,4 +42,9 @@ public abstract class AbstractCountryBasedDataProvider<T> implements ICountryBas
     public Seq<T> asSeq(String country) {
         return Seq.of(data(country));
     }
+
+    @Override
+    public io.vavr.collection.Stream<T> asVavrStream(String country) {
+        return io.vavr.collection.Stream.of(data(country));
+    }
 }

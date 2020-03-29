@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
+import com.github.tiniyield.sequences.benchmarks.model.country.Country;
+
 import one.util.streamex.StreamEx;
 
 public abstract class AbstractBaseDataProvider<T> implements ISequenceBenchmarkDataProvider<T> {
@@ -35,5 +37,10 @@ public abstract class AbstractBaseDataProvider<T> implements ISequenceBenchmarkD
     @Override
     public Seq<T> asSeq() {
         return Seq.of(data());
+    }
+
+    @Override
+    public io.vavr.collection.Stream<T> asVavrStream() {
+        return io.vavr.collection.Stream.of(data());
     }
 }
