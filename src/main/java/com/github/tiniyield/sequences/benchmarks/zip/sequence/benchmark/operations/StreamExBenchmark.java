@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations;
 
 
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamExUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamExUtils.TO_TOP_BY_COUNTRY_TRIPLET;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamExUtils.getArtists;
@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
+import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.model.track.Track;
@@ -39,6 +40,9 @@ public class StreamExBenchmark {
     }
 
     public static Stream<Pair<Integer, Value>> zipPrimeWithValue() {
-        return PRIME_NUMBERS_DATA_PROVIDER.asStreamEx().zipWith(VALUE_DATA_PROVIDER.asStreamEx(), Pair::with);
+        return getNumbersDataProvider().asStreamEx().filter(SequenceBenchmarkUtils::isPrime)
+                                       .zipWith(
+                                               getValueDataProvider().asStreamEx(),
+                                               Pair::with);
     }
 }

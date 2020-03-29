@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations;
 
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
 import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.distinctByKey;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkQueryUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkQueryUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkQueryUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -15,6 +15,7 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.jayield.Query;
 
+import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.model.track.Track;
@@ -33,6 +34,8 @@ public class QueryBenchmark {
     }
 
     public static Query<Pair<Integer, Value>> zipPrimeWithValue() {
-        return PRIME_NUMBERS_DATA_PROVIDER.asQuery().zip(VALUE_DATA_PROVIDER.asQuery(), Pair::with);
+        return getNumbersDataProvider().asQuery()
+                                       .filter(SequenceBenchmarkUtils::isPrime)
+                                       .zip(getValueDataProvider().asQuery(), Pair::with);
     }
 }

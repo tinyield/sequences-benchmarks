@@ -27,11 +27,20 @@ jobs:
       - name: Build artifacts
         run: mvn clean install
 
-      - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -rf text -rff results_q3.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark
+      - name: Create Results dir
+        run: mkdir results
+
+      - name: Run Benchmark [COLLECTION_SIZE = 10]
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_q3_10.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark -p COLLECTION_SIZE=10
+
+      - name: Run Benchmark [COLLECTION_SIZE = 1000]
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_q3_1000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark -p COLLECTION_SIZE=1000
+
+      - name: Run Benchmark [COLLECTION_SIZE = 100000]
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_q3_100000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
-          name: results
-          path: results_q3.log
+          name: results_q3
+          path: results

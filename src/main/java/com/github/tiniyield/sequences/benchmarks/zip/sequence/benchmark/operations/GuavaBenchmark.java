@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations;
 
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.zip.sequence.SequenceBenchmarkStreamUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -40,8 +40,8 @@ public class GuavaBenchmark {
 
     public static Stream<Pair<Integer, Value>> zipPrimeWithValue() {
         return zip(
-                PRIME_NUMBERS_DATA_PROVIDER.asStream(),
-                VALUE_DATA_PROVIDER.asStream(),
+                getNumbersDataProvider().asStream().filter(SequenceBenchmarkUtils::isPrime),
+                getValueDataProvider().asStream(),
                 Pair::with
         );
     }

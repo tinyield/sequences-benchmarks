@@ -6,6 +6,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -25,8 +26,12 @@ import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operatio
 @State(Scope.Benchmark)
 public class VanillaZipBenchmark implements IZipBenchmark {
 
+    @Param({"10000"})
+    private int COLLECTION_SIZE;
+
     @Setup
     public void setup() {
+        SequenceBenchmarkUtils.setCollectionSize(COLLECTION_SIZE);
         SequenceBenchmarkUtils.assertZipPrimeWithValueValidity();
     }
 

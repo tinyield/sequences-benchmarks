@@ -5,10 +5,8 @@ import static java.lang.String.format;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;

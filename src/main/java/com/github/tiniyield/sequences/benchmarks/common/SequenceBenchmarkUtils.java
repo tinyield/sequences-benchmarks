@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.github.tiniyield.sequences.benchmarks.data.providers.NumbersDataProvider;
+import com.github.tiniyield.sequences.benchmarks.data.providers.ValueDataProvider;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.JoolBenchmark;
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamExBenchmark;
@@ -17,6 +19,14 @@ import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operatio
 import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
 
 public class SequenceBenchmarkUtils {
+
+    private static NumbersDataProvider NUMBERS_DATA_PROVIDER;
+    private static ValueDataProvider VALUE_DATA_PROVIDER;
+
+    public static void setCollectionSize(int size) {
+        NUMBERS_DATA_PROVIDER = new NumbersDataProvider(size);
+        VALUE_DATA_PROVIDER = new ValueDataProvider(size);
+    }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
@@ -110,5 +120,33 @@ public class SequenceBenchmarkUtils {
             throw new RuntimeException("query results do not have the same elements");
         }
 
+    }
+
+    public static NumbersDataProvider getNumbersDataProvider() {
+        return NUMBERS_DATA_PROVIDER;
+    }
+
+    public static ValueDataProvider getValueDataProvider() {
+        return VALUE_DATA_PROVIDER;
+    }
+
+    public static boolean isPrime(int value) {
+        if (value <= 1) {
+            return false;
+        }
+        if (value <= 3) {
+            return true;
+        }
+        if (value % 2 == 0) {
+            return false;
+        }
+        int i = 3;
+        while (i * i <= value) {
+            if (value % i == 0) {
+                return false;
+            }
+            i += 2;
+        }
+        return true;
     }
 }

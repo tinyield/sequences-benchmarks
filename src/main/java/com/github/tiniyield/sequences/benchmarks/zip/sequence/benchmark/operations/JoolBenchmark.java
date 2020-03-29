@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations;
 
 
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getValueDataProvider;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.jooq.lambda.Seq;
 
+import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.model.track.Track;
@@ -33,6 +34,8 @@ public class JoolBenchmark {
     }
 
     public static Seq<Pair<Integer, Value>> zipPrimeWithValue() {
-        return PRIME_NUMBERS_DATA_PROVIDER.asSeq().zip(VALUE_DATA_PROVIDER.asSeq(), Pair::with);
+        return getNumbersDataProvider().asSeq()
+                                       .filter(SequenceBenchmarkUtils::isPrime)
+                                       .zip(getValueDataProvider().asSeq(), Pair::with);
     }
 }

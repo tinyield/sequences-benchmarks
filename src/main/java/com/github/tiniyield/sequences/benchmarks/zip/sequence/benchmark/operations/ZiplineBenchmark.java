@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations;
 
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.PRIME_NUMBERS_DATA_PROVIDER;
-import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkConstants.VALUE_DATA_PROVIDER;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils.getValueDataProvider;
 
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +44,9 @@ public class ZiplineBenchmark {
     }
 
     public static Stream<Pair<Integer, Value>> zipPrimeWithValue() {
-        Iterator<Integer> iter = PRIME_NUMBERS_DATA_PROVIDER.asStream().iterator();
-        Stream<Value> stream = VALUE_DATA_PROVIDER.asStream();
-        return stream.map(v -> Pair.with(iter.next(), v));
+        Iterator<Value> iter = getValueDataProvider().asStream().iterator();
+        Stream<Integer> stream = getNumbersDataProvider().asStream();
+        return stream.filter(SequenceBenchmarkUtils::isPrime)
+                     .map(v -> Pair.with(v, iter.next()));
     }
 }
