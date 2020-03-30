@@ -1,5 +1,9 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertZipPrimeWithValueValidity;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initValueDataProvider;
+
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -12,15 +16,14 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.GuavaBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.JoolBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ProtonpackBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamExBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
+import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -32,8 +35,9 @@ public class VanillaZipBenchmark implements IZipBenchmark {
 
     @Setup
     public void setup() {
-        SequenceBenchmarkUtils.setCollectionSize(COLLECTION_SIZE);
-        SequenceBenchmarkUtils.assertZipPrimeWithValueValidity();
+        initNumbersDataProvider(COLLECTION_SIZE);
+        initValueDataProvider(COLLECTION_SIZE);
+        assertZipPrimeWithValueValidity();
     }
 
     // Stream Based benchmarks
@@ -41,25 +45,25 @@ public class VanillaZipBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
-        StreamBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        StreamOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
-        ProtonpackBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        ProtonpackOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        GuavaOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void zipline(Blackhole bh) {
-        ZiplineBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        ZiplineOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     // Other Sequences based benchmarks
@@ -67,25 +71,25 @@ public class VanillaZipBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        StreamExBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        StreamExOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        QueryBenchmark.zipPrimeWithValue().traverse(bh::consume);
+        QueryOperations.zipPrimeWithValue().traverse(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        JoolBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        JoolOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void vavr(Blackhole bh) {
-        VavrBenchmark.zipPrimeWithValue().forEach(bh::consume);
+        VavrOperations.zipPrimeWithValue().forEach(bh::consume);
     }
 
 }

@@ -11,15 +11,15 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.JoolBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamExBenchmark;
-import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.GuavaBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ProtonpackBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
+import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -36,25 +36,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
-        StreamBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        StreamOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
-        ProtonpackBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        ProtonpackOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        GuavaOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void zipline(Blackhole bh) {
-        ZiplineBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        ZiplineOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     // Other Sequences based benchmarks
@@ -62,25 +62,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        StreamExBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        StreamExOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        QueryBenchmark.zipTopArtistAndTrackByCountry().traverse(bh::consume);
+        QueryOperations.zipTopArtistAndTrackByCountry().traverse(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        JoolBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        JoolOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void vavr(Blackhole bh) {
-        VavrBenchmark.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        VavrOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
     }
 
 }

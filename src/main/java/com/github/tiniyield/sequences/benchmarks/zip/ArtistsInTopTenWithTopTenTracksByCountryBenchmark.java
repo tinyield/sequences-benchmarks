@@ -11,20 +11,20 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.QueryBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.JoolBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamExBenchmark;
-import com.github.tiniyield.sequences.benchmarks.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.GuavaBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ProtonpackBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.StreamBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.VavrBenchmark;
-import com.github.tiniyield.sequences.benchmarks.zip.sequence.benchmark.operations.ZiplineBenchmark;
+import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark implements IZipBenchmark{
+public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark implements IZipBenchmark {
 
     @Setup
     public void setup() {
@@ -36,25 +36,25 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark implements IZipBe
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
-        StreamBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        StreamOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
-        ProtonpackBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        ProtonpackOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        GuavaOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void zipline(Blackhole bh) {
-        ZiplineBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        ZiplineOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     // Other Sequences based benchmarks
@@ -62,24 +62,24 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark implements IZipBe
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        StreamExBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        StreamExOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        QueryBenchmark.artistsInTopTenWithTopTenTracksByCountry().traverse(bh::consume);
+        QueryOperations.artistsInTopTenWithTopTenTracksByCountry().traverse(bh::consume);
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        JoolBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        JoolOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
     @Benchmark
     public void vavr(Blackhole bh) {
-        VavrBenchmark.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
+        VavrOperations.artistsInTopTenWithTopTenTracksByCountry().forEach(bh::consume);
     }
 
 }
