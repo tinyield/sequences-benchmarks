@@ -28,7 +28,7 @@ jobs:
         run: mvn clean install
 
       - name: Create Results dir
-          run: mkdir results
+        run: mkdir results
 
       - name: Run Benchmark [COLLECTION_SIZE = 10]
         run: java -jar target/benchmarks.jar -rf text -rff results/results_find_q1_10.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindInBeginningBenchmark -p COLLECTION_SIZE=10
