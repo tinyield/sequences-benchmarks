@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.zip;
+package com.github.tiniyield.sequences.benchmarks;
 
 import org.openjdk.jmh.infra.Blackhole;
 

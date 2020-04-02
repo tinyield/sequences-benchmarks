@@ -5,6 +5,8 @@ import static com.github.tiniyield.sequences.benchmarks.operations.common.Sequen
 import static com.google.common.collect.Streams.zip;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 import org.javatuples.Pair;
@@ -41,5 +43,13 @@ public class GuavaOperations {
                 getValueDataProvider().asStream(),
                 Pair::with
         );
+    }
+
+    public static <T,U> Stream<Boolean> every(Stream<T> q1, Stream<U> q2, BiPredicate<T,U> predicate) {
+        return zip(q1, q2, predicate::test);
+    }
+
+    public static <T> Stream<T> find(Stream<T> q1, Stream<T> q2, BiPredicate<T,T> predicate) {
+        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
     }
 }

@@ -16,6 +16,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;

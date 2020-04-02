@@ -39,6 +39,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Param;
@@ -48,11 +49,15 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
+import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
+import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 import io.vavr.collection.Stream;
 import one.util.streamex.StreamEx;
@@ -60,7 +65,7 @@ import one.util.streamex.StreamEx;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> implements ISequenceBenchmark {
+public abstract class FindBenchmark<T> implements IZipBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
@@ -71,7 +76,7 @@ public abstract class FindBenchmark<T> implements ISequenceBenchmark {
 
     protected abstract void init();
 
-    @Setup
+    @Setup(Level.Invocation)
     public void setup() {
         init();
     }
@@ -104,5 +109,24 @@ public abstract class FindBenchmark<T> implements ISequenceBenchmark {
     @Benchmark
     public void vavr(Blackhole bh) {
         bh.consume(VavrOperations.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
+    }
+
+
+    @Override
+    @Benchmark
+    public void protonpack(Blackhole bh) {
+        bh.consume(ProtonpackOperations.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+    }
+
+    @Override
+    @Benchmark
+    public void guava(Blackhole bh) {
+        bh.consume(GuavaOperations.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+    }
+
+    @Override
+    @Benchmark
+    public void zipline(Blackhole bh) {
+        bh.consume(ZiplineOperations.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 }
