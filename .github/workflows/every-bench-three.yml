@@ -34,4 +34,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: results_every_100000
-          path: results_every_100000
+          path: results_every_100000.log

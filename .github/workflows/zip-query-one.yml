@@ -33,5 +33,5 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
-          name: results
+          name: results_q1
           path: results_q1.log
