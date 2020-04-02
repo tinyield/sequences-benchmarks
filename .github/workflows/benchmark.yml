@@ -19,4 +19,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - run: mvn clean install
-      - run: java -jar target/benchmarks.jar -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G"
+      - run: java -jar target/benchmarks.jar -i 5 -wi 10 -f 1 -r 10 -w 10 --jvmArgs "-Xms2G -Xmx2G"
