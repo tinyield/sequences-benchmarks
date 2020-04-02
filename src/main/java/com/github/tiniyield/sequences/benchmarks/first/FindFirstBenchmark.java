@@ -1,7 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.find;
-
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenExceptStartDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenExceptStartDataProvider;
+package com.github.tiniyield.sequences.benchmarks.first;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,12 +24,47 @@ import com.github.tiniyield.sequences.benchmarks.operations.data.providers.Abstr
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class FindInBeginningBenchmark extends FindBenchmark {
+public abstract class FindFirstBenchmark implements ISequenceBenchmark {
+
+    @Param({"10000"})
+    protected int COLLECTION_SIZE;
+    protected AbstractBaseDataProvider<Integer> provider;
+    protected abstract void init();
 
     @Setup
-    public void init() {
-        initEvenExceptStartDataProvider(COLLECTION_SIZE);
-        provider = getEvenExceptStartDataProvider();
+    public void setup() {
+        init();
+        SequenceBenchmarkUtils.assertFindResult(provider);
+    }
+
+    @Override
+    @Benchmark
+    public void stream(Blackhole bh) { // With Auxiliary Function
+        bh.consume(StreamOperations.findFirst(provider));
+    }
+
+    @Override
+    @Benchmark
+    public void streamEx(Blackhole bh) {
+        bh.consume(StreamExOperations.findFirst(provider));
+    }
+
+    @Override
+    @Benchmark
+    public void jayield(Blackhole bh) {
+        bh.consume(QueryOperations.findFirst(provider));
+    }
+
+    @Override
+    @Benchmark
+    public void jool(Blackhole bh) {
+        bh.consume(JoolOperations.findFirst(provider));
+    }
+
+    @Override
+    @Benchmark
+    public void vavr(Blackhole bh) {
+        bh.consume(VavrOperations.findFirst(provider));
     }
 
 }

@@ -221,11 +221,11 @@ public class SequenceBenchmarkUtils {
     }
 
     public static void assertFindResult(AbstractBaseDataProvider<Integer> provider) {
-        Integer stream = StreamOperations.find(provider).orElseThrow();
-        Integer streamEx = StreamExOperations.find(provider).orElseThrow();
-        Integer jayield = QueryOperations.find(provider).orElseThrow();
-        Integer jool = JoolOperations.find(provider).orElseThrow();
-        Integer vavr = VavrOperations.find(provider).getOrElseThrow(RuntimeException::new);
+        Integer stream = StreamOperations.findFirst(provider).orElseThrow();
+        Integer streamEx = StreamExOperations.findFirst(provider).orElseThrow();
+        Integer jayield = QueryOperations.findFirst(provider).orElseThrow();
+        Integer jool = JoolOperations.findFirst(provider).orElseThrow();
+        Integer vavr = VavrOperations.findFirst(provider).getOrElseThrow(RuntimeException::new);
         if(!(stream.equals(streamEx) && stream.equals(jayield) && stream.equals(jool) &&
                 stream.equals(vavr) && stream.equals(ODD))) {
             throw new RuntimeException("Results were not odd");

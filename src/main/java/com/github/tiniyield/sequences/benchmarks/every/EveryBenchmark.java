@@ -29,7 +29,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.tiniyield.sequences.benchmarks.find;
+package com.github.tiniyield.sequences.benchmarks.every;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,14 +60,14 @@ import one.util.streamex.StreamEx;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> implements ISequenceBenchmark {
+public abstract class EveryBenchmark<T, U> implements ISequenceBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
 
     protected abstract List<T> getListA();
-    protected abstract List<T> getListB();
-    protected abstract BiPredicate<T,T> getPredicate();
+    protected abstract List<U> getListB();
+    protected abstract BiPredicate<T,U> getPredicate();
 
     protected abstract void init();
 
@@ -79,30 +79,30 @@ public abstract class FindBenchmark<T> implements ISequenceBenchmark {
     @Override
     @Benchmark
     public void stream(Blackhole bh) {
-        bh.consume(StreamOperations.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
+        bh.consume(StreamOperations.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        bh.consume(StreamExOperations.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(StreamExOperations.every(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(QueryOperations.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(JoolOperations.every(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override // could be replaced by corresponds
     @Benchmark
     public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
+        bh.consume(VavrOperations.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).forAll(Boolean.TRUE::equals));
     }
 }

@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.every;
+package com.github.tiniyield.sequences.benchmarks.all.match;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertEveryEvenValidity;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenDataProvider;
@@ -26,7 +26,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class EveryEvenBenchmark implements ISequenceBenchmark {
+public class AllMatchBenchmark implements ISequenceBenchmark {
 
     @Param({"10000"})
     private int COLLECTION_SIZE;

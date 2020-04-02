@@ -4,8 +4,11 @@ package com.github.tiniyield.sequences.benchmarks.operations;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getNumbersDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.zip;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -48,8 +51,16 @@ public class VavrOperations {
                                     .forAll(SequenceBenchmarkUtils::isEven);
     }
 
-    public static Option<Integer> find(AbstractBaseDataProvider<Integer> provider) {
+    public static Option<Integer> findFirst(AbstractBaseDataProvider<Integer> provider) {
         return provider.asVavrStream()
                        .find(SequenceBenchmarkUtils::isOdd);
+    }
+
+    public static <T,U> Stream<Boolean> every(Stream<T> q1, Stream<U> q2, BiPredicate<T,U> predicate) {
+        return q1.zipWith(q2, predicate::test);
+    }
+
+    public static <T> Stream<T> find(Stream<T> q1, Stream<T> q2, BiPredicate<T,T> predicate) {
+        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
     }
 }

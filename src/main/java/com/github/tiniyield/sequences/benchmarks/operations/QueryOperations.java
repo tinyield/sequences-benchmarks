@@ -6,7 +6,9 @@ import static com.github.tiniyield.sequences.benchmarks.operations.common.Sequen
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -19,6 +21,8 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkQueryUtils;
+
+import one.util.streamex.StreamEx;
 
 public class QueryOperations {
 
@@ -43,13 +47,21 @@ public class QueryOperations {
     }
 
     public static boolean everyEven() {
-        return !getEvenDataProvider().asQuery()
-                                    .anyMatch(v -> !SequenceBenchmarkUtils.isEven(v));
+        return getEvenDataProvider().asQuery()
+                                    .allMatch(SequenceBenchmarkUtils::isEven);
     }
 
-    public static Optional<Integer> find(AbstractBaseDataProvider<Integer> provider) {
+    public static Optional<Integer> findFirst(AbstractBaseDataProvider<Integer> provider) {
         return provider.asQuery()
                        .filter(SequenceBenchmarkUtils::isOdd)
                        .findFirst();
+    }
+
+    public static <T,U> Query<Boolean> every(Query<T> q1, Query<U> q2, BiPredicate<T,U> predicate) {
+        return q1.zip(q2, predicate::test);
+    }
+
+    public static <T> Query<T> find(Query<T> q1, Query<T> q2, BiPredicate<T,T> predicate) {
+        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
     }
 }

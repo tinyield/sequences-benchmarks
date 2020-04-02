@@ -1,0 +1,37 @@
+name: Operation Find Benchmark [COLLECTION_SIZE = 100000]
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  benchmark:
+    name: Benchmark
+
+    strategy:
+      matrix:
+        java: [ 11 ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Build artifacts
+        run: mvn clean install
+
+      - name: Run Benchmark [COLLECTION_SIZE = 100000]
+        run: java -jar target/benchmarks.jar -rf text -rff results_find_100000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" find -p COLLECTION_SIZE=100000
+
+      - name: Upload results
+        uses: actions/upload-artifact@v1
+        with:
+          name: results_find_100000
+          path: results_find_100000

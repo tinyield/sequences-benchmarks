@@ -28,81 +28,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.github.tiniyield.sequences.benchmarks.find;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
-
-import io.vavr.collection.Stream;
-import one.util.streamex.StreamEx;
+import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> implements ISequenceBenchmark {
+public class FindClassBenchmark extends FindBenchmark<Value> {
+    /**
+     * lstA and lstB are two Lists with the same Value objects.
+     */
+    public List<Value> lstA;
+    public List<Value> lstB;
 
-    @Param({"10000"})
-    protected int COLLECTION_SIZE;
 
-    protected abstract List<T> getListA();
-    protected abstract List<T> getListB();
-    protected abstract BiPredicate<T,T> getPredicate();
+    protected List<Value> getListA() {
+        return lstA;
+    }
 
-    protected abstract void init();
+
+    protected List<Value> getListB() {
+        return lstB;
+    }
+
+
+    protected BiPredicate<Value, Value> getPredicate() {
+        return Value::equals;
+    }
+
 
     @Setup
-    public void setup() {
-        init();
+    public void init() {
+        lstB = new ArrayList<>(COLLECTION_SIZE);
+        lstA = IntStream
+            .rangeClosed(1, COLLECTION_SIZE)
+            .mapToObj(Value::new)
+            .collect(Collectors.toList());
+        lstA.forEach(lstB::add);
     }
 
-    @Override
-    @Benchmark
-    public void stream(Blackhole bh) {
-        bh.consume(StreamOperations.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(StreamExOperations.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override // could be replaced by corresponds
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
-    }
 }

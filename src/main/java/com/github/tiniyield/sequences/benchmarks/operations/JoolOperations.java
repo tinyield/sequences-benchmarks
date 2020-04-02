@@ -6,10 +6,13 @@ import static com.github.tiniyield.sequences.benchmarks.operations.common.Sequen
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
+import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
@@ -47,9 +50,18 @@ public class JoolOperations {
                                     .allMatch(SequenceBenchmarkUtils::isEven);
     }
 
-    public static Optional<Integer> find(AbstractBaseDataProvider<Integer> provider) {
+    public static Optional<Integer> findFirst(AbstractBaseDataProvider<Integer> provider) {
         return provider.asSeq()
                        .filter(SequenceBenchmarkUtils::isOdd)
                        .findFirst();
+    }
+
+
+    public static <T,U> Seq<Boolean> every(Seq<T> q1, Seq<U> q2, BiPredicate<T,U> predicate) {
+        return q1.zip(q2, predicate::test);
+    }
+
+    public static <T> Seq<T> find(Seq<T> q1, Seq<T> q2, BiPredicate<T,T> predicate) {
+        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
     }
 }

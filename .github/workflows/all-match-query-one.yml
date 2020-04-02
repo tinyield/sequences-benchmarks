@@ -1,4 +1,4 @@
-name: Find in the Middle Benchmark
+name: All Match Benchmark
  
 on:
   push:
@@ -31,16 +31,16 @@ jobs:
         run: mkdir results
 
       - name: Run Benchmark [COLLECTION_SIZE = 10]
-        run: java -jar target/benchmarks.jar -rf text -rff results/results_find_q2_10.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindInMiddleBenchmark -p COLLECTION_SIZE=10
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_all_match_10.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" AllMatchBenchmark -p COLLECTION_SIZE=10
 
       - name: Run Benchmark [COLLECTION_SIZE = 1000]
-        run: java -jar target/benchmarks.jar -rf text -rff results/results_find_q2_1000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindInMiddleBenchmark -p COLLECTION_SIZE=1000
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_all_match_1000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" AllMatchBenchmark -p COLLECTION_SIZE=1000
 
       - name: Run Benchmark [COLLECTION_SIZE = 100000]
-        run: java -jar target/benchmarks.jar -rf text -rff results/results_find_q2_100000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindInMiddleBenchmark -p COLLECTION_SIZE=100000
+        run: java -jar target/benchmarks.jar -rf text -rff results/results_all_match_100000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" AllMatchBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
-          name: results_find_q2
+          name: results_all_match
           path: results

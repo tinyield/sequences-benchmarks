@@ -31,78 +31,58 @@
 
 package com.github.tiniyield.sequences.benchmarks.find;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
+import java.util.stream.IntStream;
 
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-
-import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
-
-import io.vavr.collection.Stream;
-import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> implements ISequenceBenchmark {
+public class FindRandomStringBenchmark extends FindBenchmark<String> {
+    public static final int BOUND = 10;
+    static final Random rand = new Random();
+    /**
+     * lstA and lstB are two Lists with the same String objects.
+     */
+    public List<String> lstA;
+    public List<String> lstB;
 
-    @Param({"10000"})
-    protected int COLLECTION_SIZE;
+    @Override
+    protected List<String> getListA() {
+        return lstA;
+    }
 
-    protected abstract List<T> getListA();
-    protected abstract List<T> getListB();
-    protected abstract BiPredicate<T,T> getPredicate();
+    @Override
+    protected List<String> getListB() {
+        return lstB;
+    }
 
-    protected abstract void init();
+    @Override
+    protected BiPredicate<String, String> getPredicate() {
+        return String::equals;
+    }
 
     @Setup
-    public void setup() {
-        init();
+    public void init() {
+        lstA = new ArrayList<>(COLLECTION_SIZE);
+        lstB = IntStream
+            .generate(() -> rand.nextInt(BOUND))
+            .mapToObj(String::valueOf)
+            .limit(COLLECTION_SIZE)
+            .collect(toList());
+        lstA.addAll(lstB);
     }
 
-    @Override
-    @Benchmark
-    public void stream(Blackhole bh) {
-        bh.consume(StreamOperations.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(StreamExOperations.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
-    }
-
-    @Override // could be replaced by corresponds
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
-    }
 }

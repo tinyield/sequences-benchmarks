@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.find;
+package com.github.tiniyield.sequences.benchmarks.first;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenExceptMiddleDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenExceptMiddleDataProvider;
@@ -15,7 +15,7 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class FindInMiddleBenchmark extends FindBenchmark {
+public class FindFirstInMiddleBenchmark extends FindFirstBenchmark {
 
     @Setup
     public void init() {
