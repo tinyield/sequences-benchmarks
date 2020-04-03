@@ -1,7 +1,7 @@
 name: Zip Primes with Values
  
 on:
-  push:
+  pull_request:
     branches:
       - master
  

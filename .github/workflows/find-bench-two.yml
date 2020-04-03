@@ -1,7 +1,7 @@
 name: Operation Find Benchmark [COLLECTION_SIZE = 1000]
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 

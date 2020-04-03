@@ -1,7 +1,7 @@
 name: Distinct Top Artist and Top Track by Country Benchmark
  
 on:
-  push:
+  pull_request:
     branches:
       - master
  

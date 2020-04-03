@@ -1,7 +1,7 @@
 name: Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark
  
 on:
-  push:
+  pull_request:
     branches:
       - master
  

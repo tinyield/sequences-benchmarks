@@ -1,10 +1,10 @@
-name: Operation Every Benchmark [COLLECTION_SIZE = 1000]
-
+name: [100K]EveryClassBenchmark
+ 
 on:
-  pull_request:
+  push:
     branches:
-      - master
-
+      - every/class
+ 
 jobs:
   benchmark:
     name: Benchmark
@@ -27,11 +27,11 @@ jobs:
       - name: Build artifacts
         run: mvn clean install
 
-      - name: Run Benchmark [COLLECTION_SIZE = 1000]
-        run: java -jar target/benchmarks.jar -rf text -rff results_every_1000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" every -p COLLECTION_SIZE=1000
+      - name: Run Benchmark [COLLECTION_SIZE = 100000]
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryClassBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
-          name: results_every_1000
-          path: results_every_1000.log
+          name: results
+          path: results.log

@@ -1,7 +1,7 @@
 name: Operation Every Benchmark [COLLECTION_SIZE = 100000]
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
