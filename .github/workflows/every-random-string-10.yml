@@ -1,9 +1,9 @@
-name: 10 EveryClassBenchmark
+name: 10 EveryRandomStringBenchmark
  
 on:
   push:
     branches:
-      - every/class
+      - every/random-string
  
 jobs:
   benchmark:
@@ -22,7 +22,7 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark [COLLECTION_SIZE = 10]
-        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryClassBenchmark -p COLLECTION_SIZE=10
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryRandomStringBenchmark -p COLLECTION_SIZE=10
 
       - name: Upload results
         uses: actions/upload-artifact@v1

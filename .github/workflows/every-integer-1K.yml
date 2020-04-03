@@ -1,9 +1,9 @@
-name: 10 EveryClassBenchmark
+name: 1K EveryIntegerBenchmark
  
 on:
   push:
     branches:
-      - every/class
+      - every/integer
  
 jobs:
   benchmark:
@@ -21,8 +21,8 @@ jobs:
       - name: Build artifacts
         run: mvn clean install
 
-      - name: Run Benchmark [COLLECTION_SIZE = 10]
-        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryClassBenchmark -p COLLECTION_SIZE=10
+      - name: Run Benchmark [COLLECTION_SIZE = 1000]
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryIntegerBenchmark -p COLLECTION_SIZE=1000
 
       - name: Upload results
         uses: actions/upload-artifact@v1

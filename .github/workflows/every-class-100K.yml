@@ -8,13 +8,7 @@ on:
 jobs:
   benchmark:
     name: Benchmark
-
-    strategy:
-      matrix:
-        java: [ 11 ]
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -22,7 +16,7 @@ jobs:
       - name: Setup java
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
+          java-version: 11
 
       - name: Build artifacts
         run: mvn clean install
