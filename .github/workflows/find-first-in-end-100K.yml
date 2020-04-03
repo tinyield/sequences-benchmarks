@@ -1,20 +1,15 @@
-name: Operation Every Benchmark [COLLECTION_SIZE = 100000]
-
+name: 100K FindFirstInEndBenchmark
+ 
 on:
-  pull_request:
+  push:
     branches:
+      - first/end
       - master
-
+ 
 jobs:
   benchmark:
     name: Benchmark
-
-    strategy:
-      matrix:
-        java: [ 11 ]
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -22,16 +17,16 @@ jobs:
       - name: Setup java
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
+          java-version: 11
 
       - name: Build artifacts
         run: mvn clean install
 
       - name: Run Benchmark [COLLECTION_SIZE = 100000]
-        run: java -jar target/benchmarks.jar -rf text -rff results_every_100000.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" every -p COLLECTION_SIZE=100000
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindFirstInEndBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v1
         with:
-          name: results_every_100000
-          path: results_every_100000.log
+          name: results
+          path: results.log

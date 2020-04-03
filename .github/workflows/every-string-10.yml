@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - every/string
+      - master
  
 jobs:
   benchmark:

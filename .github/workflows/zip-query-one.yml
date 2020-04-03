@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - zip/q1
  
 jobs:
   benchmark:

@@ -1,9 +1,9 @@
-name: {{cs}} {{class}}
+name: 10 FindStringBenchmark
  
 on:
   push:
     branches:
-      - {{branch}}
+      - find/string
       - master
  
 jobs:
@@ -22,8 +22,8 @@ jobs:
       - name: Build artifacts
         run: mvn clean install
 
-      - name: Run Benchmark [COLLECTION_SIZE = {{collection_size}}]
-        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" {{class}} -p COLLECTION_SIZE={{collection_size}}
+      - name: Run Benchmark [COLLECTION_SIZE = 10]
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindStringBenchmark -p COLLECTION_SIZE=10
 
       - name: Upload results
         uses: actions/upload-artifact@v1

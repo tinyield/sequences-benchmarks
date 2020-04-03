@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - every/class
+      - master
  
 jobs:
   benchmark:

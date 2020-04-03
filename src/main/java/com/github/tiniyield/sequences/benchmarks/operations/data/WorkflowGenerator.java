@@ -14,6 +14,20 @@ import java.util.HashMap;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.github.tiniyield.sequences.benchmarks.all.match.AllMatchBenchmark;
+import com.github.tiniyield.sequences.benchmarks.every.EveryClassBenchmark;
+import com.github.tiniyield.sequences.benchmarks.every.EveryIntegerBenchmark;
+import com.github.tiniyield.sequences.benchmarks.every.EveryRandomStringBenchmark;
+import com.github.tiniyield.sequences.benchmarks.every.EveryStringBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindClassBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindIntegerBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindRandomClassBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindRandomIntegerBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindRandomStringBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindStringBenchmark;
+import com.github.tiniyield.sequences.benchmarks.first.FindFirstInBeginningBenchmark;
+import com.github.tiniyield.sequences.benchmarks.first.FindFirstInEndBenchmark;
+import com.github.tiniyield.sequences.benchmarks.first.FindFirstInMiddleBenchmark;
 import com.google.common.base.CaseFormat;
 
 public class WorkflowGenerator {
@@ -29,6 +43,31 @@ public class WorkflowGenerator {
         COLLECTION_SIZES.put("1000", "1K");
         COLLECTION_SIZES.put("100000", "100K");
     }
+
+    public static void generateWorkflows() {
+        // all.match
+        WorkflowGenerator.generateCollectionWorkflow(AllMatchBenchmark.class.getSimpleName(), "all-match");
+
+        // every
+        WorkflowGenerator.generateCollectionWorkflow(EveryRandomStringBenchmark.class.getSimpleName(), "every/random-string");
+        WorkflowGenerator.generateCollectionWorkflow(EveryIntegerBenchmark.class.getSimpleName(), "every/integer");
+        WorkflowGenerator.generateCollectionWorkflow(EveryClassBenchmark.class.getSimpleName(), "every/class");
+        WorkflowGenerator.generateCollectionWorkflow(EveryStringBenchmark.class.getSimpleName(), "every/string");
+
+        // find
+        WorkflowGenerator.generateCollectionWorkflow(FindClassBenchmark.class.getSimpleName(), "find/class");
+        WorkflowGenerator.generateCollectionWorkflow(FindIntegerBenchmark.class.getSimpleName(), "find/integer");
+        WorkflowGenerator.generateCollectionWorkflow(FindStringBenchmark.class.getSimpleName(), "find/string");
+        WorkflowGenerator.generateCollectionWorkflow(FindRandomClassBenchmark.class.getSimpleName(), "find/random-class");
+        WorkflowGenerator.generateCollectionWorkflow(FindRandomIntegerBenchmark.class.getSimpleName(), "find/random-integer");
+        WorkflowGenerator.generateCollectionWorkflow(FindRandomStringBenchmark.class.getSimpleName(), "find/random-string");
+
+        // first
+        WorkflowGenerator.generateCollectionWorkflow(FindFirstInBeginningBenchmark.class.getSimpleName(), "first/beginning");
+        WorkflowGenerator.generateCollectionWorkflow(FindFirstInMiddleBenchmark.class.getSimpleName(), "first/middle");
+        WorkflowGenerator.generateCollectionWorkflow(FindFirstInEndBenchmark.class.getSimpleName(), "first/end");
+    }
+
 
     public static void generateCollectionWorkflow(String className, String branch){
         COLLECTION_SIZES.keySet().forEach(collectionSize -> {
