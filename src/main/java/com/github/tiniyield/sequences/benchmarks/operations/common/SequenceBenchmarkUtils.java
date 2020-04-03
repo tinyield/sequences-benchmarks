@@ -25,6 +25,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 
 public class SequenceBenchmarkUtils {
 
@@ -64,7 +65,7 @@ public class SequenceBenchmarkUtils {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity() {
+    public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity(GuavaOperations guava) {
         assertSameResults(
                 QueryOperations.zipTopArtistAndTrackByCountry().toList(),
 
@@ -72,7 +73,10 @@ public class SequenceBenchmarkUtils {
 
                 ProtonpackOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
-                GuavaOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
+                guava.zipTopArtistAndTrackByCountry(
+                        SequenceBenchmarkStreamUtils.getArtists(),
+                        SequenceBenchmarkStreamUtils.getTracks()
+                ).collect(Collectors.toList()),
 
                 ZiplineOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
 
@@ -85,7 +89,7 @@ public class SequenceBenchmarkUtils {
         );
     }
 
-    public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity() {
+    public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity(GuavaOperations guava) {
         assertSameResults(
                 QueryOperations.artistsInTopTenWithTopTenTracksByCountry()
                                .toList(),
@@ -96,8 +100,10 @@ public class SequenceBenchmarkUtils {
                 ProtonpackOperations.artistsInTopTenWithTopTenTracksByCountry()
                                     .collect(Collectors.toList()),
 
-                GuavaOperations.artistsInTopTenWithTopTenTracksByCountry()
-                               .collect(Collectors.toList()),
+                guava.artistsInTopTenWithTopTenTracksByCountry(
+                        SequenceBenchmarkStreamUtils.getArtists(),
+                        SequenceBenchmarkStreamUtils.getTracks()
+                ).collect(Collectors.toList()),
 
                 ZiplineOperations.artistsInTopTenWithTopTenTracksByCountry()
                                  .collect(Collectors.toList()),
@@ -110,7 +116,7 @@ public class SequenceBenchmarkUtils {
         );
     }
 
-    public static void assertZipPrimeWithValueValidity() {
+    public static void assertZipPrimeWithValueValidity(GuavaOperations guava) {
         assertSameResults(
                 QueryOperations.zipPrimeWithValue()
                                .toList(),
@@ -121,8 +127,10 @@ public class SequenceBenchmarkUtils {
                 ProtonpackOperations.zipPrimeWithValue()
                                     .collect(Collectors.toList()),
 
-                GuavaOperations.zipPrimeWithValue()
-                               .collect(Collectors.toList()),
+                guava.zipPrimeWithValue(
+                        getNumbersDataProvider().asStream(),
+                        getValueDataProvider().asStream()
+                ).collect(Collectors.toList()),
 
                 ZiplineOperations.zipPrimeWithValue()
                                  .collect(Collectors.toList()),

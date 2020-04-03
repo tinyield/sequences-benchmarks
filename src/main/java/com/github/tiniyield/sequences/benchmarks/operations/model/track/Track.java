@@ -4,6 +4,7 @@ package com.github.tiniyield.sequences.benchmarks.operations.model.track;
 import static java.lang.String.format;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.google.gson.annotations.Expose;
@@ -43,77 +44,120 @@ public class Track {
         return name;
     }
 
-    public void setName(String name) {
+    public Track setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public Track setDuration(String duration) {
         this.duration = duration;
+        return this;
     }
 
     public String getListeners() {
         return listeners;
     }
 
-    public void setListeners(String listeners) {
+    public Track setListeners(String listeners) {
         this.listeners = listeners;
+        return this;
     }
 
     public String getMbid() {
         return mbid;
     }
 
-    public void setMbid(String mbid) {
+    public Track setMbid(String mbid) {
         this.mbid = mbid;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public Track setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public Streamable getStreamable() {
         return streamable;
     }
 
-    public void setStreamable(Streamable streamable) {
+    public Track setStreamable(Streamable streamable) {
         this.streamable = streamable;
+        return this;
     }
 
     public Artist getArtist() {
         return artist;
     }
 
-    public void setArtist(Artist artist) {
+    public Track setArtist(Artist artist) {
         this.artist = artist;
+        return this;
     }
 
     public List<Image> getImage() {
         return image;
     }
 
-    public void setImage(List<Image> image) {
+    public Track setImage(List<Image> image) {
         this.image = image;
+        return this;
     }
 
     public TrackStatistics getAttr() {
         return attr;
     }
 
-    public void setAttr(TrackStatistics attr) {
+    public Track setAttr(TrackStatistics attr) {
         this.attr = attr;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Track track = (Track) o;
+        return Objects.equals(name, track.name) &&
+                Objects.equals(duration, track.duration) &&
+                Objects.equals(listeners, track.listeners) &&
+                Objects.equals(mbid, track.mbid) &&
+                Objects.equals(url, track.url) &&
+                Objects.equals(streamable, track.streamable) &&
+                Objects.equals(artist, track.artist) &&
+                Objects.equals(image, track.image) &&
+                Objects.equals(attr, track.attr);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, duration, listeners, mbid, url, streamable, artist, image, attr);
     }
 
     @Override
     public String toString() {
-        return format("%s by %s", name, artist.getName());
+        return "Track{" +
+                "name='" + name + '\'' +
+                ", duration='" + duration + '\'' +
+                ", listeners='" + listeners + '\'' +
+                ", mbid='" + mbid + '\'' +
+                ", url='" + url + '\'' +
+                ", streamable=" + streamable +
+                ", artist=" + artist +
+                ", image=" + image +
+                ", attr=" + attr +
+                '}';
     }
-
 }

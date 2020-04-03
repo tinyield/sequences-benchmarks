@@ -68,6 +68,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
+    private GuavaOperations guava;
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -77,6 +78,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
 
     @Setup
     public void setup() {
+        guava = new GuavaOperations();
         init();
     }
 
@@ -119,7 +121,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        bh.consume(GuavaOperations.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(guava.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override

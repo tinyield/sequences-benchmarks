@@ -2,6 +2,8 @@
 package com.github.tiniyield.sequences.benchmarks.operations.model.country;
 
 import java.util.List;
+import java.util.Objects;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -84,196 +86,308 @@ public class Country {
         return name;
     }
 
-    public void setName(String name) {
+    public Country setName(String name) {
         this.name = name;
+        return this;
     }
 
     public List<String> getTopLevelDomain() {
         return topLevelDomain;
     }
 
-    public void setTopLevelDomain(List<String> topLevelDomain) {
+    public Country setTopLevelDomain(List<String> topLevelDomain) {
         this.topLevelDomain = topLevelDomain;
+        return this;
     }
 
     public String getAlpha2Code() {
         return alpha2Code;
     }
 
-    public void setAlpha2Code(String alpha2Code) {
+    public Country setAlpha2Code(String alpha2Code) {
         this.alpha2Code = alpha2Code;
+        return this;
     }
 
     public String getAlpha3Code() {
         return alpha3Code;
     }
 
-    public void setAlpha3Code(String alpha3Code) {
+    public Country setAlpha3Code(String alpha3Code) {
         this.alpha3Code = alpha3Code;
+        return this;
     }
 
     public List<String> getCallingCodes() {
         return callingCodes;
     }
 
-    public void setCallingCodes(List<String> callingCodes) {
+    public Country setCallingCodes(List<String> callingCodes) {
         this.callingCodes = callingCodes;
+        return this;
     }
 
     public String getCapital() {
         return capital;
     }
 
-    public void setCapital(String capital) {
+    public Country setCapital(String capital) {
         this.capital = capital;
+        return this;
     }
 
     public List<String> getAltSpellings() {
         return altSpellings;
     }
 
-    public void setAltSpellings(List<String> altSpellings) {
+    public Country setAltSpellings(List<String> altSpellings) {
         this.altSpellings = altSpellings;
+        return this;
     }
 
     public String getRegion() {
         return region;
     }
 
-    public void setRegion(String region) {
+    public Country setRegion(String region) {
         this.region = region;
+        return this;
     }
 
     public String getSubregion() {
         return subregion;
     }
 
-    public void setSubregion(String subregion) {
+    public Country setSubregion(String subregion) {
         this.subregion = subregion;
+        return this;
     }
 
     public Integer getPopulation() {
         return population;
     }
 
-    public void setPopulation(Integer population) {
+    public Country setPopulation(Integer population) {
         this.population = population;
+        return this;
     }
 
     public List<Double> getLatlng() {
         return latlng;
     }
 
-    public void setLatlng(List<Double> latlng) {
+    public Country setLatlng(List<Double> latlng) {
         this.latlng = latlng;
+        return this;
     }
 
     public String getDemonym() {
         return demonym;
     }
 
-    public void setDemonym(String demonym) {
+    public Country setDemonym(String demonym) {
         this.demonym = demonym;
+        return this;
     }
 
     public Double getArea() {
         return area;
     }
 
-    public void setArea(Double area) {
+    public Country setArea(Double area) {
         this.area = area;
+        return this;
     }
 
     public Double getGini() {
         return gini;
     }
 
-    public void setGini(Double gini) {
+    public Country setGini(Double gini) {
         this.gini = gini;
+        return this;
     }
 
     public List<String> getTimezones() {
         return timezones;
     }
 
-    public void setTimezones(List<String> timezones) {
+    public Country setTimezones(List<String> timezones) {
         this.timezones = timezones;
+        return this;
     }
 
     public List<String> getBorders() {
         return borders;
     }
 
-    public void setBorders(List<String> borders) {
+    public Country setBorders(List<String> borders) {
         this.borders = borders;
+        return this;
     }
 
     public String getNativeName() {
         return nativeName;
     }
 
-    public void setNativeName(String nativeName) {
+    public Country setNativeName(String nativeName) {
         this.nativeName = nativeName;
+        return this;
     }
 
     public String getNumericCode() {
         return numericCode;
     }
 
-    public void setNumericCode(String numericCode) {
+    public Country setNumericCode(String numericCode) {
         this.numericCode = numericCode;
+        return this;
     }
 
     public List<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Currency> currencies) {
+    public Country setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
+        return this;
     }
 
     public List<Language> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<Language> languages) {
+    public Country setLanguages(List<Language> languages) {
         this.languages = languages;
+        return this;
     }
 
     public Translations getTranslations() {
         return translations;
     }
 
-    public void setTranslations(Translations translations) {
+    public Country setTranslations(Translations translations) {
         this.translations = translations;
+        return this;
     }
 
     public String getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public Country setFlag(String flag) {
         this.flag = flag;
+        return this;
     }
 
     public List<RegionalBloc> getRegionalBlocs() {
         return regionalBlocs;
     }
 
-    public void setRegionalBlocs(List<RegionalBloc> regionalBlocs) {
+    public Country setRegionalBlocs(List<RegionalBloc> regionalBlocs) {
         this.regionalBlocs = regionalBlocs;
+        return this;
     }
 
     public String getCioc() {
         return cioc;
     }
 
-    public void setCioc(String cioc) {
+    public Country setCioc(String cioc) {
         this.cioc = cioc;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Country country = (Country) o;
+        return Objects.equals(name, country.name) &&
+                Objects.equals(topLevelDomain, country.topLevelDomain) &&
+                Objects.equals(alpha2Code, country.alpha2Code) &&
+                Objects.equals(alpha3Code, country.alpha3Code) &&
+                Objects.equals(callingCodes, country.callingCodes) &&
+                Objects.equals(capital, country.capital) &&
+                Objects.equals(altSpellings, country.altSpellings) &&
+                Objects.equals(region, country.region) &&
+                Objects.equals(subregion, country.subregion) &&
+                Objects.equals(population, country.population) &&
+                Objects.equals(latlng, country.latlng) &&
+                Objects.equals(demonym, country.demonym) &&
+                Objects.equals(area, country.area) &&
+                Objects.equals(gini, country.gini) &&
+                Objects.equals(timezones, country.timezones) &&
+                Objects.equals(borders, country.borders) &&
+                Objects.equals(nativeName, country.nativeName) &&
+                Objects.equals(numericCode, country.numericCode) &&
+                Objects.equals(currencies, country.currencies) &&
+                Objects.equals(languages, country.languages) &&
+                Objects.equals(translations, country.translations) &&
+                Objects.equals(flag, country.flag) &&
+                Objects.equals(regionalBlocs, country.regionalBlocs) &&
+                Objects.equals(cioc, country.cioc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,
+                            topLevelDomain,
+                            alpha2Code,
+                            alpha3Code,
+                            callingCodes,
+                            capital,
+                            altSpellings,
+                            region,
+                            subregion,
+                            population,
+                            latlng,
+                            demonym,
+                            area,
+                            gini,
+                            timezones,
+                            borders,
+                            nativeName,
+                            numericCode,
+                            currencies,
+                            languages,
+                            translations,
+                            flag,
+                            regionalBlocs,
+                            cioc);
     }
 
     @Override
     public String toString() {
-        return name;
+        return "Country{" +
+                "name='" + name + '\'' +
+                ", topLevelDomain=" + topLevelDomain +
+                ", alpha2Code='" + alpha2Code + '\'' +
+                ", alpha3Code='" + alpha3Code + '\'' +
+                ", callingCodes=" + callingCodes +
+                ", capital='" + capital + '\'' +
+                ", altSpellings=" + altSpellings +
+                ", region='" + region + '\'' +
+                ", subregion='" + subregion + '\'' +
+                ", population=" + population +
+                ", latlng=" + latlng +
+                ", demonym='" + demonym + '\'' +
+                ", area=" + area +
+                ", gini=" + gini +
+                ", timezones=" + timezones +
+                ", borders=" + borders +
+                ", nativeName='" + nativeName + '\'' +
+                ", numericCode='" + numericCode + '\'' +
+                ", currencies=" + currencies +
+                ", languages=" + languages +
+                ", translations=" + translations +
+                ", flag='" + flag + '\'' +
+                ", regionalBlocs=" + regionalBlocs +
+                ", cioc='" + cioc + '\'' +
+                '}';
     }
 }

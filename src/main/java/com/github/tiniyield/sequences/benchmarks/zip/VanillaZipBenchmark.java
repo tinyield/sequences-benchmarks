@@ -1,6 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertZipPrimeWithValueValidity;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getNumbersDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initNumbersDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initValueDataProvider;
 
@@ -33,12 +35,14 @@ public class VanillaZipBenchmark implements IZipBenchmark {
 
     @Param({"10000"})
     private int COLLECTION_SIZE;
+    private GuavaOperations guava;
 
     @Setup
     public void setup() {
+        guava = new GuavaOperations();
         initNumbersDataProvider(COLLECTION_SIZE);
         initValueDataProvider(COLLECTION_SIZE);
-        assertZipPrimeWithValueValidity();
+        assertZipPrimeWithValueValidity(guava);
     }
 
     // Stream Based benchmarks
@@ -58,7 +62,10 @@ public class VanillaZipBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaOperations.zipPrimeWithValue().forEach(bh::consume);
+        guava.zipPrimeWithValue(
+                getNumbersDataProvider().asStream(),
+                getValueDataProvider().asStream()
+        ).forEach(bh::consume);
     }
 
     @Override

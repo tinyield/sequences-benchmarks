@@ -21,15 +21,19 @@ import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class ZipTopArtistAndTrackByCountryBenchmark implements IZipBenchmark {
 
+    private GuavaOperations guava;
+
     @Setup
     public void setup() {
-        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity();
+        guava = new GuavaOperations();
+        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity(guava);
     }
 
     // Stream Based benchmarks
@@ -49,7 +53,10 @@ public class ZipTopArtistAndTrackByCountryBenchmark implements IZipBenchmark {
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        GuavaOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+        guava.zipTopArtistAndTrackByCountry(
+                SequenceBenchmarkStreamUtils.getArtists(),
+                SequenceBenchmarkStreamUtils.getTracks()
+        ).forEach(bh::consume);
     }
 
     @Override

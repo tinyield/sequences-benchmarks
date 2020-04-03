@@ -20,6 +20,8 @@ import java.util.stream.StreamSupport;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.ArtistsDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.CountriesDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
