@@ -1,6 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -31,6 +30,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     protected int COLLECTION_SIZE;
     protected AbstractBaseDataProvider<Integer> provider;
     private JoolOperations jool;
+    private QueryOperations query;
 
     protected abstract void init();
 
@@ -38,6 +38,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     public void setup() {
         init();
         jool = new JoolOperations();
+        query = new QueryOperations();
         SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
     }
 
@@ -46,7 +47,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     }
 
     private Integer getQuery() {
-        return QueryOperations.findFirst(provider).orElseThrow();
+        return query.findFirst(provider.asQuery()).orElseThrow();
     }
 
     private Integer getStreamEx() {
@@ -58,7 +59,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     }
 
     private Integer getJool() {
-        return jool.findFirst(provider).orElseThrow();
+        return jool.findFirst(provider.asSeq()).orElseThrow();
     }
 
     @Override

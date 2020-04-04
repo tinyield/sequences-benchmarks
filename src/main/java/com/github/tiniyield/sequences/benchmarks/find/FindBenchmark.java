@@ -72,6 +72,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     private GuavaOperations guava;
     private JoolOperations jool;
     private ProtonpackOperations protonpack;
+    private QueryOperations query;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -84,6 +85,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
         guava = new GuavaOperations();
         jool = new JoolOperations();
         protonpack = new ProtonpackOperations();
+        query = new QueryOperations();
     }
 
     @Setup(Level.Invocation)
@@ -106,7 +108,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(query.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
     }
 
     @Override

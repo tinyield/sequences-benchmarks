@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
-import org.jooq.lambda.Seq;
+import org.jayield.Query;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,25 +18,28 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
-public class JoolOperationsTest {
+public class QueryOperationsTest {
 
-    private JoolOperations instance;
-    private Seq<Pair<Country, Seq<Artist>>> artists;
-    private Seq<Pair<Country, Seq<Track>>> tracks;
+    private QueryOperations instance;
+    private Query<Pair<Country, Query<Artist>>> artists;
+    private Query<Pair<Country, Query<Track>>> tracks;
     private MockData mockData;
-    private Seq<Value> values;
-    private Seq<Integer> numbers;
-    private Seq<Integer> otherNumbers;
+    private Query<Value> values;
+    private Query<Integer> numbers;
+    private Query<Integer> otherNumbers;
 
     @BeforeMethod
     public void setup() {
         mockData = new MockData();
-        instance = new JoolOperations();
-        artists = Seq.seq(mockData.getCountries()).map(c -> Pair.with(c, Seq.seq(mockData.getArtists())));
-        tracks = Seq.seq(mockData.getCountries()).map(c -> Pair.with(c, Seq.seq(mockData.getTracks())));
-        values = Seq.seq(mockData.getValues());
-        numbers = Seq.seq(mockData.getNumbers());
-        otherNumbers = Seq.seq(mockData.getNumbers()).sorted((t0, t1) -> t1 - t0);
+        instance = new QueryOperations();
+        artists = Query.fromList(mockData.getCountries()).map(c -> Pair.with(c, Query.fromList(mockData.getArtists())));
+        tracks = Query.fromList(mockData.getCountries()).map(c -> Pair.with(c, Query.fromList(mockData.getTracks())));
+        values = Query.fromList(mockData.getValues());
+        numbers = Query.fromList(mockData.getNumbers());
+        otherNumbers = Query.fromList(mockData.getNumbers()
+                                              .stream()
+                                              .sorted((t0, t1) -> t1 - t0)
+                                              .collect(Collectors.toList()));
     }
 
     @Test
@@ -50,7 +53,7 @@ public class JoolOperationsTest {
         );
 
         List<Triplet<Country, Artist, Track>> actual = this.instance.zipTopArtistAndTrackByCountry(artists, tracks)
-                                                                    .collect(Collectors.toList());
+                                                                    .toList();
 
 
         assertEquals(expected.size(), actual.size());
@@ -77,7 +80,7 @@ public class JoolOperationsTest {
 
         List<Pair<Country, List<Artist>>> actual = this.instance.artistsInTopTenWithTopTenTracksByCountry(artists,
                                                                                                           tracks)
-                                                                .collect(Collectors.toList());
+                                                                .toList();
 
 
         assertEquals(expected.size(), actual.size());
@@ -106,7 +109,7 @@ public class JoolOperationsTest {
                 Pair.with(3, new Value(3)),
                 Pair.with(5, new Value(4))
         );
-        List<Pair<Integer, Value>> actual = instance.zipPrimeWithValue(numbers, values).collect(Collectors.toList());
+        List<Pair<Integer, Value>> actual = instance.zipPrimeWithValue(numbers, values).toList();
 
         assertEquals(expected.size(), actual.size());
         for (int i = 0; i < actual.size(); i++) {
@@ -118,51 +121,51 @@ public class JoolOperationsTest {
     @Test
     public void testFindFirstSuccess() {
         TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
-        assertTrue(instance.findFirst(provider.asSeq()).isPresent());
+        assertTrue(instance.findFirst(provider.asQuery()).isPresent());
     }
 
     @Test
     public void testFindFirstFailure() {
         TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertFalse(instance.findFirst(provider.asSeq()).isPresent());
+        assertFalse(instance.findFirst(provider.asQuery()).isPresent());
     }
 
     @Test
     public void testIsEveryEvenSuccess() {
         TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertTrue(instance.isEveryEven(provider.asSeq()));
+        assertTrue(instance.isEveryEven(provider.asQuery()));
     }
 
     @Test
     public void testIsEveryEvenFailure() {
         TestDataProvider<Integer> provider = new TestDataProvider<>(2, 1);
-        assertFalse(instance.isEveryEven(provider.asSeq()));
+        assertFalse(instance.isEveryEven(provider.asQuery()));
     }
 
     @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                                  .allMatch(Boolean.TRUE::equals));
+                           .allMatch(Boolean.TRUE::equals));
     }
 
 
     @Test
     public void testEveryFailure() {
         assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                           .allMatch(Boolean.TRUE::equals));
+                            .allMatch(Boolean.TRUE::equals));
     }
 
     @Test
     public void testFindSuccess() {
         assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                                  .findFirst()
-                                  .isPresent());
+                           .findFirst()
+                           .isPresent());
     }
 
     @Test
     public void testFindFailure() {
         assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                           .findFirst()
-                           .isPresent());
+                            .findFirst()
+                            .isPresent());
     }
 }

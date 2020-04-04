@@ -32,11 +32,13 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
     private int COLLECTION_SIZE;
 
     private JoolOperations jool;
+    private QueryOperations query;
 
     @Setup
     public void setup() {
         initEvenDataProvider(COLLECTION_SIZE);
         jool = new JoolOperations();
+        query = new QueryOperations();
         assertEveryEvenValidity(getStream(), getStreamEx(), getQuery(), getJool(), getVavr());
     }
 
@@ -49,11 +51,11 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
     }
 
     private boolean getQuery() {
-        return QueryOperations.everyEven();
+        return query.isEveryEven(getEvenDataProvider().asQuery());
     }
 
     private boolean getJool() {
-        return jool.isEveryEven(getEvenDataProvider());
+        return jool.isEveryEven(getEvenDataProvider().asSeq());
     }
 
     private boolean getVavr() {

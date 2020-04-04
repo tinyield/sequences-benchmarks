@@ -15,8 +15,6 @@ import org.javatuples.Triplet;
 import org.jooq.lambda.Seq;
 
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.AbstractBaseDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
@@ -41,12 +39,12 @@ public class JoolOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zip(values, Pair::with);
     }
 
-    public boolean isEveryEven(AbstractBaseDataProvider<Integer> provider) {
-        return provider.asSeq().allMatch(SequenceBenchmarkUtils::isEven);
+    public boolean isEveryEven(Seq<Integer> numbers) {
+        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
     }
 
-    public Optional<Integer> findFirst(AbstractBaseDataProvider<Integer> provider) {
-        return provider.asSeq().filter(SequenceBenchmarkUtils::isOdd).findFirst();
+    public Optional<Integer> findFirst(Seq<Integer> numbers) {
+        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
 

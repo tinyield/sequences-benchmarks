@@ -13,7 +13,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
@@ -24,6 +23,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkQueryUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 
 import one.util.streamex.StreamEx;
@@ -67,7 +67,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark
     }
 
     protected Query<Triplet<Country, Artist, Track>> getQuery() {
-        return QueryOperations.zipTopArtistAndTrackByCountry();
+        return query.zipTopArtistAndTrackByCountry(SequenceBenchmarkQueryUtils.getArtists(),
+                                                             SequenceBenchmarkQueryUtils.getTracks());
     }
 
     protected Seq<Triplet<Country, Artist, Track>> getJool() {

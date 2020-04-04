@@ -14,7 +14,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
@@ -24,6 +23,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBench
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkQueryUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 
 import one.util.streamex.StreamEx;
@@ -67,7 +67,8 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark extends AbstractZ
     }
 
     protected Query<Pair<Country, List<Artist>>> getQuery() {
-        return QueryOperations.artistsInTopTenWithTopTenTracksByCountry();
+        return query.artistsInTopTenWithTopTenTracksByCountry(SequenceBenchmarkQueryUtils.getArtists(),
+                                                                        SequenceBenchmarkQueryUtils.getTracks());
     }
 
     protected Stream<Pair<Country, List<Artist>>> getGuava() {

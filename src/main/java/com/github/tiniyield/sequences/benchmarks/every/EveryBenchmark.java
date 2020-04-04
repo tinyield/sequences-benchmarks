@@ -71,6 +71,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     private GuavaOperations guava;
     private JoolOperations jool;
     private ProtonpackOperations protonpack;
+    private QueryOperations query;
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -83,6 +84,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
         guava = new GuavaOperations();
         jool = new JoolOperations();
         protonpack = new ProtonpackOperations();
+        query = new QueryOperations();
         init();
     }
 
@@ -101,7 +103,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     @Override
     @Benchmark
     public final void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(query.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override

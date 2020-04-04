@@ -18,6 +18,7 @@ import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 
 import one.util.streamex.StreamEx;
 
@@ -39,12 +40,14 @@ public abstract class AbstractZipBenchmark<T> implements IZipBenchmark {
     protected GuavaOperations guava;
     protected JoolOperations jool;
     protected ProtonpackOperations protonpack;
+    protected QueryOperations query;
 
     @Setup
     public void setup() {
         guava = new GuavaOperations();
         jool = new JoolOperations();
         protonpack = new ProtonpackOperations();
+        query = new QueryOperations();
         this.init();
     }
 
