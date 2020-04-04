@@ -14,8 +14,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
@@ -60,7 +58,8 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark extends AbstractZ
     }
 
     protected Stream<Pair<Country, List<Artist>>> getProtonpack() {
-        return ProtonpackOperations.artistsInTopTenWithTopTenTracksByCountry();
+        return protonpack.artistsInTopTenWithTopTenTracksByCountry(SequenceBenchmarkStreamUtils.getArtists(),
+                                                                             SequenceBenchmarkStreamUtils.getTracks());
     }
 
     protected Stream<Pair<Country, List<Artist>>> getStream() {

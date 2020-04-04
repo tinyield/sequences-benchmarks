@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import org.javatuples.Pair;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
@@ -20,11 +19,7 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
@@ -71,7 +66,8 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
     }
 
     protected Stream<Pair<Integer, Value>> getProtonpack() {
-        return ProtonpackOperations.zipPrimeWithValue();
+        return protonpack.zipPrimeWithValue(getNumbersDataProvider().asStream(),
+                                                      getValueDataProvider().asStream());
     }
 
     protected Stream<Pair<Integer, Value>> getStream() {

@@ -13,8 +13,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
@@ -37,7 +35,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark
 
     @Setup
     public void init() {
-        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity(getGuava(), getJool(),
+        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity(getGuava(),
+                                                                                    getJool(),
                                                                                     getQuery(),
                                                                                     getStream(),
                                                                                     getProtonpack(),
@@ -59,7 +58,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark
     }
 
     protected Stream<Triplet<Country, Artist, Track>> getProtonpack() {
-        return ProtonpackOperations.zipTopArtistAndTrackByCountry();
+        return protonpack.zipTopArtistAndTrackByCountry(SequenceBenchmarkStreamUtils.getArtists(),
+                                                                  SequenceBenchmarkStreamUtils.getTracks());
     }
 
     protected Stream<Triplet<Country, Artist, Track>> getStream() {

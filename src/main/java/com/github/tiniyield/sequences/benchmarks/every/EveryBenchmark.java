@@ -70,6 +70,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     protected int COLLECTION_SIZE;
     private GuavaOperations guava;
     private JoolOperations jool;
+    private ProtonpackOperations protonpack;
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -81,6 +82,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     public void setup() {
         guava = new GuavaOperations();
         jool = new JoolOperations();
+        protonpack = new ProtonpackOperations();
         init();
     }
 
@@ -117,7 +119,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     @Override
     @Benchmark
     public final void protonpack(Blackhole bh) {
-        bh.consume(ProtonpackOperations.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(protonpack.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override

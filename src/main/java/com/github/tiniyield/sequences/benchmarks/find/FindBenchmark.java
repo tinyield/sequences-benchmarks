@@ -71,6 +71,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     protected int COLLECTION_SIZE;
     private GuavaOperations guava;
     private JoolOperations jool;
+    private ProtonpackOperations protonpack;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -82,6 +83,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     public void setupOperations() {
         guava = new GuavaOperations();
         jool = new JoolOperations();
+        protonpack = new ProtonpackOperations();
     }
 
     @Setup(Level.Invocation)
@@ -123,7 +125,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
-        bh.consume(ProtonpackOperations.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(protonpack.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override
