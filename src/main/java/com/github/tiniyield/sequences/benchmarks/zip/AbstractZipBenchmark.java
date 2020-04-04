@@ -14,21 +14,15 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class AbstractZipBenchmark<T> implements IZipBenchmark {
+public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
     protected abstract io.vavr.collection.Stream<T> getVavr();
     protected abstract StreamEx<T> getStreamEx();
@@ -40,23 +34,9 @@ public abstract class AbstractZipBenchmark<T> implements IZipBenchmark {
     protected abstract Seq<T> getJool();
     protected abstract void init();
 
-    protected GuavaOperations guava;
-    protected JoolOperations jool;
-    protected ProtonpackOperations protonpack;
-    protected QueryOperations query;
-    protected StreamExOperations streamEx;
-    protected StreamOperations stream;
-    protected VavrOperations vavr;
-
     @Setup
     public void setup() {
-        guava = new GuavaOperations();
-        jool = new JoolOperations();
-        protonpack = new ProtonpackOperations();
-        query = new QueryOperations();
-        streamEx = new StreamExOperations();
-        stream = new StreamOperations();
-        vavr = new VavrOperations();
+        super.init();
         this.init();
     }
 

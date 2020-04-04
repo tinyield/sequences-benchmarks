@@ -47,6 +47,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
@@ -64,17 +65,11 @@ import one.util.streamex.StreamEx;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
+public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
-    private GuavaOperations guava;
-    private JoolOperations jool;
-    private ProtonpackOperations protonpack;
-    private QueryOperations query;
-    private StreamExOperations streamEx;
-    protected StreamOperations stream;
-    protected VavrOperations vavr;
+
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -84,14 +79,8 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
 
     @Setup
     public void setup() {
-        guava = new GuavaOperations();
-        jool = new JoolOperations();
-        protonpack = new ProtonpackOperations();
-        query = new QueryOperations();
-        streamEx = new StreamExOperations();
-        stream = new StreamOperations();
-        vavr = new VavrOperations();
-        init();
+        super.init();
+        this.init();
     }
 
     @Override
@@ -139,6 +128,6 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     @Override
     @Benchmark
     public final void zipline(Blackhole bh) {
-        bh.consume(ZiplineOperations.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(zipline.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 }

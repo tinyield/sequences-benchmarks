@@ -17,7 +17,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
@@ -58,7 +57,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark extends AbstractZ
     }
 
     protected Stream<Pair<Country, List<Artist>>> getZipline() {
-        return ZiplineOperations.artistsInTopTenWithTopTenTracksByCountry();
+        return zipline.artistsInTopTenWithTopTenTracksByCountry(getArtists(), getTracks());
     }
 
     protected Stream<Pair<Country, List<Artist>>> getProtonpack() {

@@ -12,6 +12,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.sequences.benchmarks.AbstractSequenceOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
@@ -24,27 +25,18 @@ import com.github.tiniyield.sequences.benchmarks.operations.data.providers.Abstr
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindFirstBenchmark implements ISequenceBenchmark {
+public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBenchmark implements ISequenceBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
     protected AbstractBaseDataProvider<Integer> provider;
-    private JoolOperations jool;
-    private QueryOperations query;
-    private StreamExOperations streamEx;
-    protected StreamOperations stream;
-    protected VavrOperations vavr;
 
     protected abstract void init();
 
     @Setup
     public void setup() {
+        super.init();
         init();
-        jool = new JoolOperations();
-        query = new QueryOperations();
-        streamEx = new StreamExOperations();
-        stream = new StreamOperations();
-        vavr = new VavrOperations();
         SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
     }
 

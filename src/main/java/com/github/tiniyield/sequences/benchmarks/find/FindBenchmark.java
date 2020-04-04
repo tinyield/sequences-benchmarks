@@ -48,6 +48,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
@@ -65,17 +66,10 @@ import one.util.streamex.StreamEx;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> implements IZipBenchmark {
+public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
-    private GuavaOperations guava;
-    private JoolOperations jool;
-    private ProtonpackOperations protonpack;
-    private QueryOperations query;
-    private StreamExOperations streamEx;
-    protected StreamOperations stream;
-    protected VavrOperations vavr;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -85,13 +79,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
 
     @Setup()
     public void setupOperations() {
-        guava = new GuavaOperations();
-        jool = new JoolOperations();
-        protonpack = new ProtonpackOperations();
-        query = new QueryOperations();
-        streamEx = new StreamExOperations();
-        stream = new StreamOperations();
-        vavr = new VavrOperations();
+        super.init();
     }
 
     @Setup(Level.Invocation)
@@ -145,6 +133,6 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override
     @Benchmark
     public void zipline(Blackhole bh) {
-        bh.consume(ZiplineOperations.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(zipline.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 }

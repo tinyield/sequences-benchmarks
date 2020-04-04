@@ -1,10 +1,10 @@
 name: CI
- 
+
 on:
   push:
     branches:
       - master
- 
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-      - name: Build
-         run: mvn clean install
-      - name: Test
-         run: mvn test
+
+      - name: Build and Test
+        run: mvn clean install
