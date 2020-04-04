@@ -1,9 +1,9 @@
 name: Zip Primes with Values
  
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - all-benchmarks
       - zip/q3
  
 jobs:

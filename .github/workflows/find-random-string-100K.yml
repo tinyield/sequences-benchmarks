@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - find/random-string
-      - master
+      - all-benchmarks
  
 jobs:
   benchmark:

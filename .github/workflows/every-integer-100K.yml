@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - every/integer
-      - master
+      - all-benchmarks
  
 jobs:
   benchmark:

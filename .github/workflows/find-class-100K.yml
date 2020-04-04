@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - find/class
-      - master
+      - all-benchmarks
  
 jobs:
   benchmark:
