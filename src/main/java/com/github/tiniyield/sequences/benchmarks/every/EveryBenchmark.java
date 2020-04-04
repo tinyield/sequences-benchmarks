@@ -73,6 +73,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     private ProtonpackOperations protonpack;
     private QueryOperations query;
     private StreamExOperations streamEx;
+    protected StreamOperations stream;
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -87,13 +88,14 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
         protonpack = new ProtonpackOperations();
         query = new QueryOperations();
         streamEx = new StreamExOperations();
+        stream = new StreamOperations();
         init();
     }
 
     @Override
     @Benchmark
     public final void stream(Blackhole bh) {
-        bh.consume(StreamOperations.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(stream.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
     }
 
     @Override

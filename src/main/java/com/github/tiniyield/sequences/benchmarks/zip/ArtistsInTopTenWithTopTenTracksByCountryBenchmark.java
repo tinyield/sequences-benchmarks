@@ -1,5 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.getArtists;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.getTracks;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -14,7 +17,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
@@ -64,7 +66,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark extends AbstractZ
     }
 
     protected Stream<Pair<Country, List<Artist>>> getStream() {
-        return StreamOperations.artistsInTopTenWithTopTenTracksByCountry();
+        return stream.artistsInTopTenWithTopTenTracksByCountry(getArtists(), getTracks());
     }
 
     protected Query<Pair<Country, List<Artist>>> getQuery() {

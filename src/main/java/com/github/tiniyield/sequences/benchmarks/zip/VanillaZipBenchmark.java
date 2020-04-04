@@ -20,7 +20,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
@@ -70,7 +69,8 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
     }
 
     protected Stream<Pair<Integer, Value>> getStream() {
-        return StreamOperations.zipPrimeWithValue();
+        return stream.zipPrimeWithValue(getNumbersDataProvider().asStream(),
+                                                  getValueDataProvider().asStream());
     }
 
     protected Query<Pair<Integer, Value>> getQuery() {

@@ -74,6 +74,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     private ProtonpackOperations protonpack;
     private QueryOperations query;
     private StreamExOperations streamEx;
+    protected StreamOperations stream;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -88,6 +89,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
         protonpack = new ProtonpackOperations();
         query = new QueryOperations();
         streamEx = new StreamExOperations();
+        stream = new StreamOperations();
     }
 
     @Setup(Level.Invocation)
@@ -98,7 +100,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override
     @Benchmark
     public void stream(Blackhole bh) {
-        bh.consume(StreamOperations.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
+        bh.consume(stream.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
     }
 
     @Override
