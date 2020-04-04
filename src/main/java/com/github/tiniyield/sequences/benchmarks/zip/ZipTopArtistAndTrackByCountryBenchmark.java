@@ -13,7 +13,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
@@ -24,6 +23,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkQueryUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 
 import one.util.streamex.StreamEx;
@@ -50,7 +50,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark
     }
 
     protected StreamEx<Triplet<Country, Artist, Track>> getStreamEx() {
-        return StreamExOperations.zipTopArtistAndTrackByCountry();
+        return streamEx.zipTopArtistAndTrackByCountry(SequenceBenchmarkStreamExUtils.getArtists(),
+                                                                SequenceBenchmarkStreamExUtils.getTracks());
     }
 
     protected Stream<Triplet<Country, Artist, Track>> getZipline() {

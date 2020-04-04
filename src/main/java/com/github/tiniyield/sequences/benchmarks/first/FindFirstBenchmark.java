@@ -31,6 +31,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     protected AbstractBaseDataProvider<Integer> provider;
     private JoolOperations jool;
     private QueryOperations query;
+    private StreamExOperations streamEx;
 
     protected abstract void init();
 
@@ -39,6 +40,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
         init();
         jool = new JoolOperations();
         query = new QueryOperations();
+        streamEx = new StreamExOperations();
         SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
     }
 
@@ -51,7 +53,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     }
 
     private Integer getStreamEx() {
-        return StreamExOperations.findFirst(provider).orElseThrow();
+        return streamEx.findFirst(provider.asStreamEx()).orElseThrow();
     }
 
     private Integer getStream() {
