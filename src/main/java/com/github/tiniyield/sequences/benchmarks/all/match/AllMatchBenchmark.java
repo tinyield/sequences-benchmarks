@@ -1,6 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.all.match;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertEveryEvenValidity;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenDataProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -16,11 +17,10 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 
 @BenchmarkMode(Mode.Throughput)
@@ -31,40 +31,63 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
     @Param({"10000"})
     private int COLLECTION_SIZE;
 
+    private JoolOperations jool;
+
     @Setup
     public void setup() {
         initEvenDataProvider(COLLECTION_SIZE);
-        assertEveryEvenValidity();
+        jool = new JoolOperations();
+        assertEveryEvenValidity(getStream(), getStreamEx(), getQuery(), getJool(), getVavr());
+    }
+
+    private boolean getStream() {
+        return StreamOperations.everyEven();
+    }
+
+    private boolean getStreamEx() {
+        return StreamExOperations.everyEven();
+    }
+
+    private boolean getQuery() {
+        return QueryOperations.everyEven();
+    }
+
+    private boolean getJool() {
+        return jool.isEveryEven(getEvenDataProvider());
+    }
+
+    private boolean getVavr() {
+        return VavrOperations.everyEven();
     }
 
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
-        bh.consume(StreamOperations.everyEven());
+        bh.consume(getStream());
     }
 
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        bh.consume(StreamExOperations.everyEven());
+        bh.consume(getStreamEx());
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.everyEven());
+        bh.consume(getQuery());
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.everyEven());
+        bh.consume(getJool());
     }
 
     @Override
     @Benchmark
     public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.everyEven());
+        bh.consume(getVavr());
     }
 
 }

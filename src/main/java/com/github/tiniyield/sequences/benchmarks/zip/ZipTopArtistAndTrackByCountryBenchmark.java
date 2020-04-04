@@ -1,94 +1,86 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
-import org.openjdk.jmh.annotations.Benchmark;
+import org.javatuples.Triplet;
+import org.jayield.Query;
+import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
+
+import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class ZipTopArtistAndTrackByCountryBenchmark implements IZipBenchmark {
-
-    private GuavaOperations guava;
+public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark<Triplet<Country, Artist, Track>> {
 
     @Setup
-    public void setup() {
-        guava = new GuavaOperations();
-        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity(guava);
+    public void init() {
+        SequenceBenchmarkUtils.assertZipTopArtistAndTrackByCountryBenchmarkValidity(getGuava(), getJool(),
+                                                                                    getQuery(),
+                                                                                    getStream(),
+                                                                                    getProtonpack(),
+                                                                                    getZipline(),
+                                                                                    getStreamEx(),
+                                                                                    getVavr());
     }
 
-    // Stream Based benchmarks
-
-    @Override
-    @Benchmark
-    public void stream(Blackhole bh) { // With Auxiliary Function
-        StreamOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    protected io.vavr.collection.Stream<Triplet<Country, Artist, Track>> getVavr() {
+        return VavrOperations.zipTopArtistAndTrackByCountry();
     }
 
-    @Override
-    @Benchmark
-    public void protonpack(Blackhole bh) {
-        ProtonpackOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
+    protected StreamEx<Triplet<Country, Artist, Track>> getStreamEx() {
+        return StreamExOperations.zipTopArtistAndTrackByCountry();
     }
 
-    @Override
-    @Benchmark
-    public void guava(Blackhole bh) {
-        guava.zipTopArtistAndTrackByCountry(
+    protected Stream<Triplet<Country, Artist, Track>> getZipline() {
+        return ZiplineOperations.zipTopArtistAndTrackByCountry();
+    }
+
+    protected Stream<Triplet<Country, Artist, Track>> getProtonpack() {
+        return ProtonpackOperations.zipTopArtistAndTrackByCountry();
+    }
+
+    protected Stream<Triplet<Country, Artist, Track>> getStream() {
+        return StreamOperations.zipTopArtistAndTrackByCountry();
+    }
+
+    protected Query<Triplet<Country, Artist, Track>> getQuery() {
+        return QueryOperations.zipTopArtistAndTrackByCountry();
+    }
+
+    protected Seq<Triplet<Country, Artist, Track>> getJool() {
+        return jool.zipTopArtistAndTrackByCountry(
+                SequenceBenchmarkJoolUtils.getArtists(),
+                SequenceBenchmarkJoolUtils.getTracks()
+        );
+    }
+
+    protected Stream<Triplet<Country, Artist, Track>> getGuava() {
+        return guava.zipTopArtistAndTrackByCountry(
                 SequenceBenchmarkStreamUtils.getArtists(),
                 SequenceBenchmarkStreamUtils.getTracks()
-        ).forEach(bh::consume);
+        );
     }
-
-    @Override
-    @Benchmark
-    public void zipline(Blackhole bh) {
-        ZiplineOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
-    }
-
-    // Other Sequences based benchmarks
-
-    @Override
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        StreamExOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
-    }
-
-    @Override
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        QueryOperations.zipTopArtistAndTrackByCountry().traverse(bh::consume);
-    }
-
-    @Override
-    @Benchmark
-    public void jool(Blackhole bh) {
-        JoolOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
-    }
-
-    @Override
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        VavrOperations.zipTopArtistAndTrackByCountry().forEach(bh::consume);
-    }
-
 }

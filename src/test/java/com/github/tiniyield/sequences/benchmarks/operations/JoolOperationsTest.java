@@ -4,15 +4,13 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
+import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
@@ -20,25 +18,25 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
-public class GuavaOperationsTest {
+public class JoolOperationsTest {
 
-    private GuavaOperations instance;
-    private Stream<Pair<Country, Stream<Artist>>> artists;
-    private Stream<Pair<Country, Stream<Track>>> tracks;
+    private JoolOperations instance;
+    private Seq<Pair<Country, Seq<Artist>>> artists;
+    private Seq<Pair<Country, Seq<Track>>> tracks;
     private MockData mockData;
-    private Stream<Value> values;
-    private Stream<Integer> numbers;
-    private Stream<Integer> otherNumbers;
+    private Seq<Value> values;
+    private Seq<Integer> numbers;
+    private Seq<Integer> otherNumbers;
 
     @BeforeMethod
     public void setup() {
         mockData = new MockData();
-        instance = new GuavaOperations();
-        artists = mockData.getCountries().stream().map(c -> Pair.with(c, mockData.getArtists().stream()));
-        tracks = mockData.getCountries().stream().map(c -> Pair.with(c, mockData.getTracks().stream()));
-        values = mockData.getValues().stream();
-        numbers = mockData.getNumbers().stream();
-        otherNumbers = mockData.getNumbers().stream().sorted((t0, t1) -> t1 - t0);
+        instance = new JoolOperations();
+        artists = Seq.seq(mockData.getCountries()).map(c -> Pair.with(c, Seq.seq(mockData.getArtists())));
+        tracks = Seq.seq(mockData.getCountries()).map(c -> Pair.with(c, Seq.seq(mockData.getTracks())));
+        values = Seq.seq(mockData.getValues());
+        numbers = Seq.seq(mockData.getNumbers());
+        otherNumbers = Seq.seq(mockData.getNumbers()).sorted((t0, t1) -> t1 - t0);
     }
 
     @Test
@@ -118,28 +116,53 @@ public class GuavaOperationsTest {
     }
 
     @Test
+    public void testFindFirstSuccess() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
+        assertTrue(instance.findFirst(provider).isPresent());
+    }
+
+    @Test
+    public void testFindFirstFailure() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
+        assertFalse(instance.findFirst(provider).isPresent());
+    }
+
+    @Test
+    public void testIsEveryEvenSuccess() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
+        assertTrue(instance.isEveryEven(provider));
+    }
+
+    @Test
+    public void testIsEveryEvenFailure() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 1);
+        assertFalse(instance.isEveryEven(provider));
+    }
+
+    @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                           .allMatch(Boolean.TRUE::equals));
+                                  .allMatch(Boolean.TRUE::equals));
     }
+
 
     @Test
     public void testEveryFailure() {
         assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                            .allMatch(Boolean.TRUE::equals));
+                           .allMatch(Boolean.TRUE::equals));
     }
 
     @Test
     public void testFindSuccess() {
         assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                           .findFirst()
-                           .isPresent());
+                                  .findFirst()
+                                  .isPresent());
     }
 
     @Test
     public void testFindFailure() {
         assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                            .findFirst()
-                            .isPresent());
+                           .findFirst()
+                           .isPresent());
     }
 }

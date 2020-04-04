@@ -9,23 +9,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.AbstractBaseDataProvider;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.jayield.Query;
+import org.jooq.lambda.Seq;
+
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptEndSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptMiddleSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptStartSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+
+import one.util.streamex.StreamEx;
 
 public class SequenceBenchmarkUtils {
 
@@ -65,89 +67,35 @@ public class SequenceBenchmarkUtils {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity(GuavaOperations guava) {
+    public static void assertZipTopArtistAndTrackByCountryBenchmarkValidity(
+            Stream<Triplet<Country, Artist, Track>> guava,
+            Seq<Triplet<Country, Artist, Track>> jool,
+            Query<Triplet<Country, Artist, Track>> query,
+            Stream<Triplet<Country, Artist, Track>> stream,
+            Stream<Triplet<Country, Artist, Track>> protonpack,
+            Stream<Triplet<Country, Artist, Track>> zipline,
+            StreamEx<Triplet<Country, Artist, Track>> streamEx,
+            io.vavr.collection.Stream<Triplet<Country, Artist, Track>> vavr) {
+
         assertSameResults(
-                QueryOperations.zipTopArtistAndTrackByCountry().toList(),
-
-                StreamOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
-
-                ProtonpackOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
-
-                guava.zipTopArtistAndTrackByCountry(
-                        SequenceBenchmarkStreamUtils.getArtists(),
-                        SequenceBenchmarkStreamUtils.getTracks()
-                ).collect(Collectors.toList()),
-
-                ZiplineOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
-
-                StreamExOperations.zipTopArtistAndTrackByCountry().collect(Collectors.toList()),
-
-                JoolOperations.zipTopArtistAndTrackByCountry().toList(),
-
-                VavrOperations.zipTopArtistAndTrackByCountry().toList().asJava()
-
+                query.toList(),
+                stream.collect(Collectors.toList()),
+                protonpack.collect(Collectors.toList()),
+                guava.collect(Collectors.toList()),
+                zipline.collect(Collectors.toList()),
+                streamEx.collect(Collectors.toList()),
+                jool.toList(),
+                vavr.toList().asJava()
         );
     }
 
-    public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity(GuavaOperations guava) {
-        assertSameResults(
-                QueryOperations.artistsInTopTenWithTopTenTracksByCountry()
-                               .toList(),
-
-                StreamOperations.artistsInTopTenWithTopTenTracksByCountry()
-                                .collect(Collectors.toList()),
-
-                ProtonpackOperations.artistsInTopTenWithTopTenTracksByCountry()
-                                    .collect(Collectors.toList()),
-
-                guava.artistsInTopTenWithTopTenTracksByCountry(
-                        SequenceBenchmarkStreamUtils.getArtists(),
-                        SequenceBenchmarkStreamUtils.getTracks()
-                ).collect(Collectors.toList()),
-
-                ZiplineOperations.artistsInTopTenWithTopTenTracksByCountry()
-                                 .collect(Collectors.toList()),
-
-                StreamExOperations.artistsInTopTenWithTopTenTracksByCountry().collect(Collectors.toList()),
-
-                JoolOperations.artistsInTopTenWithTopTenTracksByCountry().toList(),
-
-                VavrOperations.artistsInTopTenWithTopTenTracksByCountry().toList().asJava()
-        );
-    }
-
-    public static void assertZipPrimeWithValueValidity(GuavaOperations guava) {
-        assertSameResults(
-                QueryOperations.zipPrimeWithValue()
-                               .toList(),
-
-                StreamOperations.zipPrimeWithValue()
-                                .collect(Collectors.toList()),
-
-                ProtonpackOperations.zipPrimeWithValue()
-                                    .collect(Collectors.toList()),
-
-                guava.zipPrimeWithValue(
-                        getNumbersDataProvider().asStream(),
-                        getValueDataProvider().asStream()
-                ).collect(Collectors.toList()),
-
-                ZiplineOperations.zipPrimeWithValue()
-                                 .collect(Collectors.toList()),
-
-                StreamExOperations.zipPrimeWithValue().collect(Collectors.toList()),
-
-                JoolOperations.zipPrimeWithValue().toList()
-        );
-    }
-
-    private static <T> void assertSameResults(List<T>... results) {
+    public static <T> void assertSameResults(List<T>... results) {
         if (results.length < 1) {
             throw new RuntimeException("Insufficient results");
         }
         List<T> first = results[0];
         List<List<T>> otherResults = Arrays.asList(Arrays.copyOfRange(results, 1, results.length));
-        if(first.size() < 1) {
+        if (first.size() < 1) {
             throw new RuntimeException("results are empty");
         }
         boolean sameResultSizes = otherResults.stream()
@@ -163,6 +111,48 @@ public class SequenceBenchmarkUtils {
             throw new RuntimeException("query results do not have the same elements");
         }
 
+    }
+
+    public static void assertArtistsInTopTenWithTopTenTracksByCountryBenchmarkValidity(
+            Stream<Pair<Country, List<Artist>>> guava,
+            Seq<Pair<Country, List<Artist>>> jool,
+            Query<Pair<Country, List<Artist>>> query,
+            Stream<Pair<Country, List<Artist>>> stream,
+            Stream<Pair<Country, List<Artist>>> protonpack,
+            Stream<Pair<Country, List<Artist>>> zipline,
+            StreamEx<Pair<Country, List<Artist>>> streamEx,
+            io.vavr.collection.Stream<Pair<Country, List<Artist>>> vavr) {
+
+        assertSameResults(
+                query.toList(),
+                stream.collect(Collectors.toList()),
+                protonpack.collect(Collectors.toList()),
+                guava.collect(Collectors.toList()),
+                zipline.collect(Collectors.toList()),
+                streamEx.collect(Collectors.toList()),
+                jool.toList(),
+                vavr.toList().asJava()
+        );
+    }
+
+    public static void assertZipPrimeWithValueValidity(Stream<Pair<Integer, Value>> guava,
+                                                       Seq<Pair<Integer, Value>> jool,
+                                                       Query<Pair<Integer, Value>> query,
+                                                       Stream<Pair<Integer, Value>> stream,
+                                                       Stream<Pair<Integer, Value>> protonpack,
+                                                       Stream<Pair<Integer, Value>> zipline,
+                                                       StreamEx<Pair<Integer, Value>> streamEx,
+                                                       io.vavr.collection.Stream<Pair<Integer, Value>> vavr) {
+        assertSameResults(
+                query.toList(),
+                stream.collect(Collectors.toList()),
+                protonpack.collect(Collectors.toList()),
+                guava.collect(Collectors.toList()),
+                zipline.collect(Collectors.toList()),
+                streamEx.collect(Collectors.toList()),
+                jool.toList(),
+                vavr.toList().asJava()
+        );
     }
 
     public static IntegerDataProvider getNumbersDataProvider() {
@@ -201,13 +191,12 @@ public class SequenceBenchmarkUtils {
         return value % 2 != 0;
     }
 
-    public static Integer doubled(Integer value) {
-        return value * 2;
-    }
-
-    public static void assertEveryEvenValidity() {
-        if (!(StreamOperations.everyEven() == StreamExOperations.everyEven() == QueryOperations.everyEven() ==
-                JoolOperations.everyEven() == VavrOperations.everyEven())) {
+    public static void assertEveryEvenValidity(boolean stream,
+                                               boolean streamEx,
+                                               boolean query,
+                                               boolean jool,
+                                               boolean vavr) {
+        if (!(stream == streamEx == query == jool == vavr)) {
             throw new RuntimeException("Results were not as expected");
         }
     }
@@ -228,13 +217,8 @@ public class SequenceBenchmarkUtils {
         return EVEN_EXCEPT_END_DATA_PROVIDER;
     }
 
-    public static void assertFindResult(AbstractBaseDataProvider<Integer> provider) {
-        Integer stream = StreamOperations.findFirst(provider).orElseThrow();
-        Integer streamEx = StreamExOperations.findFirst(provider).orElseThrow();
-        Integer jayield = QueryOperations.findFirst(provider).orElseThrow();
-        Integer jool = JoolOperations.findFirst(provider).orElseThrow();
-        Integer vavr = VavrOperations.findFirst(provider).getOrElseThrow(RuntimeException::new);
-        if(!(stream.equals(streamEx) && stream.equals(jayield) && stream.equals(jool) &&
+    public static void assertFindResult(Integer jool, Integer stream, Integer streamEx, Integer query, Integer vavr) {
+        if (!(stream.equals(streamEx) && stream.equals(query) && stream.equals(jool) &&
                 stream.equals(vavr) && stream.equals(ODD))) {
             throw new RuntimeException("Results were not odd");
         }

@@ -70,6 +70,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Param({"10000"})
     protected int COLLECTION_SIZE;
     private GuavaOperations guava;
+    private JoolOperations jool;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -80,6 +81,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Setup()
     public void setupOperations() {
         guava = new GuavaOperations();
+        jool = new JoolOperations();
     }
 
     @Setup(Level.Invocation)
@@ -108,7 +110,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(jool.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
     }
 
     @Override // could be replaced by corresponds

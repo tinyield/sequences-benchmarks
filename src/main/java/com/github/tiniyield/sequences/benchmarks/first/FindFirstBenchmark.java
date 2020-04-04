@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -29,42 +30,66 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     @Param({"10000"})
     protected int COLLECTION_SIZE;
     protected AbstractBaseDataProvider<Integer> provider;
+    private JoolOperations jool;
+
     protected abstract void init();
 
     @Setup
     public void setup() {
         init();
-        SequenceBenchmarkUtils.assertFindResult(provider);
+        jool = new JoolOperations();
+        SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
+    }
+
+    private Integer getVavr() {
+        return VavrOperations.findFirst(provider).getOrElseThrow(RuntimeException::new);
+    }
+
+    private Integer getQuery() {
+        return QueryOperations.findFirst(provider).orElseThrow();
+    }
+
+    private Integer getStreamEx() {
+        return StreamExOperations.findFirst(provider).orElseThrow();
+    }
+
+    private Integer getStream() {
+        return StreamOperations.findFirst(provider).orElseThrow();
+    }
+
+    private Integer getJool() {
+        return jool.findFirst(provider).orElseThrow();
     }
 
     @Override
     @Benchmark
-    public void stream(Blackhole bh) { // With Auxiliary Function
-        bh.consume(StreamOperations.findFirst(provider));
+    public final void stream(Blackhole bh) { // With Auxiliary Function
+        bh.consume(getStream());
     }
 
     @Override
     @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(StreamExOperations.findFirst(provider));
+    public final void streamEx(Blackhole bh) {
+        bh.consume(getStreamEx());
     }
 
     @Override
     @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(QueryOperations.findFirst(provider));
+    public final void jayield(Blackhole bh) {
+        bh.consume(getQuery());
     }
 
     @Override
     @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(JoolOperations.findFirst(provider));
+    public final void jool(Blackhole bh) {
+        bh.consume(getJool());
     }
+
 
     @Override
     @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.findFirst(provider));
+    public final void vavr(Blackhole bh) {
+        bh.consume(getVavr());
     }
 
 }
