@@ -74,6 +74,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     private QueryOperations query;
     private StreamExOperations streamEx;
     protected StreamOperations stream;
+    protected VavrOperations vavr;
 
     protected abstract List<T> getListA();
     protected abstract List<U> getListB();
@@ -89,6 +90,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
         query = new QueryOperations();
         streamEx = new StreamExOperations();
         stream = new StreamOperations();
+        vavr = new VavrOperations();
         init();
     }
 
@@ -119,7 +121,7 @@ public abstract class EveryBenchmark<T, U> implements IZipBenchmark {
     @Override // could be replaced by corresponds
     @Benchmark
     public final void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).forAll(Boolean.TRUE::equals));
+        bh.consume(vavr.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).forAll(Boolean.TRUE::equals));
     }
 
     @Override

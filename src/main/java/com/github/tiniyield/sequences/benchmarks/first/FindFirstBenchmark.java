@@ -33,6 +33,7 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
     private QueryOperations query;
     private StreamExOperations streamEx;
     protected StreamOperations stream;
+    protected VavrOperations vavr;
 
     protected abstract void init();
 
@@ -43,11 +44,12 @@ public abstract class FindFirstBenchmark implements ISequenceBenchmark {
         query = new QueryOperations();
         streamEx = new StreamExOperations();
         stream = new StreamOperations();
+        vavr = new VavrOperations();
         SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
     }
 
     private Integer getVavr() {
-        return VavrOperations.findFirst(provider).getOrElseThrow(RuntimeException::new);
+        return vavr.findFirst(provider.asVavrStream()).getOrElseThrow(RuntimeException::new);
     }
 
     private Integer getQuery() {

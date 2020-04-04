@@ -6,7 +6,6 @@ import static org.testng.AssertJUnit.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -18,9 +17,12 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
-public class ProtonpackOperationsTest {
+import io.vavr.collection.Stream;
 
-    private ProtonpackOperations instance;
+
+public class VavrOperationsTest {
+
+    private VavrOperations instance;
     private Stream<Pair<Country, Stream<Artist>>> artists;
     private Stream<Pair<Country, Stream<Track>>> tracks;
     private MockData mockData;
@@ -31,12 +33,12 @@ public class ProtonpackOperationsTest {
     @BeforeMethod
     public void setup() {
         mockData = new MockData();
-        instance = new ProtonpackOperations();
-        artists = mockData.getCountries().stream().map(c -> Pair.with(c, mockData.getArtists().stream()));
-        tracks = mockData.getCountries().stream().map(c -> Pair.with(c, mockData.getTracks().stream()));
-        values = mockData.getValues().stream();
-        numbers = mockData.getNumbers().stream();
-        otherNumbers = mockData.getNumbers().stream().sorted((t0, t1) -> t1 - t0);
+        instance = new VavrOperations();
+        artists = Stream.ofAll(mockData.getCountries()).map(c -> Pair.with(c, Stream.ofAll(mockData.getArtists())));
+        tracks = Stream.ofAll(mockData.getCountries()).map(c -> Pair.with(c, Stream.ofAll(mockData.getTracks())));
+        values = Stream.ofAll(mockData.getValues());
+        numbers = Stream.ofAll(mockData.getNumbers());
+        otherNumbers = Stream.ofAll(mockData.getNumbers()).sorted((t0, t1) -> t1 - t0);
     }
 
     @Test
@@ -50,7 +52,7 @@ public class ProtonpackOperationsTest {
         );
 
         List<Triplet<Country, Artist, Track>> actual = this.instance.zipTopArtistAndTrackByCountry(artists, tracks)
-                                                                    .collect(Collectors.toList());
+                                                                    .toJavaList();
 
 
         assertEquals(expected.size(), actual.size());
@@ -77,7 +79,7 @@ public class ProtonpackOperationsTest {
 
         List<Pair<Country, List<Artist>>> actual = this.instance.artistsInTopTenWithTopTenTracksByCountry(artists,
                                                                                                           tracks)
-                                                                .collect(Collectors.toList());
+                                                                .toJavaList();
 
 
         assertEquals(expected.size(), actual.size());
@@ -116,28 +118,53 @@ public class ProtonpackOperationsTest {
     }
 
     @Test
+    public void testFindFirstSuccess() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
+        assertTrue(instance.findFirst(provider.asVavrStream()).isDefined());
+    }
+
+    @Test
+    public void testFindFirstFailure() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
+        assertFalse(instance.findFirst(provider.asVavrStream()).isDefined());
+    }
+
+    @Test
+    public void testIsEveryEvenSuccess() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
+        assertTrue(instance.isEveryEven(provider.asVavrStream()));
+    }
+
+    @Test
+    public void testIsEveryEvenFailure() {
+        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 1);
+        assertFalse(instance.isEveryEven(provider.asVavrStream()));
+    }
+
+    @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                           .allMatch(Boolean.TRUE::equals));
+                           .forAll(Boolean.TRUE::equals));
     }
+
 
     @Test
     public void testEveryFailure() {
         assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                            .allMatch(Boolean.TRUE::equals));
+                            .forAll(Boolean.TRUE::equals));
     }
 
     @Test
     public void testFindSuccess() {
         assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                           .findFirst()
-                           .isPresent());
+                           .headOption()
+                           .isDefined());
     }
 
     @Test
     public void testFindFailure() {
         assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                            .findFirst()
-                            .isPresent());
+                            .headOption()
+                            .isDefined());
     }
 }

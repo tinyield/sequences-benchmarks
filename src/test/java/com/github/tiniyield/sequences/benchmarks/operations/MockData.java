@@ -10,26 +10,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
 public class MockData {
 
-    public List<Artist> getArtists() {
-        return List.of(
-                new Artist().setName("0"),
-                new Artist().setName("1"),
-                new Artist().setName("2"),
-                new Artist().setName("3"),
-                new Artist().setName("4"),
-                new Artist().setName("5"),
-                new Artist().setName("6"),
-                new Artist().setName("7"),
-                new Artist().setName("8"),
-                new Artist().setName("9"),
-                new Artist().setName("10"),
-                new Artist().setName("11"),
-                new Artist().setName("12"),
-                new Artist().setName("13"),
-                new Artist().setName("14")
-        );
-    }
-
     public List<Country> getCountries() {
         return List.of(
                 new Country().setName("0"),
@@ -58,11 +38,31 @@ public class MockData {
         );
     }
 
-    public List<Integer> getNumbers() {
-        return List.of(3, 4, 5);
+    public List<Artist> getArtists() {
+        return List.of(
+                new Artist().setName("0"),
+                new Artist().setName("1"),
+                new Artist().setName("2"),
+                new Artist().setName("3"),
+                new Artist().setName("4"),
+                new Artist().setName("5"),
+                new Artist().setName("6"),
+                new Artist().setName("7"),
+                new Artist().setName("8"),
+                new Artist().setName("9"),
+                new Artist().setName("10"),
+                new Artist().setName("11"),
+                new Artist().setName("12"),
+                new Artist().setName("13"),
+                new Artist().setName("14")
+        );
     }
 
     public List<Value> getValues() {
         return getNumbers().stream().map(Value::new).collect(Collectors.toList());
+    }
+
+    public List<Integer> getNumbers() {
+        return List.of(3, 4, 5);
     }
 }

@@ -35,6 +35,7 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
     private QueryOperations query;
     private StreamExOperations streamEx;
     protected StreamOperations stream;
+    protected VavrOperations vavr;
 
     @Setup
     public void setup() {
@@ -43,6 +44,7 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
         query = new QueryOperations();
         streamEx = new StreamExOperations();
         stream = new StreamOperations();
+        vavr = new VavrOperations();
         assertEveryEvenValidity(getStream(), getStreamEx(), getQuery(), getJool(), getVavr());
     }
 
@@ -63,7 +65,7 @@ public class AllMatchBenchmark implements ISequenceBenchmark {
     }
 
     private boolean getVavr() {
-        return VavrOperations.everyEven();
+        return vavr.isEveryEven(getEvenDataProvider().asVavrStream());
     }
 
     @Override

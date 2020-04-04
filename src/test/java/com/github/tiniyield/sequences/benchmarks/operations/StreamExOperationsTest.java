@@ -1,8 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getNumbersDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
@@ -19,7 +16,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
-import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils;
 
 import one.util.streamex.StreamEx;
 
@@ -80,7 +76,8 @@ public class StreamExOperationsTest {
                 )
         );
 
-        List<Pair<Country, List<Artist>>> actual = this.instance.artistsInTopTenWithTopTenTracksByCountry(artists, tracks)
+        List<Pair<Country, List<Artist>>> actual = this.instance.artistsInTopTenWithTopTenTracksByCountry(artists,
+                                                                                                          tracks)
                                                                 .collect(Collectors.toList());
 
 
@@ -146,27 +143,27 @@ public class StreamExOperationsTest {
     @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                                  .allMatch(Boolean.TRUE::equals));
+                           .allMatch(Boolean.TRUE::equals));
     }
 
 
     @Test
     public void testEveryFailure() {
         assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                           .allMatch(Boolean.TRUE::equals));
+                            .allMatch(Boolean.TRUE::equals));
     }
 
     @Test
     public void testFindSuccess() {
         assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                                  .findFirst()
-                                  .isPresent());
+                           .findFirst()
+                           .isPresent());
     }
 
     @Test
     public void testFindFailure() {
         assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                           .findFirst()
-                           .isPresent());
+                            .findFirst()
+                            .isPresent());
     }
 }

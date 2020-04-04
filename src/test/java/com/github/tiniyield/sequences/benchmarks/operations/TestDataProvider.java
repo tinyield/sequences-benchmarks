@@ -6,7 +6,7 @@ public class TestDataProvider<T> extends AbstractBaseDataProvider<T> {
 
     private final T[] data;
 
-    public TestDataProvider(T ...data) {
+    public TestDataProvider(T... data) {
         this.data = data;
     }
 

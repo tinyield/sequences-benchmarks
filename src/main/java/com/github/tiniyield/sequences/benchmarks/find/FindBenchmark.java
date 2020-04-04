@@ -75,6 +75,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     private QueryOperations query;
     private StreamExOperations streamEx;
     protected StreamOperations stream;
+    protected VavrOperations vavr;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -90,6 +91,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
         query = new QueryOperations();
         streamEx = new StreamExOperations();
         stream = new StreamOperations();
+        vavr = new VavrOperations();
     }
 
     @Setup(Level.Invocation)
@@ -124,7 +126,7 @@ public abstract class FindBenchmark<T> implements IZipBenchmark {
     @Override // could be replaced by corresponds
     @Benchmark
     public void vavr(Blackhole bh) {
-        bh.consume(VavrOperations.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
+        bh.consume(vavr.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
     }
 
 

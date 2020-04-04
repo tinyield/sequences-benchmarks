@@ -142,27 +142,27 @@ public class JoolOperationsTest {
     @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                                  .allMatch(Boolean.TRUE::equals));
+                           .allMatch(Boolean.TRUE::equals));
     }
 
 
     @Test
     public void testEveryFailure() {
         assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                           .allMatch(Boolean.TRUE::equals));
+                            .allMatch(Boolean.TRUE::equals));
     }
 
     @Test
     public void testFindSuccess() {
         assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                                  .findFirst()
-                                  .isPresent());
+                           .findFirst()
+                           .isPresent());
     }
 
     @Test
     public void testFindFailure() {
         assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                           .findFirst()
-                           .isPresent());
+                            .findFirst()
+                            .isPresent());
     }
 }

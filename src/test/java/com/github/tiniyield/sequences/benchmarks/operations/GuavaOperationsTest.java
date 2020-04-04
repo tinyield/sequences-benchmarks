@@ -4,7 +4,6 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,7 +11,6 @@ import java.util.stream.Stream;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
