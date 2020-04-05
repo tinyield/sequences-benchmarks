@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -44,26 +43,25 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindClassBenchmark extends FindBenchmark<Value> {
-    /**
-     * lstA and lstB are two Lists with the same Value objects.
-     */
-    public List<Value> lstA;
-    public List<Value> lstB;
+
+    private List<List<Value>> matrixA;
+    private List<List<Value>> matrixB;
 
 
     protected List<Value> getListA() {
-        return lstA;
+        return matrixA.get(index % COLLECTION_SIZE);
     }
 
 
     protected List<Value> getListB() {
-        return lstB;
+        return matrixB.get(index % COLLECTION_SIZE);
     }
 
 
@@ -74,12 +72,24 @@ public class FindClassBenchmark extends FindBenchmark<Value> {
 
     @Setup
     public void init() {
-        lstB = new ArrayList<>(COLLECTION_SIZE);
-        lstA = IntStream
-            .rangeClosed(1, COLLECTION_SIZE)
-            .mapToObj(Value::new)
-            .collect(Collectors.toList());
-        lstA.forEach(lstB::add);
+        matrixA = new ArrayList<>(COLLECTION_SIZE);
+        matrixB = new ArrayList<>(COLLECTION_SIZE);
+        for (int i = 0; i < COLLECTION_SIZE; i++) {
+            matrixA.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .map(Value::new)
+                            .collect(Collectors.toList())
+            );
+            int iFinal = i;
+            matrixB.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .map(v -> iFinal)
+                            .map(Value::new)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
 }

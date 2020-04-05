@@ -45,40 +45,51 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindIntegerBenchmark extends FindBenchmark<Integer> {
-    /**
-     * lstA and lstB are two Lists with the same Integer objects.
-     */
-    public List<Integer> lstA;
-    public List<Integer> lstB;
 
-    @Override
+    private List<List<Integer>> matrixA;
+    private List<List<Integer>> matrixB;
+
+
     protected List<Integer> getListA() {
-        return lstA;
+        return matrixA.get(index % COLLECTION_SIZE);
     }
 
-    @Override
+
     protected List<Integer> getListB() {
-        return lstB;
+        return matrixB.get(index % COLLECTION_SIZE);
     }
 
-    @Override
+
     protected BiPredicate<Integer, Integer> getPredicate() {
         return Integer::equals;
     }
 
+
     @Setup
     public void init() {
-        lstB = new ArrayList<>(COLLECTION_SIZE);
-        lstA = IntStream
-            .rangeClosed(1, COLLECTION_SIZE)
-            .boxed()
-            .collect(Collectors.toList());
-//        lstB.addAll(lstA);
-        lstA.forEach(lstB::add);
+        matrixA = new ArrayList<>(COLLECTION_SIZE);
+        matrixB = new ArrayList<>(COLLECTION_SIZE);
+        for (int i = 0; i < COLLECTION_SIZE; i++) {
+            matrixA.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .collect(Collectors.toList())
+            );
+            int iFinal = i;
+            matrixB.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .map(v -> iFinal)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
 }

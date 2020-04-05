@@ -49,16 +49,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 import io.vavr.collection.Stream;
 import one.util.streamex.StreamEx;
@@ -68,23 +59,26 @@ import one.util.streamex.StreamEx;
 @State(Scope.Benchmark)
 public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
-    @Param({"10000"})
+    @Param({"1000"})
     protected int COLLECTION_SIZE;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
     protected abstract BiPredicate<T,T> getPredicate();
+    protected int index;
 
     protected abstract void init();
 
     @Setup()
     public void setupOperations() {
+        index = 0;
         super.init();
+        init();
     }
 
     @Setup(Level.Invocation)
-    public void setupSequences() {
-        init();
+    public void iterate() {
+        index++;
     }
 
     @Override

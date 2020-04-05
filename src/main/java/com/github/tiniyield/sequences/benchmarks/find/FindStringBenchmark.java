@@ -14,39 +14,51 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
+
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindStringBenchmark extends FindBenchmark<String> {
-    /**
-     * lstA and lstB are two Lists with the same String  objects.
-     */
-    private List<String> lstA;
-    private List<String> lstB;
+    private List<List<String>> matrixA;
+    private List<List<String>> matrixB;
 
-    @Override
+
     protected List<String> getListA() {
-        return lstA;
+        return matrixA.get(index % COLLECTION_SIZE);
     }
 
-    @Override
+
     protected List<String> getListB() {
-        return lstB;
+        return matrixB.get(index % COLLECTION_SIZE);
     }
 
-    @Override
+
     protected BiPredicate<String, String> getPredicate() {
         return String::equals;
     }
 
+
     @Setup
     public void init() {
-        lstB = new ArrayList<>(COLLECTION_SIZE);
-        lstA = IntStream
-                .rangeClosed(1, COLLECTION_SIZE)
-                .mapToObj(String::valueOf)
-                .collect(Collectors.toList());
-        lstB.addAll(lstA);
+        matrixA = new ArrayList<>(COLLECTION_SIZE);
+        matrixB = new ArrayList<>(COLLECTION_SIZE);
+        for (int i = 0; i < COLLECTION_SIZE; i++) {
+            matrixA.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .map(String::valueOf)
+                            .collect(Collectors.toList())
+            );
+            int iFinal = i;
+            matrixB.add(
+                    new IntegerDataProvider(COLLECTION_SIZE)
+                            .asStream()
+                            .map(v -> iFinal)
+                            .map(String::valueOf)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
 }

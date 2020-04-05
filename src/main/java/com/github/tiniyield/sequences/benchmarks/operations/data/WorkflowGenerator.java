@@ -1,13 +1,9 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data;
 
-import java.io.FileDescriptor;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.io.Writer;
 import java.util.HashMap;
 
@@ -20,10 +16,8 @@ import com.github.tiniyield.sequences.benchmarks.every.EveryIntegerBenchmark;
 import com.github.tiniyield.sequences.benchmarks.every.EveryRandomStringBenchmark;
 import com.github.tiniyield.sequences.benchmarks.every.EveryStringBenchmark;
 import com.github.tiniyield.sequences.benchmarks.find.FindClassBenchmark;
+import com.github.tiniyield.sequences.benchmarks.find.FindFixedIndexBenchmark;
 import com.github.tiniyield.sequences.benchmarks.find.FindIntegerBenchmark;
-import com.github.tiniyield.sequences.benchmarks.find.FindRandomClassBenchmark;
-import com.github.tiniyield.sequences.benchmarks.find.FindRandomIntegerBenchmark;
-import com.github.tiniyield.sequences.benchmarks.find.FindRandomStringBenchmark;
 import com.github.tiniyield.sequences.benchmarks.find.FindStringBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInBeginningBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInEndBenchmark;
@@ -58,9 +52,10 @@ public class WorkflowGenerator {
         WorkflowGenerator.generateCollectionWorkflow(FindClassBenchmark.class.getSimpleName(), "find/class");
         WorkflowGenerator.generateCollectionWorkflow(FindIntegerBenchmark.class.getSimpleName(), "find/integer");
         WorkflowGenerator.generateCollectionWorkflow(FindStringBenchmark.class.getSimpleName(), "find/string");
-        WorkflowGenerator.generateCollectionWorkflow(FindRandomClassBenchmark.class.getSimpleName(), "find/random-class");
-        WorkflowGenerator.generateCollectionWorkflow(FindRandomIntegerBenchmark.class.getSimpleName(), "find/random-integer");
-        WorkflowGenerator.generateCollectionWorkflow(FindRandomStringBenchmark.class.getSimpleName(), "find/random-string");
+        WorkflowGenerator.generateCollectionWorkflow(FindFixedIndexBenchmark.class.getSimpleName(), "find/fixed-index");
+//        WorkflowGenerator.generateCollectionWorkflow(FindRandomClassBenchmark.class.getSimpleName(), "find/random-class");
+//        WorkflowGenerator.generateCollectionWorkflow(FindRandomIntegerBenchmark.class.getSimpleName(), "find/random-integer");
+//        WorkflowGenerator.generateCollectionWorkflow(FindRandomStringBenchmark.class.getSimpleName(), "find/random-string");
 
         // first
         WorkflowGenerator.generateCollectionWorkflow(FindFirstInBeginningBenchmark.class.getSimpleName(), "first/beginning");

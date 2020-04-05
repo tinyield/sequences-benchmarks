@@ -1,9 +1,9 @@
-name: 100K FindRandomIntegerBenchmark
+name: 100K FindFixedIndexBenchmark
  
 on:
   push:
     branches:
-      - find/random-integer
+      - find/fixed-index
       - all-benchmarks
  
 jobs:
@@ -23,7 +23,7 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark [COLLECTION_SIZE = 100000]
-        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindRandomIntegerBenchmark -p COLLECTION_SIZE=100000
+        run: java -jar target/benchmarks.jar -rf text -rff results.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" FindFixedIndexBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v1

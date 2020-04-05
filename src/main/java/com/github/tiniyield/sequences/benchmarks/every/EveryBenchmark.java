@@ -67,7 +67,7 @@ import one.util.streamex.StreamEx;
 @State(Scope.Benchmark)
 public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
-    @Param({"10000"})
+    @Param({"1000"})
     protected int COLLECTION_SIZE;
 
 
