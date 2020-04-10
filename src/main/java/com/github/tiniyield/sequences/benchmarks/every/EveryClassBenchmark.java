@@ -47,7 +47,7 @@ import org.openjdk.jmh.annotations.State;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
 @BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class EveryClassBenchmark extends EveryBenchmark<Value, Value> {
     /**

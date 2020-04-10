@@ -63,11 +63,11 @@ import io.vavr.collection.Stream;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
-    @Param({"1000"})
+    @Param({"100"})
     protected int COLLECTION_SIZE;
 
 
