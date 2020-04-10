@@ -1,8 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.distinctByKey;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getNumbersDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -41,11 +39,14 @@ public class GuavaOperations {
         return zip(numbers.filter(SequenceBenchmarkUtils::isPrime), values, Pair::with);
     }
 
-    public <T, U> Stream<Boolean> every(Stream<T> q1, Stream<U> q2, BiPredicate<T, U> predicate) {
-        return zip(q1, q2, predicate::test);
+    public <T, U> boolean every(Stream<T> q1, Stream<U> q2, BiPredicate<T, U> predicate) {
+        return zip(q1, q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T> Stream<T> find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
-        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
+    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
+        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -2,6 +2,8 @@ package com.github.tiniyield.sequences.benchmarks.operations;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.util.List;
@@ -143,28 +145,22 @@ public class VavrOperationsTest {
 
     @Test
     public void testEverySuccess() {
-        assertTrue(instance.every(numbers, values, (number, value) -> value.value == number)
-                           .forAll(Boolean.TRUE::equals));
+        assertTrue(instance.every(numbers, values, (number, value) -> value.value == number));
     }
 
 
     @Test
     public void testEveryFailure() {
-        assertFalse(instance.every(numbers, values, (number, value) -> value.value != number)
-                            .forAll(Boolean.TRUE::equals));
+        assertFalse(instance.every(numbers, values, (number, value) -> value.value != number));
     }
 
     @Test
     public void testFindSuccess() {
-        assertTrue(instance.find(numbers, otherNumbers, (number, value) -> value < number)
-                           .headOption()
-                           .isDefined());
+        assertNotNull(instance.find(numbers, otherNumbers, (number, value) -> value < number));
     }
 
     @Test
     public void testFindFailure() {
-        assertFalse(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2)
-                            .headOption()
-                            .isDefined());
+        assertNull(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2));
     }
 }

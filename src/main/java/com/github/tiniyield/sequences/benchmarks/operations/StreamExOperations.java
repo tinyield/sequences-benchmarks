@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.stream.Stream;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -53,11 +52,14 @@ public class StreamExOperations {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
-    public <T, U> StreamEx<Boolean> every(StreamEx<T> q1, StreamEx<U> q2, BiPredicate<T, U> predicate) {
-        return q1.zipWith(q2, predicate::test);
+    public <T, U> boolean every(StreamEx<T> q1, StreamEx<U> q2, BiPredicate<T, U> predicate) {
+        return q1.zipWith(q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T> StreamEx<T> find(StreamEx<T> q1, StreamEx<T> q2, BiPredicate<T, T> predicate) {
-        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
+    public <T> T find(StreamEx<T> q1, StreamEx<T> q2, BiPredicate<T, T> predicate) {
+        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                 .filter(Objects::nonNull)
+                 .findFirst()
+                 .orElse(null);
     }
 }

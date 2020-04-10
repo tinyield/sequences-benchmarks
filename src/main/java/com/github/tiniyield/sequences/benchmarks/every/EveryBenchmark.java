@@ -86,48 +86,48 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
     @Override
     @Benchmark
     public final void stream(Blackhole bh) {
-        bh.consume(stream.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(stream.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void streamEx(Blackhole bh) {
-        bh.consume(streamEx.every(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(streamEx.every(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void jayield(Blackhole bh) {
-        bh.consume(query.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(query.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void jool(Blackhole bh) {
-        bh.consume(jool.every(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(jool.every(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()));
     }
 
     @Override // could be replaced by corresponds
     @Benchmark
     public final void vavr(Blackhole bh) {
-        bh.consume(vavr.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).forAll(Boolean.TRUE::equals));
+        bh.consume(vavr.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void protonpack(Blackhole bh) {
-        bh.consume(protonpack.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(protonpack.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void guava(Blackhole bh) {
-        bh.consume(guava.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(guava.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public final void zipline(Blackhole bh) {
-        bh.consume(zipline.every(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(zipline.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 }

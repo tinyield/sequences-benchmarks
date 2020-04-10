@@ -48,11 +48,14 @@ public class JoolOperations {
     }
 
 
-    public <T, U> Seq<Boolean> every(Seq<T> q1, Seq<U> q2, BiPredicate<T, U> predicate) {
-        return q1.zip(q2, predicate::test);
+    public <T, U> boolean every(Seq<T> q1, Seq<U> q2, BiPredicate<T, U> predicate) {
+        return q1.zip(q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T> Seq<T> find(Seq<T> q1, Seq<T> q2, BiPredicate<T, T> predicate) {
-        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
+    public <T> T find(Seq<T> q1, Seq<T> q2, BiPredicate<T, T> predicate) {
+        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                 .filter(Objects::nonNull)
+                 .findFirst()
+                 .orElse(null);
     }
 }

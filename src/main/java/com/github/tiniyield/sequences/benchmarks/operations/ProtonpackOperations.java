@@ -37,11 +37,14 @@ public class ProtonpackOperations {
         return zip(numbers.filter(SequenceBenchmarkUtils::isPrime), values, Pair::with);
     }
 
-    public <T,U> Stream<Boolean> every(Stream<T> q1, Stream<U> q2, BiPredicate<T,U> predicate) {
-        return zip(q1, q2, predicate::test);
+    public <T,U> boolean every(Stream<T> q1, Stream<U> q2, BiPredicate<T,U> predicate) {
+        return zip(q1, q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T> Stream<T> find(Stream<T> q1, Stream<T> q2, BiPredicate<T,T> predicate) {
-        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull);
+    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T,T> predicate) {
+        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -84,49 +84,49 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
     @Override
     @Benchmark
     public void stream(Blackhole bh) {
-        bh.consume(stream.find(getListA().stream(), getListB().stream(), getPredicate()).findFirst().orElse(null));
+        bh.consume(stream.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
-        bh.consume(streamEx.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(streamEx.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()));
     }
 
     @Override
     @Benchmark
     public void jayield(Blackhole bh) {
-        bh.consume(query.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(query.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()));
     }
 
     @Override
     @Benchmark
     public void jool(Blackhole bh) {
-        bh.consume(jool.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()).findFirst().orElse(null));
+        bh.consume(jool.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()));
     }
 
     @Override // could be replaced by corresponds
     @Benchmark
     public void vavr(Blackhole bh) {
-        bh.consume(vavr.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()).getOrNull());
+        bh.consume(vavr.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()));
     }
 
 
     @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
-        bh.consume(protonpack.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(protonpack.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public void guava(Blackhole bh) {
-        bh.consume(guava.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(guava.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
     @Override
     @Benchmark
     public void zipline(Blackhole bh) {
-        bh.consume(zipline.find(getListA().stream(), getListB().stream(), getPredicate()).allMatch(Boolean.TRUE::equals));
+        bh.consume(zipline.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 }

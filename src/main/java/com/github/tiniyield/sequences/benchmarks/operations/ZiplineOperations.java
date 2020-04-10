@@ -48,13 +48,16 @@ public class ZiplineOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).map(v -> Pair.with(v, iter.next()));
     }
 
-    public <T, U> Stream<Boolean> every(Stream<T> q1, Stream<U> q2, BiPredicate<T, U> predicate) {
+    public <T, U> boolean every(Stream<T> q1, Stream<U> q2, BiPredicate<T, U> predicate) {
         Iterator<U> it = q2.iterator();
-        return q1.map(t -> predicate.test(t, it.next()));
+        return q1.map(t -> predicate.test(t, it.next())).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T> Stream<T> find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
+    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
         Iterator<T> it = q2.iterator();
-        return q1.map(t -> predicate.test(t, it.next()) ? t : null).filter(Objects::nonNull);
+        return q1.map(t -> predicate.test(t, it.next()) ? t : null)
+                 .filter(Objects::nonNull)
+                 .findFirst()
+                 .orElse(null);
     }
 }
