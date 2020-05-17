@@ -14,11 +14,6 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractSequenceOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.AbstractBaseDataProvider;
 
@@ -31,8 +26,6 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
     protected int COLLECTION_SIZE;
     protected AbstractBaseDataProvider<Integer> provider;
 
-    protected abstract void init();
-
     @Setup
     public void setup() {
         super.init();
@@ -40,24 +33,30 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
         SequenceBenchmarkUtils.assertFindResult(getJool(), getStream(), getStreamEx(), getQuery(), getVavr());
     }
 
-    private Integer getVavr() {
-        return vavr.findFirst(provider.asVavrStream()).getOrElseThrow(RuntimeException::new);
-    }
+    protected abstract void init();
 
-    private Integer getQuery() {
-        return query.findFirst(provider.asQuery()).orElseThrow();
-    }
-
-    private Integer getStreamEx() {
-        return streamEx.findFirst(provider.asStreamEx()).orElseThrow();
+    private Integer getJool() {
+        return jool.findFirst(provider.asSeq()).orElseThrow();
     }
 
     private Integer getStream() {
         return stream.findFirst(provider.asStream()).orElseThrow();
     }
 
-    private Integer getJool() {
-        return jool.findFirst(provider.asSeq()).orElseThrow();
+    private Integer getStreamEx() {
+        return streamEx.findFirst(provider.asStreamEx()).orElseThrow();
+    }
+
+    private Integer getQuery() {
+        return query.findFirst(provider.asQuery()).orElseThrow();
+    }
+
+    private Integer getVavr() {
+        return vavr.findFirst(provider.asVavrStream()).getOrElseThrow(RuntimeException::new);
+    }
+
+    private Integer getKotlin() {
+        return kotlin.findFirst(provider.asSequence()).orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -89,6 +88,12 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
     @Benchmark
     public final void vavr(Blackhole bh) {
         bh.consume(getVavr());
+    }
+
+    @Override
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(getKotlin());
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 public interface ISequenceBenchmarkDataProvider<T> {
@@ -14,5 +15,7 @@ public interface ISequenceBenchmarkDataProvider<T> {
     StreamEx<T> asStreamEx();
     Query<T> asQuery();
     Seq<T> asSeq();
+    Sequence<T> asSequence();
+
     io.vavr.collection.Stream<T> asVavrStream();
 }

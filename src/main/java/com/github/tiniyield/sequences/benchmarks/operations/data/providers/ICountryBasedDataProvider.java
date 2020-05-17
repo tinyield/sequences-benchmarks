@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 public interface ICountryBasedDataProvider<T> {
@@ -18,4 +19,5 @@ public interface ICountryBasedDataProvider<T> {
     Query<T> asQuery(String country);
     Seq<T> asSeq(String country);
     io.vavr.collection.Stream<T> asVavrStream(String country);
+    Sequence<T> asSequence(String country);
 }

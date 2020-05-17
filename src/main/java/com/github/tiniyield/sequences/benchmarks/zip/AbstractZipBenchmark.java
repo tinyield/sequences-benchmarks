@@ -17,6 +17,9 @@ import org.openjdk.jmh.infra.Blackhole;
 import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 
+import kotlin.Unit;
+import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
@@ -32,6 +35,7 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
     protected abstract Query<T> getQuery();
     protected abstract Stream<T> getGuava();
     protected abstract Seq<T> getJool();
+    protected abstract Sequence<T> getKotlin();
     protected abstract void init();
 
     @Setup
@@ -87,5 +91,14 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
     @Benchmark
     public final void zipline(Blackhole bh) {
         getZipline().forEach(bh::consume);
+    }
+
+    @Override
+    @Benchmark
+    public final void kotlin(Blackhole bh) {
+        SequencesKt.forEach(getKotlin(), elem -> {
+            bh.consume(elem);
+            return Unit.INSTANCE;
+        });
     }
 }

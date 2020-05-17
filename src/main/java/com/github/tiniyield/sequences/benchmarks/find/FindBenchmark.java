@@ -52,6 +52,7 @@ import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 
 import io.vavr.collection.Stream;
+import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
@@ -128,5 +129,11 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
     @Benchmark
     public void zipline(Blackhole bh) {
         bh.consume(zipline.find(getListA().stream(), getListB().stream(), getPredicate()));
+    }
+
+    @Override
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(kotlin.find(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
 }

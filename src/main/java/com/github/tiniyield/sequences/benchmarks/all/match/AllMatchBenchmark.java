@@ -18,11 +18,6 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractSequenceOperationsBenchmark;
 import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -59,6 +54,10 @@ public class AllMatchBenchmark extends AbstractSequenceOperationsBenchmark imple
         return vavr.isEveryEven(getEvenDataProvider().asVavrStream());
     }
 
+    private boolean getKotlin() {
+        return kotlin.isEveryEven(getEvenDataProvider().asSequence());
+    }
+
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
@@ -87,6 +86,12 @@ public class AllMatchBenchmark extends AbstractSequenceOperationsBenchmark imple
     @Benchmark
     public void vavr(Blackhole bh) {
         bh.consume(getVavr());
+    }
+
+    @Override
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(getKotlin());
     }
 
 }

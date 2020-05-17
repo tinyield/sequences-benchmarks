@@ -16,7 +16,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
+import com.github.tiniyield.sequences.benchmarks.kt.operations.utils.SequenceBenchmarkKtSequenceUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
@@ -27,6 +27,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchm
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkVavrUtils;
 
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
@@ -78,6 +79,14 @@ public class ZipTopArtistAndTrackByCountryBenchmark extends AbstractZipBenchmark
         return jool.zipTopArtistAndTrackByCountry(
                 SequenceBenchmarkJoolUtils.getArtists(),
                 SequenceBenchmarkJoolUtils.getTracks()
+        );
+    }
+
+    @Override
+    protected Sequence<Triplet<Country, Artist, Track>> getKotlin() {
+        return kotlin.zipTopArtistAndTrackByCountry(
+                SequenceBenchmarkKtSequenceUtils.INSTANCE.getArtists(),
+                SequenceBenchmarkKtSequenceUtils.INSTANCE.getTracks()
         );
     }
 

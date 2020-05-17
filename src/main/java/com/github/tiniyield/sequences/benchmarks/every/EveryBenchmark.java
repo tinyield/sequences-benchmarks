@@ -48,18 +48,10 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.GuavaOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ProtonpackOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.StreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.VavrOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 
 import io.vavr.collection.Stream;
+import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
@@ -129,5 +121,11 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
     @Benchmark
     public final void zipline(Blackhole bh) {
         bh.consume(zipline.every(getListA().stream(), getListB().stream(), getPredicate()));
+    }
+
+    @Override
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(kotlin.every(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
 }

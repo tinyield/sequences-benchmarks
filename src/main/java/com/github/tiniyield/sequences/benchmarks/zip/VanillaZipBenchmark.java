@@ -20,9 +20,9 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.tiniyield.sequences.benchmarks.operations.ZiplineOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 @BenchmarkMode(Mode.Throughput)
@@ -50,27 +50,27 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
 
     protected io.vavr.collection.Stream<Pair<Integer, Value>> getVavr() {
         return vavr.zipPrimeWithValue(getNumbersDataProvider().asVavrStream(),
-                                                getValueDataProvider().asVavrStream());
+                                      getValueDataProvider().asVavrStream());
     }
 
     protected StreamEx<Pair<Integer, Value>> getStreamEx() {
         return streamEx.zipPrimeWithValue(getNumbersDataProvider().asStreamEx(),
-                                                    getValueDataProvider().asStreamEx());
+                                          getValueDataProvider().asStreamEx());
     }
 
     protected Stream<Pair<Integer, Value>> getZipline() {
         return zipline.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                                                   getValueDataProvider().asStream());
+                                         getValueDataProvider().asStream());
     }
 
     protected Stream<Pair<Integer, Value>> getProtonpack() {
         return protonpack.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                                                      getValueDataProvider().asStream());
+                                            getValueDataProvider().asStream());
     }
 
     protected Stream<Pair<Integer, Value>> getStream() {
         return stream.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                                                  getValueDataProvider().asStream());
+                                        getValueDataProvider().asStream());
     }
 
     protected Query<Pair<Integer, Value>> getQuery() {
@@ -88,6 +88,14 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
         return jool.zipPrimeWithValue(
                 getNumbersDataProvider().asSeq(),
                 getValueDataProvider().asSeq()
+        );
+    }
+
+    @Override
+    protected Sequence<Pair<Integer, Value>> getKotlin() {
+        return kotlin.zipPrimeWithValue(
+                getNumbersDataProvider().asSequence(),
+                getValueDataProvider().asSequence()
         );
     }
 

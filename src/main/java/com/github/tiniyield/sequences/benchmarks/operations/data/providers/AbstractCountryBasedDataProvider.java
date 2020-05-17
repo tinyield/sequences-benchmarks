@@ -7,6 +7,8 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
+import kotlin.collections.ArraysKt;
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 public abstract class AbstractCountryBasedDataProvider<T> implements ICountryBasedDataProvider<T> {
@@ -46,5 +48,10 @@ public abstract class AbstractCountryBasedDataProvider<T> implements ICountryBas
     @Override
     public io.vavr.collection.Stream<T> asVavrStream(String country) {
         return io.vavr.collection.Stream.of(data(country));
+    }
+
+    @Override
+    public Sequence<T> asSequence(String country) {
+        return ArraysKt.asSequence(data(country));
     }
 }

@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
+import kotlin.collections.ArraysKt;
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 
 public abstract class AbstractBaseDataProvider<T> implements ISequenceBenchmarkDataProvider<T> {
@@ -35,6 +37,11 @@ public abstract class AbstractBaseDataProvider<T> implements ISequenceBenchmarkD
     @Override
     public Seq<T> asSeq() {
         return Seq.of(data());
+    }
+
+    @Override
+    public Sequence<T> asSequence() {
+        return ArraysKt.asSequence(data());
     }
 
     @Override

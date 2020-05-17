@@ -1,8 +1,6 @@
 
 package com.github.tiniyield.sequences.benchmarks.operations.model.track;
 
-import static java.lang.String.format;
-
 import java.util.List;
 import java.util.Objects;
 

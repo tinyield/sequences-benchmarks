@@ -7,7 +7,6 @@ import static com.github.tiniyield.sequences.benchmarks.operations.common.Sequen
 import static java.util.Locale.ENGLISH;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.javatuples.Pair;

@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -46,7 +45,6 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)

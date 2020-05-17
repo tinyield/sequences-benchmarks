@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.operations.common;
 
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.ArtistsDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.CountriesDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.TracksDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.CountriesDataProvider;
 
 public class SequenceBenchmarkConstants {
 

@@ -2,6 +2,7 @@
 package com.github.tiniyield.sequences.benchmarks.operations.model.country;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
