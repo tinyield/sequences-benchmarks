@@ -31,7 +31,6 @@
 
 package com.github.tiniyield.sequences.benchmarks.find;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
@@ -51,17 +50,17 @@ import com.github.tiniyield.sequences.benchmarks.operations.data.providers.numbe
 @State(Scope.Benchmark)
 public class FindIntegerBenchmark extends FindBenchmark<Integer> {
 
-    private List<List<Integer>> matrixA;
-    private List<List<Integer>> matrixB;
+    private List<Integer> lstA;
+    private List<Integer> lstB;
 
 
     protected List<Integer> getListA() {
-        return matrixA.get(index % COLLECTION_SIZE);
+        return lstA;
     }
 
 
     protected List<Integer> getListB() {
-        return matrixB.get(index % COLLECTION_SIZE);
+        return lstB;
     }
 
 
@@ -72,22 +71,18 @@ public class FindIntegerBenchmark extends FindBenchmark<Integer> {
 
     @Setup
     public void init() {
-        matrixA = new ArrayList<>(COLLECTION_SIZE);
-        matrixB = new ArrayList<>(COLLECTION_SIZE);
-        for (int i = 0; i < COLLECTION_SIZE; i++) {
-            matrixA.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .collect(Collectors.toList())
-            );
-            int iFinal = i;
-            matrixB.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .map(v -> iFinal)
-                            .collect(Collectors.toList())
-            );
-        }
+        lstA = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .collect(Collectors.toList());
+        lstB = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .map(v -> -1)
+                .collect(Collectors.toList());
+    }
+
+    protected void update() {
+        lstB.set((index - 1) % COLLECTION_SIZE, -1);
+        lstB.set(index % COLLECTION_SIZE, index % COLLECTION_SIZE);
     }
 
 }

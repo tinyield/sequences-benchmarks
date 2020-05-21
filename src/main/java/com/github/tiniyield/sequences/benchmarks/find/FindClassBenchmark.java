@@ -30,7 +30,6 @@
  */
 package com.github.tiniyield.sequences.benchmarks.find;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
@@ -51,17 +50,17 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 @State(Scope.Benchmark)
 public class FindClassBenchmark extends FindBenchmark<Value> {
 
-    private List<List<Value>> matrixA;
-    private List<List<Value>> matrixB;
+    private List<Value> lstA;
+    private List<Value> lstB;
 
 
     protected List<Value> getListA() {
-        return matrixA.get(index % COLLECTION_SIZE);
+        return lstA;
     }
 
 
     protected List<Value> getListB() {
-        return matrixB.get(index % COLLECTION_SIZE);
+        return lstB;
     }
 
 
@@ -69,27 +68,22 @@ public class FindClassBenchmark extends FindBenchmark<Value> {
         return Value::equals;
     }
 
-
     @Setup
     public void init() {
-        matrixA = new ArrayList<>(COLLECTION_SIZE);
-        matrixB = new ArrayList<>(COLLECTION_SIZE);
-        for (int i = 0; i < COLLECTION_SIZE; i++) {
-            matrixA.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .map(Value::new)
-                            .collect(Collectors.toList())
-            );
-            int iFinal = i;
-            matrixB.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .map(v -> iFinal)
-                            .map(Value::new)
-                            .collect(Collectors.toList())
-            );
-        }
+        lstA = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .map(Value::new)
+                .collect(Collectors.toList());
+        lstB = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .map(v -> -1)
+                .map(Value::new)
+                .collect(Collectors.toList());
+    }
+
+    protected void update() {
+        lstB.set((index - 1) % COLLECTION_SIZE, new Value(-1));
+        lstB.set(index % COLLECTION_SIZE, new Value(index % COLLECTION_SIZE));
     }
 
 }

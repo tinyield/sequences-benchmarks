@@ -1,6 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
@@ -19,17 +18,17 @@ import com.github.tiniyield.sequences.benchmarks.operations.data.providers.numbe
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindStringBenchmark extends FindBenchmark<String> {
-    private List<List<String>> matrixA;
-    private List<List<String>> matrixB;
+    private List<String> lstA;
+    private List<String> lstB;
 
 
     protected List<String> getListA() {
-        return matrixA.get(index % COLLECTION_SIZE);
+        return lstA;
     }
 
 
     protected List<String> getListB() {
-        return matrixB.get(index % COLLECTION_SIZE);
+        return lstB;
     }
 
 
@@ -37,27 +36,22 @@ public class FindStringBenchmark extends FindBenchmark<String> {
         return String::equals;
     }
 
-
     @Setup
     public void init() {
-        matrixA = new ArrayList<>(COLLECTION_SIZE);
-        matrixB = new ArrayList<>(COLLECTION_SIZE);
-        for (int i = 0; i < COLLECTION_SIZE; i++) {
-            matrixA.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .map(String::valueOf)
-                            .collect(Collectors.toList())
-            );
-            int iFinal = i;
-            matrixB.add(
-                    new IntegerDataProvider(COLLECTION_SIZE)
-                            .asStream()
-                            .map(v -> iFinal)
-                            .map(String::valueOf)
-                            .collect(Collectors.toList())
-            );
-        }
+        lstA = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+        lstB = new IntegerDataProvider(COLLECTION_SIZE)
+                .asStream()
+                .map(v -> -1)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    protected void update() {
+        lstB.set((index - 1) % COLLECTION_SIZE, String.valueOf(-1));
+        lstB.set(index % COLLECTION_SIZE, String.valueOf(index % COLLECTION_SIZE));
     }
 
 }

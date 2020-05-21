@@ -81,6 +81,11 @@ public class FindFixedIndexBenchmark extends FindBenchmark<String> {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    protected void update() {
+        // do nothing
+    }
+
     private Integer getMatchIndex() {
         int matchIndex = COLLECTION_SIZE / 100;
         if(COLLECTION_SIZE < 100) {

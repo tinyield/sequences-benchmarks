@@ -69,6 +69,7 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
     protected int index;
 
     protected abstract void init();
+    protected abstract void update();
 
     @Setup()
     public void setupOperations() {
@@ -80,6 +81,7 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
     @Setup(Level.Invocation)
     public void iterate() {
         index++;
+        this.update();
     }
 
     @Override
