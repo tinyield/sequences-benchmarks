@@ -458,17 +458,17 @@ check the [Github Actions Section](https://github.com/tinyield/sequences-benchma
             <comment></comment>
             <td class="Java Stream">1</td>
             <comment></comment>
-            <td class="Zipline"></td>
-            <comment></comment>
-            <td class="Kotlin Sequence"></td>
-            <comment></comment>
-            <td class="Jayield"></td>
-            <td class="StreamEx"></td>
-            <td class="jOOλ"></td>
-            <td class="Vavr"></td>
-            <comment></comment>
-            <td class="Guava"></td>
-            <td class="Protonpack"></td>
+			<td class="Zipline">1</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">1.4</td>
+			<comment></comment>
+			<td class="Jayield">1.7</td>
+			<td class="StreamEx">1.1</td>
+			<td class="jOOλ">0.9</td>
+			<td class="Vavr">0.1</td>
+			<comment></comment>
+			<td class="Guava">0.9</td>
+			<td class="Protonpack">1.5</td>
         </tr>
         <tr class="Separator"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr>
@@ -513,17 +513,17 @@ check the [Github Actions Section](https://github.com/tinyield/sequences-benchma
             <comment></comment>
             <td class="Java Stream">1</td>
             <comment></comment>
-            <td class="Zipline"></td>
-            <comment></comment>
-            <td class="Kotlin Sequence"></td>
-            <comment></comment>
-            <td class="Jayield"></td>
-            <td class="StreamEx"></td>
-            <td class="jOOλ"></td>
-            <td class="Vavr"></td>
-            <comment></comment>
-            <td class="Guava"></td>
-            <td class="Protonpack"></td>
+			<td class="Zipline">1.1</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">3.7</td>
+			<comment></comment>
+			<td class="Jayield">7.4</td>
+			<td class="StreamEx">1.2</td>
+			<td class="jOOλ">0.8</td>
+			<td class="Vavr">0.1</td>
+			<comment></comment>
+			<td class="Guava">1</td>
+			<td class="Protonpack">1</td>
         </tr>
         <tr class="Separator"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr>
@@ -568,17 +568,17 @@ check the [Github Actions Section](https://github.com/tinyield/sequences-benchma
             <comment></comment>
             <td class="Java Stream">1</td>
             <comment></comment>
-            <td class="Zipline"></td>
-            <comment></comment>
-            <td class="Kotlin Sequence"></td>
-            <comment></comment>
-            <td class="Jayield"></td>
-            <td class="StreamEx"></td>
-            <td class="jOOλ"></td>
-            <td class="Vavr"></td>
-            <comment></comment>
-            <td class="Guava"></td>
-            <td class="Protonpack"></td>
+			<td class="Zipline">1</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">2.2</td>
+			<comment></comment>
+			<td class="Jayield">3.3</td>
+			<td class="StreamEx">0.9</td>
+			<td class="jOOλ">0.8</td>
+			<td class="Vavr">0.1</td>
+			<comment></comment>
+			<td class="Guava">1.1</td>
+			<td class="Protonpack">1.2</td>
         </tr>
         <tr class="Separator"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr>
