@@ -77,7 +77,6 @@ public class EveryIntegerBenchmark extends EveryBenchmark<Integer, Integer> {
             .rangeClosed(1, COLLECTION_SIZE)
             .boxed()
             .collect(Collectors.toList());
-//        lstB.addAll(lstA);
         lstA.forEach(lstB::add);
     }
 
