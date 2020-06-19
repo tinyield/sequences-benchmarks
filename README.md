@@ -105,7 +105,10 @@ Collection Sizes: [10, 1000, 100 000]
 
 Pipeline:
 ```ignorelang
-sourceSequence1 + sourceSequence2 -> zip((e1, e2) -> Object.equals(e1, e2) ? t1 : null) -> filter(Objects::nonNull) -> findFirst()
+sourceSequence1 + sourceSequence2 -> 
+-> zip((e1, e2) -> Object.equals(e1, e2) ? t1 : null) -> 
+-> filter(Objects::nonNull) -> 
+-> findFirst()
 ```
 ##### Find First
 Benchmarks the usage of the `findFirst()` operator. This benchmark was run 
@@ -137,12 +140,22 @@ the exact same thing but for the top 50 Tracks.
 Then _zipping_ both sequences into a Trio of Country, First Artist and First Track and
 retrieving the distinct elements by Artist.
 
-Pipeline:
+Pipelines:
+* Sequence of Artists:
 ```ignorelang
-sequenceOfArtists = sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasArtists) -> map(Pair.of(country, artists));
-sequenceOfTracks = sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasTracks) -> map(Pair.of(country, tracks));
+sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasArtists) -> map(Pair.of(country, artists));
+```
 
-sequenceOfArtists + sequenceOfTracks -> zip(Trio.of(country, topArtist, topTrack)) -> distinctBy(artist) -> forEach(bh::consume)
+* Sequence of Tracks:
+```ignorelang
+sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasTracks) -> map(Pair.of(country, tracks));
+```
+* Pipeline
+```ignorelang
+sequenceOfArtists + sequenceOfTracks -> 
+-> zip(Trio.of(country, topArtist, topTrack)) -> 
+-> distinctBy(artist) -> 
+-> forEach(bh::consume)
 ```
 ##### Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark
 Benchmarks creating two different sequences, one consisting of the top 50 Artists 
@@ -154,12 +167,22 @@ names and zip them into a Trio. After, the top ten artists are filtered by their
 presence in the top ten Track artist's name, returning a Pair with the Country 
 and the resulting Sequence.
 
-Pipeline:
+Pipelines:
+* Sequence of Artists:
 ```ignorelang
-sequenceOfArtists = sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasArtists) -> map(Pair.of(country, artists));
-sequenceOfTracks = sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasTracks) -> map(Pair.of(country, tracks));
+sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasArtists) -> map(Pair.of(country, artists));
+```
 
-sequenceOfArtists + sequenceOfTracks -> zip(Trio.of(country, artists, tracks)) -> map(Pair.of(country, artists)) -> forEach(bh::consume)
+* Sequence of Tracks:
+```ignorelang
+sequenceOfCountries -> filter(isNonEnglishSpeaking) -> filter(hasTracks) -> map(Pair.of(country, tracks));
+```
+* Pipeline
+```ignorelang
+sequenceOfArtists + sequenceOfTracks -> 
+-> zip(Trio.of(country, artists, tracks)) -> 
+-> map(Pair.of(country, artists)) -> 
+-> forEach(bh::consume)
 ```
 
 # Performance Comparison
@@ -167,7 +190,7 @@ The results presented here were based on the results attained from Github Action
 they are presented in relation to Java's Stream performance. For the actual results
 check the [Github Actions Section](https://github.com/tinyield/sequences-benchmarks/actions).
 
-Notes:
+**Notes:**
 * Java's Stream performance is equivalent to 1, all results are presented in relation to it
 * When collection sizes vary the results are presented in a pipe manner, relating to the 
 collection size, so, for collection sizes of 10, 1K and 100K we would have:
