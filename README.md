@@ -5,7 +5,7 @@
     1. [All Match](#all-match)
     2. [Every](#every)
     3. [Find](#find)
-    4. [Find First](#find-first)
+    4. [First](#find-first)
     5. [Zip](#zip)
     6. [Distinct Top Artist and Top Track by Country Benchmark](#distinct-top-artist-and-top-track-by-country-benchmark)
     7. [Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark](#artists-who-are-in-a-countrys-top-ten-who-also-have-tracks-in-the-same-countrys-top-ten-benchmark)
@@ -28,7 +28,7 @@ And then:
 java -jar target/benchmarks.jar
 ```
 # Benchmarks Overview
-##### All Match
+### All Match - `allMatch(sequence, predicate)`
 Benchmarks the `allMatch()` operation in the different sequence types.
 
 Collection Sizes: [10, 1000, 100 000]
@@ -37,7 +37,7 @@ Pipeline:
 ```ignorelang
 sequenceOfEvenIntegers -> allMatch(isEven)
 ```
-##### Every
+### Every - `every(sequence1, sequence2, predicate)`
 Every is an operation that, based on a user defined predicate, tests if all the
 elements of a sequence match between corresponding positions. So for instance, if we have:
 ```java
@@ -58,15 +58,14 @@ such as:
 seq1.zip(seq2, pred::test).allMatch(Boolean.TRUE::equals);
 ```
 
-Benchmarked for: [Class, Integer, String, Randomly generated String]
-
+Benchmarked for: [Class, Integer, String, Randomly generated String]  
 Collection Sizes: [10, 1000, 100 000]
 
 Pipeline:
 ```ignorelang
 sourceSequence + copyOfSourceSequence -> zip(Object::Equals) -> allMatch(Boolean.TRUE::equals)
 ```
-##### Find
+### Find - `find(sequence1, sequence2, predicate)`
 The `find` between two sequences is an operation that, based on a user defined
 predicate, finds two elements that match, returning one of them in the process.
 So if we have:
@@ -93,15 +92,20 @@ zip(seq1, seq2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
 }
 ```
 
-Benchmarked for: [Class, Integer, String, String matching in a fixed index]
-Match Index:
-* For Class, Integer and String, the match index increments with each iteration
-to make sure there are matches in every index of the sequence.
-* For String matching in a fixed index, matches would be made in the index
-corresponding to COLLECTION_SIZE / 100, if the COLLECTION_SIZE was larger than 100 
-elements otherwise COLLECTION_SIZE / 10.
-
-Collection Sizes: [10, 1000, 100 000]
+Benchmarked for: [Class, Integer, String]  
+Collection Sizes: [10, 1000, 100 000]  
+This pipeline has two ways of determining which element will be the matching element:
+1. For String sequences, the matching element will be on a fixed index, using the 
+following criteria:
+    * For collections with more than 100 elements, the matching index will correspond
+     to COLLECTION_SIZE / 100.  
+      (e.g: for a COLLECTION_SIZE of 100K the pipeline will match with the 1000th element)
+      
+    * Otherwise, the matching index will correspond to COLLECTION_SIZE / 10.  
+    (e.g: for a COLLECTION_SIZE of 100 elements the pipeline will match with the 10th element)
+2. For all sequences (including String), the match index increments with each iteration
+to make sure there are matches in every index of the sequence.  
+(e.g: On the 1st iteration the match index will be 0, on the 2nd it will be 1, etc... )
 
 Pipeline:
 ```ignorelang
@@ -110,7 +114,7 @@ sourceSequence1 + sourceSequence2 ->
 -> filter(Objects::nonNull) -> 
 -> findFirst()
 ```
-##### Find First
+### First - `first(sequence, predicate)`
 Benchmarks the usage of the `findFirst()` operator. This benchmark was run 
 with three types of Sequences:
 1. One where the match would be found in the first element.
@@ -123,7 +127,7 @@ Pipeline:
 ```ignorelang
 sequenceOfAllButOneEvenIntegers -> filter(isOdd) -> findFirst()
 ```
-##### Zip
+### Zip Primes with Values - `zip(primes, values)`
 Benchmarks _zipping_ a sequence of prime Integers with instances of the class Value.
 
 Collection Sizes: [10, 1000, 100 000]
@@ -132,7 +136,7 @@ Pipeline:
 ```ignorelang
 (sequenceOfIntegers -> filter(isPrime)) + sequenceOfValues -> zip(Pair::with) -> forEach(bh::consume)
 ```
-##### Distinct Top Artist and Top Track by Country Benchmark
+### Distinct Top Artist and Top Track by Country Benchmark - `zip(artists, tracks)`
 Benchmarks creating two different sequences, one consisting of the top 50 Artists 
 (provided by [Last.fm](https://www.last.fm/api/)) of each non english speaking 
 country (provided by [REST Countries](https://restcountries.eu/)) and the other
@@ -157,7 +161,7 @@ sequenceOfArtists + sequenceOfTracks ->
 -> distinctBy(artist) -> 
 -> forEach(bh::consume)
 ```
-##### Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark
+### Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark - `zip(artists, tracks)`
 Benchmarks creating two different sequences, one consisting of the top 50 Artists 
 (provided by [Last.fm](https://www.last.fm/api/)) of each non english speaking 
 country (provided by [REST Countries](https://restcountries.eu/)) and the other
@@ -192,10 +196,74 @@ check the [Github Actions Section](https://github.com/tinyield/sequences-benchma
 
 **Notes:**
 * Java's Stream performance is equivalent to 1, all results are presented in relation to it
-* When collection sizes vary the results are presented in a pipe manner, relating to the 
-collection size, so, for collection sizes of 10, 1K and 100K we would have:
-  * 10 results|1K results|100K results
+* For Pipelines where collection sizes vary, only 1k results and 100k results will be
+displayed, separated in a pipe format, like so:
+  * 1K results | 100K results
 
+### Benchmarks with one Sequence
+<table>
+    <thead>
+        <tr>
+            <th>Benchmark</th>
+            <th>Time Complexity</th>
+            <comment></comment>
+            <th>Kotlin Sequence</th>
+            <comment></comment>
+            <th>Jayield</th>
+            <th>StreamEx</th>
+            <th>jOOλ</th>
+            <th>Vavr</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="Benchmark">All Match</td>
+            <td class="TimeComplexity">Linear</td>
+            <comment></comment>
+            <td class="Kotlin Sequence">1.7 | 2.8</td>
+            <comment></comment>
+            <td class="Jayield">3.7 | 5.6</td>
+            <td class="StreamEx">0.7 | 0.9</td>
+            <td class="jOOλ">0.6 | 1.0</td>
+            <td class="Vavr">0.1 | 0.1</td>
+        </tr>
+        <tr>
+            <td class="Benchmark">First in the Beginning</td>
+            <td class="TimeComplexity">Constant</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">11.6 | 11.4</td>
+			<comment></comment>
+			<td class="Jayield">0.4 | 0.4</td>
+			<td class="StreamEx">0.9 | 0.9</td>
+			<td class="jOOλ">0.5 | 0.5</td>
+			<td class="Vavr">0.9 | 0.9</td>
+        </tr>
+        <tr>
+            <td class="Benchmark">First in the Middle</td>
+            <td class="TimeComplexity">Linear</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">3.8 | 7.1</td>
+			<comment></comment>
+			<td class="Jayield">0.7 | 1.3</td>
+			<td class="StreamEx">0.5 | 1.0</td>
+			<td class="jOOλ">1.0 | 1.0</td>
+			<td class="Vavr">0.1 | 0.1</td>
+        </tr>
+        <tr>
+            <td class="Benchmark">First in the End</td>
+            <td class="TimeComplexity">Linear</td>
+			<comment></comment>
+			<td class="Kotlin Sequence">4.4 | 8.9</td>
+			<comment></comment>
+			<td class="Jayield">0.8 | 1.2</td>
+			<td class="StreamEx">0.6 | 1.0</td>
+			<td class="jOOλ">0.8 | 1.0</td>
+			<td class="Vavr">0.1 | 0.1</td>
+        </tr>
+    </tbody>
+</table>
+
+### Benchmarks with two Sequences
 <table>
     <thead>
         <tr>
@@ -217,231 +285,135 @@ collection size, so, for collection sizes of 10, 1K and 100K we would have:
     </thead>
     <tbody>
         <tr>
-            <td class="Benchmark">All Match</td>
-            <td class="TimeComplexity">Linear</td>
-            <comment></comment>
-            <td class="Zipline">-</td>
-            <comment></comment>
-            <td class="Kotlin Sequence">3.5|1.7|2.8</td>
-            <comment></comment>
-            <td class="Jayield">3.3|3.7|5.6</td>
-            <td class="StreamEx">0.8|0.7|0.9</td>
-            <td class="jOOλ">0.6|0.6|1</td>
-            <td class="Vavr">0.1|0.1|0.1</td>
-            <comment></comment>
-            <td class="Guava">-</td>
-            <td class="Protonpack">-</td>
-        </tr>
-        <tr>
             <td class="Benchmark">Every String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.3|1.2|1.2</td>
+			<td class="Zipline">1.2 | 1.2</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">2.5|3.7|3.9</td>
+			<td class="Kotlin Sequence">3.7 | 3.9</td>
 			<comment></comment>
-			<td class="Jayield">3.7|8.4|4</td>
-			<td class="StreamEx">1.2|1.3|1.4</td>
-			<td class="jOOλ">0.6|0.7|0.8</td>
-			<td class="Vavr">0.1|0.1|0.1</td>
+			<td class="Jayield">8.4 | 4.0</td>
+			<td class="StreamEx">1.3 | 1.4</td>
+			<td class="jOOλ">0.7 | 0.8</td>
+			<td class="Vavr">0.1 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">1|1.1|1.1</td>
-			<td class="Protonpack">1.1|1.1|1.1</td>
+			<td class="Guava">1.1 | 1.1</td>
+			<td class="Protonpack">1.1 | 1.1</td>
         </tr>
         <tr>
             <td class="Benchmark">Every Integer</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.4|1.5|1.7</td>
+			<td class="Zipline">1.5 | 1.7</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">2.5|5.7|6</td>
+			<td class="Kotlin Sequence">5.7 | 6.0</td>
 			<comment></comment>
-			<td class="Jayield">1.1|0.9|5.6</td>
-			<td class="StreamEx">1.6|1.4|1.3</td>
-			<td class="jOOλ">0.7|0.8|0.8</td>
-			<td class="Vavr">0.1|0.1|0.1</td>
+			<td class="Jayield">1.0 | 5.6</td>
+			<td class="StreamEx">1.4 | 1.3</td>
+			<td class="jOOλ">0.8 | 0.8</td>
+			<td class="Vavr">0.1 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">1|1|1</td>
-			<td class="Protonpack">1|1|0.8</td>
-        </tr>
-        <tr>
-            <td class="Benchmark">Every Class</td>
-            <td class="TimeComplexity">Linear</td>
-            <comment></comment>
-			<td class="Zipline">1.5|1.5|1.7</td>
-			<comment></comment>
-			<td class="Kotlin Sequence">2.4|6|4.1</td>
-			<comment></comment>
-			<td class="Jayield">1.1|1|4.9</td>
-			<td class="StreamEx">1.3|1.4|1.3</td>
-			<td class="jOOλ">0.6|0.7|0.8</td>
-			<td class="Vavr">0.1|0.1|0.1</td>
-			<comment></comment>
-			<td class="Guava">1|1|1</td>
-			<td class="Protonpack">1.4|1.2|1.1</td>
+			<td class="Guava">1.0 | 1.0</td>
+			<td class="Protonpack">1.0 | 0.8</td>
         </tr>
         <tr>
             <td class="Benchmark">Every Random String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.3|1.3|1.5</td>
+			<td class="Zipline">1.3 | 1.5</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">2.5|4.4|3.5</td>
+			<td class="Kotlin Sequence">4.4 | 3.5</td>
 			<comment></comment>
-			<td class="Jayield">3.6|7.9|7</td>
-			<td class="StreamEx">1.1|1.3|1.7</td>
-			<td class="jOOλ">0.6|0.8|0.9</td>
-			<td class="Vavr">0.1|0.1|0.1</td>
+			<td class="Jayield">7.9 | 7.0</td>
+			<td class="StreamEx">1.3 | 1.7</td>
+			<td class="jOOλ">0.8 | 0.9</td>
+			<td class="Vavr">0.1 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">0.9|1.2|1</td>
-			<td class="Protonpack">1.1|1.2|2.3</td>
+			<td class="Guava">1.2 | 1.0</td>
+			<td class="Protonpack">1.2 | 2.3</td>
         </tr>
         <tr>
             <td class="Benchmark">Find String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1|1.1|1</td>
+			<td class="Zipline">1.1 | 1.0</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">1.4|2|1.4</td>
+			<td class="Kotlin Sequence">2.0 | 1.4</td>
 			<comment></comment>
-			<td class="Jayield">1|2.2|1.7</td>
-			<td class="StreamEx">1.1|1.1|1.1</td>
-			<td class="jOOλ">0.6|0.8|0.9</td>
-			<td class="Vavr">0.2|0.2|0.1</td>
+			<td class="Jayield">2.2 | 1.7</td>
+			<td class="StreamEx">1.1 | 1.1</td>
+			<td class="jOOλ">0.8 | 0.9</td>
+			<td class="Vavr">0.2 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">1|1.1|0.9</td>
-			<td class="Protonpack">1.1|1.1|1.5</td>
+			<td class="Guava">1.1 | 0.9</td>
+			<td class="Protonpack">1.1 | 1.5</td>
         </tr>
         <tr>
             <td class="Benchmark">Find Integer</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.1|1.2|1.1</td>
+			<td class="Zipline">1.2 | 1.1</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">1.6|3.3|3.7</td>
+			<td class="Kotlin Sequence">3.3 | 3.7</td>
 			<comment></comment>
-			<td class="Jayield">1|5.1|7.4</td>
-			<td class="StreamEx">1.1|1.3|1.2</td>
-			<td class="jOOλ">0.6|0.8|0.8</td>
-			<td class="Vavr">0.2|0.1|0.1</td>
+			<td class="Jayield">5.1 | 7.4</td>
+			<td class="StreamEx">1.3 | 1.2</td>
+			<td class="jOOλ">0.8 | 0.8</td>
+			<td class="Vavr">0.1 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">1|1.1|1</td>
-			<td class="Protonpack">1.1|1.2|1</td>
-        </tr>
-        <tr>
-            <td class="Benchmark">Find Class</td>
-            <td class="TimeComplexity">Linear</td>
-            <comment></comment>
-			<td class="Zipline">1|1.1|1</td>
-			<comment></comment>
-			<td class="Kotlin Sequence">1|1.7|2.2.5</td>
-			<comment></comment>
-			<td class="Jayield">1|1.8|3.3</td>
-			<td class="StreamEx">1|1.2|0.9.1</td>
-			<td class="jOOλ">0|0.8|0.8.6</td>
-			<td class="Vavr">0|0.2|0.1.2</td>
-			<comment></comment>
-			<td class="Guava">1|1.1|1.1</td>
-			<td class="Protonpack">1|1.1|1.2</td>
+			<td class="Guava">1.1 | 1.0</td>
+			<td class="Protonpack">1.2 | 1.0</td>
         </tr>
         <tr>
             <td class="Benchmark">Find Fixed Index</td>
             <td class="TimeComplexity">Constant</td>
             <comment></comment>
-			<td class="Zipline">1.1|1.1|0.9</td>
+			<td class="Zipline">1.1 | 0.9</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">1.2|1.9|2.7</td>
+			<td class="Kotlin Sequence">1.9 | 2.7</td>
 			<comment></comment>
-			<td class="Jayield">0.5|1.4|5.3</td>
-			<td class="StreamEx">1|1.2|1.3</td>
-			<td class="jOOλ">0.5|0.7|0.8</td>
-			<td class="Vavr">0.4|0.2|0.1</td>
+			<td class="Jayield">1.4 | 5.3</td>
+			<td class="StreamEx">1.2 | 1.3</td>
+			<td class="jOOλ">0.7 | 0.8</td>
+			<td class="Vavr">0.2 | 0.1</td>
 			<comment></comment>
-			<td class="Guava">0.9|1|0.9</td>
-			<td class="Protonpack">1.1|1.2|1</td>
+			<td class="Guava">1.0 | 0.9</td>
+			<td class="Protonpack">1.2 | 1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Find First in the Beginning</td>
-            <td class="TimeComplexity">Constant</td>
-            <comment></comment>
-			<td class="Zipline">-</td>
-			<comment></comment>
-			<td class="Kotlin Sequence">11.1|11.6|11.4</td>
-			<comment></comment>
-			<td class="Jayield">0.4|0.4|0.4</td>
-			<td class="StreamEx">0.9|0.9|0.9</td>
-			<td class="jOOλ">0.4|0.5|0.5</td>
-			<td class="Vavr">0.8|0.9|0.9</td>
-			<comment></comment>
-			<td class="Guava">-</td>
-			<td class="Protonpack">-</td>
-        </tr>
-        <tr>
-            <td class="Benchmark">Find First in the Middle</td>
+            <td class="Benchmark">Zip Primes with Values</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">-</td>
-			<comment></comment>
-			<td class="Kotlin Sequence">7.2|3.8|7.1</td>
-			<comment></comment>
-			<td class="Jayield">0.4|0.7|1.3</td>
-			<td class="StreamEx">0.9|0.5|1</td>
-			<td class="jOOλ">0.5|1|1</td>
-			<td class="Vavr">0.2|0.1|0.1</td>
-			<comment></comment>
-			<td class="Guava">-</td>
-			<td class="Protonpack">-</td>
+            <td class="Zipline">1.2 | 1.2</td>
+            <comment></comment>
+            <td class="Kotlin Sequence">1.6 | 1.3</td>
+            <comment></comment>
+            <td class="Jayield">1.6 | 1.2</td>
+            <td class="StreamEx">0.9 | 1.1</td>
+            <td class="jOOλ">0.9 | 1.1</td>
+            <td class="Vavr">0.3 | 0.7</td>
+            <comment></comment>
+            <td class="Guava">0.9 | 1.1</td>
+            <td class="Protonpack">1.0 | 1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Find First in the End</td>
-            <td class="TimeComplexity">Linear</td>
-            <comment></comment>
-			<td class="Zipline">-</td>
-			<comment></comment>
-			<td class="Kotlin Sequence">5.6|4.4|8.9</td>
-			<comment></comment>
-			<td class="Jayield">0.4|0.8|1.2</td>
-			<td class="StreamEx">0.9|0.6|1</td>
-			<td class="jOOλ">0.5|0.8|1</td>
-			<td class="Vavr">0.1|0.1|0.1</td>
-			<comment></comment>
-			<td class="Guava">-</td>
-			<td class="Protonpack">-</td>
-        </tr>
-        <tr>
-            <td class="Benchmark">Zip</td>
-            <td class="TimeComplexity">Linear</td>
-            <comment></comment>
-            <td class="Zipline">1.8|1.2|1.2</td>
-            <comment></comment>
-            <td class="Kotlin Sequence">2.3|1.6|1.3</td>
-            <comment></comment>
-            <td class="Jayield">2.5|1.6|1.2</td>
-            <td class="StreamEx">1|0.9|1.1</td>
-            <td class="jOOλ">0.7|0.9|1.1</td>
-            <td class="Vavr">0.3|0.3|0.7</td>
-            <comment></comment>
-            <td class="Guava">1|0.9|1.1</td>
-            <td class="Protonpack">1|1|1</td>
-        </tr>
-        <tr>
-            <td class="Benchmark">Complex Zip Pipeline(1)</td>
+            <td class="Benchmark">Zip Top Artist & Track(1)</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
             <td class="Zipline">1.1</td>
             <comment></comment>
-            <td class="Kotlin Sequence">2</td>
+            <td class="Kotlin Sequence">2.0</td>
             <comment></comment>
             <td class="Jayield">1.1</td>
             <td class="StreamEx">0.9</td>
             <td class="jOOλ">0.8</td>
             <td class="Vavr">0.6</td>
             <comment></comment>
-            <td class="Guava">1</td>
-            <td class="Protonpack">1</td>
+            <td class="Guava">1.0</td>
+            <td class="Protonpack">1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Complex Zip Pipeline(2)</td>
+            <td class="Benchmark">Zip Artists in Top10(2)</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
             <td class="Zipline">1.1</td>
@@ -454,14 +426,13 @@ collection size, so, for collection sizes of 10, 1K and 100K we would have:
             <td class="Vavr">0.4</td>
             <comment></comment>
             <td class="Guava">1.1</td>
-            <td class="Protonpack">1</td>
+            <td class="Protonpack">1.0</td>
         </tr>
     </tbody>
 </table>
-Notes:
 
-(1) Distinct Top Artist and Top Track by Country Benchmark  
-(2) Artists who are in a Country's top ten who also have Tracks 
+(1) Corresponds to "Distinct Top Artist and Top Track by Country Benchmark"  <br>
+(2) Corresponds to Artists who are in a Country's top ten who also have Tracks" 
 in the same Country's top ten Benchmark
 
 # Article
