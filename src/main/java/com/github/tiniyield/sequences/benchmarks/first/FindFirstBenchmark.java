@@ -59,6 +59,10 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
         return kotlin.findFirst(provider.asSequence()).orElseThrow(RuntimeException::new);
     }
 
+    private Integer getJKotlin() {
+        return jkotlin.findFirst(provider.asSequence()).orElseThrow(RuntimeException::new);
+    }
+
     @Override
     @Benchmark
     public final void stream(Blackhole bh) { // With Auxiliary Function
@@ -94,6 +98,12 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(getKotlin());
+    }
+
+    @Override
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(getJKotlin());
     }
 
 }

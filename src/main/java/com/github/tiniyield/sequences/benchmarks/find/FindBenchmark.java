@@ -138,4 +138,10 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
     public void kotlin(Blackhole bh) {
         bh.consume(kotlin.find(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
+
+    @Override
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(jkotlin.find(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
+    }
 }

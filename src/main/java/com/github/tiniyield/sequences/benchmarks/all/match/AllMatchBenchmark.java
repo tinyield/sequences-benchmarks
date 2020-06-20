@@ -58,6 +58,10 @@ public class AllMatchBenchmark extends AbstractSequenceOperationsBenchmark imple
         return kotlin.isEveryEven(getEvenDataProvider().asSequence());
     }
 
+    private boolean getJKotlin() {
+        return jkotlin.isEveryEven(getEvenDataProvider().asSequence());
+    }
+
     @Override
     @Benchmark
     public void stream(Blackhole bh) { // With Auxiliary Function
@@ -92,6 +96,12 @@ public class AllMatchBenchmark extends AbstractSequenceOperationsBenchmark imple
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(getKotlin());
+    }
+
+    @Override
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(getJKotlin());
     }
 
 }

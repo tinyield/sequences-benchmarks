@@ -9,4 +9,5 @@ public interface ISequenceBenchmark {
     void jool(Blackhole bh);
     void vavr(Blackhole bh);
     void kotlin(Blackhole bh);
+    void jkotlin(Blackhole bh);
 }

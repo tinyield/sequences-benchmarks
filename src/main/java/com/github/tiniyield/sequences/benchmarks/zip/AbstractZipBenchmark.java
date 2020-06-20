@@ -1,8 +1,11 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
-
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
+import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
+import kotlin.Unit;
+import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt;
+import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -14,13 +17,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-
-import kotlin.Unit;
-import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
-import one.util.streamex.StreamEx;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -28,14 +26,26 @@ import one.util.streamex.StreamEx;
 public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
 
     protected abstract io.vavr.collection.Stream<T> getVavr();
+
     protected abstract StreamEx<T> getStreamEx();
+
     protected abstract Stream<T> getZipline();
+
     protected abstract Stream<T> getProtonpack();
+
     protected abstract Stream<T> getStream();
+
     protected abstract Query<T> getQuery();
+
     protected abstract Stream<T> getGuava();
+
     protected abstract Seq<T> getJool();
+
     protected abstract Sequence<T> getKotlin();
+
+    protected abstract Sequence<T> getJKotlin();
+
+    @Override
     protected abstract void init();
 
     @Setup
@@ -70,6 +80,7 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
 
     // Other Sequences based benchmarks
 
+    @Override
     @Benchmark
     public final void vavr(Blackhole bh) {
         getVavr().forEach(bh::consume);
@@ -97,6 +108,15 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
     @Benchmark
     public final void kotlin(Blackhole bh) {
         SequencesKt.forEach(getKotlin(), elem -> {
+            bh.consume(elem);
+            return Unit.INSTANCE;
+        });
+    }
+
+    @Override
+    @Benchmark
+    public final void jkotlin(Blackhole bh) {
+        SequencesKt.forEach(getJKotlin(), elem -> {
             bh.consume(elem);
             return Unit.INSTANCE;
         });

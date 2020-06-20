@@ -31,10 +31,11 @@
 
 package com.github.tiniyield.sequences.benchmarks.every;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BiPredicate;
-
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
+import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
+import io.vavr.collection.Stream;
+import kotlin.sequences.SequencesKt;
+import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -47,12 +48,9 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-
-import io.vavr.collection.Stream;
-import kotlin.sequences.SequencesKt;
-import one.util.streamex.StreamEx;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiPredicate;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
@@ -64,9 +62,12 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
 
 
     protected abstract List<T> getListA();
-    protected abstract List<U> getListB();
-    protected abstract BiPredicate<T,U> getPredicate();
 
+    protected abstract List<U> getListB();
+
+    protected abstract BiPredicate<T, U> getPredicate();
+
+    @Override
     protected abstract void init();
 
     @Setup
@@ -99,7 +100,7 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
         bh.consume(jool.every(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()));
     }
 
-    @Override // could be replaced by corresponds
+    @Override
     @Benchmark
     public final void vavr(Blackhole bh) {
         bh.consume(vavr.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()));
@@ -127,5 +128,11 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(kotlin.every(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
+    }
+
+    @Override
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(jkotlin.every(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
 }

@@ -1,6 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks;
 
 import com.github.tiniyield.sequences.benchmarks.kt.operations.KotlinOperations;
+import com.github.tiniyield.sequences.benchmarks.operations.JKotlinOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.JoolOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.QueryOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.StreamExOperations;
@@ -14,6 +15,7 @@ public abstract class AbstractSequenceOperationsBenchmark {
     protected JoolOperations jool;
     protected VavrOperations vavr;
     protected KotlinOperations kotlin;
+    protected JKotlinOperations jkotlin;
 
     protected void init() {
         streamEx = new StreamExOperations();
@@ -22,5 +24,6 @@ public abstract class AbstractSequenceOperationsBenchmark {
         jool = new JoolOperations();
         vavr = new VavrOperations();
         kotlin = new KotlinOperations();
+        jkotlin = new JKotlinOperations();
     }
 }

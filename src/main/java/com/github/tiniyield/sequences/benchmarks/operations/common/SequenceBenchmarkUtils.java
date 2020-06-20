@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Lists;
+import kotlin.sequences.Sequence;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.jayield.Query;
@@ -75,7 +77,9 @@ public class SequenceBenchmarkUtils {
             Stream<Triplet<Country, Artist, Track>> protonpack,
             Stream<Triplet<Country, Artist, Track>> zipline,
             StreamEx<Triplet<Country, Artist, Track>> streamEx,
-            io.vavr.collection.Stream<Triplet<Country, Artist, Track>> vavr) {
+            io.vavr.collection.Stream<Triplet<Country, Artist, Track>> vavr,
+            Sequence<Triplet<Country, Artist, Track>> kotlin,
+            Sequence<Triplet<Country, Artist, Track>> jkotlin) {
 
         assertSameResults(
                 query.toList(),
@@ -85,7 +89,9 @@ public class SequenceBenchmarkUtils {
                 zipline.collect(Collectors.toList()),
                 streamEx.collect(Collectors.toList()),
                 jool.toList(),
-                vavr.toList().asJava()
+                vavr.toList().asJava(),
+                Lists.newArrayList(kotlin.iterator()),
+                Lists.newArrayList(jkotlin.iterator())
         );
     }
 
@@ -121,7 +127,9 @@ public class SequenceBenchmarkUtils {
             Stream<Pair<Country, List<Artist>>> protonpack,
             Stream<Pair<Country, List<Artist>>> zipline,
             StreamEx<Pair<Country, List<Artist>>> streamEx,
-            io.vavr.collection.Stream<Pair<Country, List<Artist>>> vavr) {
+            io.vavr.collection.Stream<Pair<Country, List<Artist>>> vavr,
+            Sequence<Pair<Country, List<Artist>>> kotlin,
+            Sequence<Pair<Country, List<Artist>>> jkotlin) {
 
         assertSameResults(
                 query.toList(),
@@ -131,7 +139,9 @@ public class SequenceBenchmarkUtils {
                 zipline.collect(Collectors.toList()),
                 streamEx.collect(Collectors.toList()),
                 jool.toList(),
-                vavr.toList().asJava()
+                vavr.toList().asJava(),
+                Lists.newArrayList(kotlin.iterator()),
+                Lists.newArrayList(jkotlin.iterator())
         );
     }
 
@@ -142,7 +152,9 @@ public class SequenceBenchmarkUtils {
                                                        Stream<Pair<Integer, Value>> protonpack,
                                                        Stream<Pair<Integer, Value>> zipline,
                                                        StreamEx<Pair<Integer, Value>> streamEx,
-                                                       io.vavr.collection.Stream<Pair<Integer, Value>> vavr) {
+                                                       io.vavr.collection.Stream<Pair<Integer, Value>> vavr,
+                                                       Sequence<Pair<Integer, Value>> kotlin,
+                                                       Sequence<Pair<Integer, Value>> jkotlin) {
         assertSameResults(
                 query.toList(),
                 stream.collect(Collectors.toList()),
@@ -151,7 +163,9 @@ public class SequenceBenchmarkUtils {
                 zipline.collect(Collectors.toList()),
                 streamEx.collect(Collectors.toList()),
                 jool.toList(),
-                vavr.toList().asJava()
+                vavr.toList().asJava(),
+                Lists.newArrayList(kotlin.iterator()),
+                Lists.newArrayList(jkotlin.iterator())
         );
     }
 
@@ -163,7 +177,7 @@ public class SequenceBenchmarkUtils {
         return VALUE_DATA_PROVIDER;
     }
 
-    public static boolean isPrime(int value) {
+    public static boolean isPrime(Integer value) {
         if (value <= 1) {
             return false;
         }
