@@ -1,0 +1,8 @@
+Benchmark                           (COLLECTION_SIZE)   Mode  Cnt      Score   Error  Units
+FlatMapAndReduceBenchmark.jayield                1000  thrpt       44088,221          ops/s
+FlatMapAndReduceBenchmark.jkotlin                1000  thrpt       48803,316          ops/s
+FlatMapAndReduceBenchmark.jool                   1000  thrpt       23142,718          ops/s
+FlatMapAndReduceBenchmark.kotlin                 1000  thrpt       52880,015          ops/s
+FlatMapAndReduceBenchmark.stream                 1000  thrpt       45166,669          ops/s
+FlatMapAndReduceBenchmark.streamEx               1000  thrpt       46645,076          ops/s
+FlatMapAndReduceBenchmark.vavr                   1000  thrpt        4828,855          ops/s

@@ -58,4 +58,8 @@ public class VavrOperations {
     public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
         return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull).getOrNull();
     }
+
+    public Integer flatMapAndReduce(Stream<Stream<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum);
+    }
 }

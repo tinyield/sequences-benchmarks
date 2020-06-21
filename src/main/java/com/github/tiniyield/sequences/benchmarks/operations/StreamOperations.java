@@ -62,4 +62,8 @@ public class StreamOperations {
                 .findFirst()
                 .orElse(null);
     }
+
+    public Integer flatMapAndReduce(Stream<Stream<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
 }

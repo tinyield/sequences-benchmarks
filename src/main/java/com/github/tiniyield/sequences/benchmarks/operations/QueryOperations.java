@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -57,5 +58,9 @@ public class QueryOperations {
                  .filter(Objects::nonNull)
                  .findFirst()
                  .orElse(null);
+    }
+
+    public Integer flatMapAndReduce(Query<Query<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
     }
 }

@@ -8,6 +8,7 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value
 import org.javatuples.Pair
 import org.javatuples.Triplet
+import java.lang.RuntimeException
 import java.util.*
 import java.util.function.BiPredicate
 
@@ -47,5 +48,10 @@ open class KotlinOperations {
         return q1.zip(q2) { t1, t2 -> if (predicate.test(t1, t2)) t1 else null }
                 .filter { obj -> Objects.nonNull(obj) }
                 .first()!!
+    }
+
+    fun flatMapAndReduce(input: Sequence<Sequence<Int?>>): Int {
+        return input.flatMap { i -> i }
+                .reduce { acc: Int?, i: Int? -> acc!!.plus(i!!) }!!
     }
 }

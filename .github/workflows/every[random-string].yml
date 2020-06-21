@@ -1,4 +1,4 @@
-name: Every[Random String]
+name: Every[Random_String]
  
 on:
   push:
@@ -23,13 +23,13 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark [COLLECTION_SIZE = 1K]
-        run: java -jar target/benchmarks.jar -rf text -rff Every[Random String]-1K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryRandomStringBenchmark -p COLLECTION_SIZE=1000
+        run: java -jar target/benchmarks.jar -rf text -rff Every[Random_String]-1K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryRandomStringBenchmark -p COLLECTION_SIZE=1000
 
       - name: Run Benchmark [COLLECTION_SIZE = 100K]
-        run: java -jar target/benchmarks.jar -rf text -rff Every[Random String]-100K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryRandomStringBenchmark -p COLLECTION_SIZE=100000
+        run: java -jar target/benchmarks.jar -rf text -rff Every[Random_String]-100K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryRandomStringBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v2
         with:
-          name: Every[Random String]
+          name: Every[Random_String]
           path: ./*.log

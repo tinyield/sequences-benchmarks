@@ -58,4 +58,8 @@ public class JoolOperations {
                  .findFirst()
                  .orElse(null);
     }
+
+    public Integer flatMapAndReduce(Seq<Seq<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
 }

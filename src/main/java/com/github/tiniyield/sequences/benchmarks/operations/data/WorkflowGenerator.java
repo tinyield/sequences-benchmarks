@@ -15,6 +15,7 @@ import com.github.tiniyield.sequences.benchmarks.find.FindStringBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInBeginningBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInEndBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInMiddleBenchmark;
+import com.github.tiniyield.sequences.benchmarks.flatmap.FlatMapAndReduceBenchmark;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,10 +32,10 @@ public class WorkflowGenerator {
 
     public static void generateWorkflows() {
         // all.match
-        WorkflowGenerator.generateCollectionWorkflow("All Match", "all-match", AllMatchBenchmark.class.getSimpleName());
+        WorkflowGenerator.generateCollectionWorkflow("All_Match", "all-match", AllMatchBenchmark.class.getSimpleName());
 
         // every
-        WorkflowGenerator.generateCollectionWorkflow("Every[Random String]", "every/random-string", EveryRandomStringBenchmark.class.getSimpleName());
+        WorkflowGenerator.generateCollectionWorkflow("Every[Random_String]", "every/random-string", EveryRandomStringBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("Every[Integer]", "every/integer", EveryIntegerBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("Every[Class]", "every/class", EveryClassBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("Every[String]", "every/string", EveryStringBenchmark.class.getSimpleName());
@@ -43,12 +44,15 @@ public class WorkflowGenerator {
         WorkflowGenerator.generateCollectionWorkflow("Find[Class]", "find/class", FindClassBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("Find[Integer]", "find/integer", FindIntegerBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("Find[String]", "find/string", FindStringBenchmark.class.getSimpleName());
-        WorkflowGenerator.generateCollectionWorkflow("Find[Fixed Index]", "find/fixed-index", FindFixedIndexBenchmark.class.getSimpleName());
+        WorkflowGenerator.generateCollectionWorkflow("Find[Fixed_Index]", "find/fixed-index", FindFixedIndexBenchmark.class.getSimpleName());
 
         // first
         WorkflowGenerator.generateCollectionWorkflow("First[Beginning]", "first/beginning", FindFirstInBeginningBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("First[Middle]", "first/middle", FindFirstInMiddleBenchmark.class.getSimpleName());
         WorkflowGenerator.generateCollectionWorkflow("First[End]", "first/end", FindFirstInEndBenchmark.class.getSimpleName());
+
+        // FlatMap and Reduce
+        WorkflowGenerator.generateCollectionWorkflow("Flatmap_Reduce", "flatmap-reduce", FlatMapAndReduceBenchmark.class.getSimpleName());
     }
 
 
@@ -74,7 +78,7 @@ public class WorkflowGenerator {
     }
 
     private static String getFileName(String benchName) {
-        return "./.github/workflows/" + benchName.toLowerCase().replace(' ', '-') + ".yml";
+        return "./.github/workflows/" + benchName.toLowerCase().replace(' ', '-').replace('_', '-') + ".yml";
     }
 
     private static HashMap<String, String> getCollectionTemplateMap(String className, String benchName, String branch) {
