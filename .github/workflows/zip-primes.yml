@@ -1,0 +1,44 @@
+name: Zip Primes with Values
+ 
+on:
+  push:
+    branches:
+      - all-benchmarks
+      - zip/q3
+ 
+jobs:
+  benchmark:
+    name: Benchmark
+
+    strategy:
+      matrix:
+        java: [ 11 ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Build artifacts
+        run: mvn clean install
+
+      - name: Create Results dir
+        run: mkdir results
+
+      - name: Run Benchmark [COLLECTION_SIZE = 1000]
+        run: java -jar target/benchmarks.jar -rf text -rff zip-primes-1K.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark -p COLLECTION_SIZE=1000
+
+      - name: Run Benchmark [COLLECTION_SIZE = 100000]
+        run: java -jar target/benchmarks.jar -rf text -rff zip-primes-100K.log -i 10 -wi 10 -f 2 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" VanillaZipBenchmark -p COLLECTION_SIZE=100000
+
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: zip-primes
+          path: ./*.log

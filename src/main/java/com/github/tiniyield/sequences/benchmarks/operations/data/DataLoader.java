@@ -24,8 +24,8 @@ public class DataLoader {
 
     public static void main(String[] args) {
 //        loadFromApi();
-//        WorkflowGenerator.generateWorkflows();
-        manualTest();
+        WorkflowGenerator.generateWorkflows();
+//        manualTest();
     }
 
     public static void loadFromApi() {

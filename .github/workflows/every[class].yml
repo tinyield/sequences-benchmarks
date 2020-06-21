@@ -1,9 +1,9 @@
-name: {{name}}
+name: Every[Class]
  
 on:
   push:
     branches:
-      - {{branch}}
+      - every/class
       - all-benchmarks
  
 jobs:
@@ -23,13 +23,13 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark [COLLECTION_SIZE = 1K]
-        run: java -jar target/benchmarks.jar -rf text -rff {{name}}-1K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" {{class}} -p COLLECTION_SIZE=1000
+        run: java -jar target/benchmarks.jar -rf text -rff Every[Class]-1K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryClassBenchmark -p COLLECTION_SIZE=1000
 
       - name: Run Benchmark [COLLECTION_SIZE = 100K]
-        run: java -jar target/benchmarks.jar -rf text -rff {{name}}-100K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" {{class}} -p COLLECTION_SIZE=100000
+        run: java -jar target/benchmarks.jar -rf text -rff Every[Class]-100K.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" EveryClassBenchmark -p COLLECTION_SIZE=100000
 
       - name: Upload results
         uses: actions/upload-artifact@v2
         with:
-          name: {{name}}
+          name: Every[Class]
           path: ./*.log

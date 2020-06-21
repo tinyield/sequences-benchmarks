@@ -1,10 +1,10 @@
-name: Distinct Top Artist and Top Track by Country Benchmark
+name: Artists who are in a Country's top ten who also have Tracks in the same Country's top ten Benchmark
  
 on:
   push:
     branches:
       - all-benchmarks
-      - zip/q1
+      - zip/q2
  
 jobs:
   benchmark:
@@ -29,10 +29,10 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -rf text -rff results_q1.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ZipTopArtistAndTrackByCountryBenchmark
+        run: java -jar target/benchmarks.jar -rf text -rff zip-artists-top10.log -i 10 -wi 10 -f 3 -r 15 -w 20 --jvmArgs "-Xms2G -Xmx2G" ArtistsInTopTenWithTopTenTracksByCountryBenchmark
 
       - name: Upload results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: results_q1
-          path: results_q1.log
+          name: zip-artists-top10
+          path: zip-artists-top10.log
