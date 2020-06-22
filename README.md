@@ -198,16 +198,16 @@ check the [Github Actions Section](https://github.com/tinyield/sequences-benchma
 * Java's Stream performance is equivalent to 1, all results are presented in relation to it
 * For Pipelines where collection sizes vary, only 1k results and 100k results will be
 displayed, separated in a pipe format, like so:
-  * 1K results | 100K results
+  * 1K results&nbsp;|&nbsp;100K results
 
 ### Benchmarks with one Sequence
 <table>
     <thead>
         <tr>
             <th>Benchmark</th>
-            <th>Time Complexity</th>
+            <th>Time&nbsp;Complexity</th>
             <comment></comment>
-            <th>Kotlin Sequence</th>
+            <th>Kotlin&nbsp;Sequence</th>
             <comment></comment>
             <th>Jayield</th>
             <th>StreamEx</th>
@@ -217,48 +217,48 @@ displayed, separated in a pipe format, like so:
     </thead>
     <tbody>
         <tr>
-            <td class="Benchmark">All Match</td>
+            <td class="Benchmark">All&nbsp;Match</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-            <td class="Kotlin Sequence">1.7 | 2.8</td>
+            <td class="Kotlin Sequence">1.7&nbsp;|&nbsp;2.8</td>
             <comment></comment>
-            <td class="Jayield">3.7 | 5.6</td>
-            <td class="StreamEx">0.7 | 0.9</td>
-            <td class="jOOλ">0.6 | 1.0</td>
-            <td class="Vavr">0.1 | 0.1</td>
+            <td class="Jayield">3.7&nbsp;|&nbsp;5.6</td>
+            <td class="StreamEx">0.7&nbsp;|&nbsp;0.9</td>
+            <td class="jOOλ">0.6&nbsp;|&nbsp;1.0</td>
+            <td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
         </tr>
         <tr>
-            <td class="Benchmark">First in the Beginning</td>
+            <td class="Benchmark">First&nbsp;in&nbsp;the&nbsp;Beginning</td>
             <td class="TimeComplexity">Constant</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">11.6 | 11.4</td>
+			<td class="Kotlin Sequence">11.6&nbsp;|&nbsp;11.4</td>
 			<comment></comment>
-			<td class="Jayield">0.4 | 0.4</td>
-			<td class="StreamEx">0.9 | 0.9</td>
-			<td class="jOOλ">0.5 | 0.5</td>
-			<td class="Vavr">0.9 | 0.9</td>
+			<td class="Jayield">0.4&nbsp;|&nbsp;0.4</td>
+			<td class="StreamEx">0.9&nbsp;|&nbsp;0.9</td>
+			<td class="jOOλ">0.5&nbsp;|&nbsp;0.5</td>
+			<td class="Vavr">0.9&nbsp;|&nbsp;0.9</td>
         </tr>
         <tr>
-            <td class="Benchmark">First in the Middle</td>
+            <td class="Benchmark">First&nbsp;in&nbsp;the&nbsp;Middle</td>
             <td class="TimeComplexity">Linear</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">3.8 | 7.1</td>
+			<td class="Kotlin Sequence">3.8&nbsp;|&nbsp;7.1</td>
 			<comment></comment>
-			<td class="Jayield">0.7 | 1.3</td>
-			<td class="StreamEx">0.5 | 1.0</td>
-			<td class="jOOλ">1.0 | 1.0</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">0.7&nbsp;|&nbsp;1.3</td>
+			<td class="StreamEx">0.5&nbsp;|&nbsp;1.0</td>
+			<td class="jOOλ">1.0&nbsp;|&nbsp;1.0</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
         </tr>
         <tr>
-            <td class="Benchmark">First in the End</td>
+            <td class="Benchmark">First&nbsp;in&nbsp;the&nbsp;End</td>
             <td class="TimeComplexity">Linear</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">4.4 | 8.9</td>
+			<td class="Kotlin Sequence">4.4&nbsp;|&nbsp;8.9</td>
 			<comment></comment>
-			<td class="Jayield">0.8 | 1.2</td>
-			<td class="StreamEx">0.6 | 1.0</td>
-			<td class="jOOλ">0.8 | 1.0</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">0.8&nbsp;|&nbsp;1.2</td>
+			<td class="StreamEx">0.6&nbsp;|&nbsp;1.0</td>
+			<td class="jOOλ">0.8&nbsp;|&nbsp;1.0</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
         </tr>
     </tbody>
 </table>
@@ -268,136 +268,136 @@ displayed, separated in a pipe format, like so:
     <thead>
         <tr>
             <th>Benchmark</th>
-            <th>Time Complexity</th>
+            <th>Time&nbsp;Complexity</th>
             <comment></comment>
-            <th>Zipline</th>
+            <th>&nbsp;&nbsp;Zipline&nbsp;&nbsp;</th>
             <comment></comment>
-            <th>Kotlin Sequence</th>
+            <th>Kotlin&nbsp;Sequence</th>
             <comment></comment>
-            <th>Jayield</th>
+            <th>&nbsp;&nbsp;Jayield&nbsp;&nbsp;</th>
             <th>StreamEx</th>
-            <th>jOOλ</th>
-            <th>Vavr</th>
+            <th>&nbsp;&nbsp;&nbsp;jOOλ&nbsp;&nbsp;&nbsp;</th>
+            <th>&nbsp;&nbsp;&nbsp;Vavr&nbsp;&nbsp;&nbsp;</th>
             <comment></comment>
-            <th>Guava over Stream</th>
-            <th>Protonpack over Stream</th>
+            <th>Guava&nbsp;over&nbsp;Stream</th>
+            <th>Protonpack&nbsp;over&nbsp;Stream</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="Benchmark">Every String</td>
+            <td class="Benchmark">Every&nbsp;String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.2 | 1.2</td>
+			<td class="Zipline">1.2&nbsp;|&nbsp;1.2</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">3.7 | 3.9</td>
+			<td class="Kotlin Sequence">3.7&nbsp;|&nbsp;3.9</td>
 			<comment></comment>
-			<td class="Jayield">8.4 | 4.0</td>
-			<td class="StreamEx">1.3 | 1.4</td>
-			<td class="jOOλ">0.7 | 0.8</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">8.4&nbsp;|&nbsp;4.0</td>
+			<td class="StreamEx">1.3&nbsp;|&nbsp;1.4</td>
+			<td class="jOOλ">0.7&nbsp;|&nbsp;0.8</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.1 | 1.1</td>
-			<td class="Protonpack">1.1 | 1.1</td>
+			<td class="Guava">1.1&nbsp;|&nbsp;1.1</td>
+			<td class="Protonpack">1.1&nbsp;|&nbsp;1.1</td>
         </tr>
         <tr>
-            <td class="Benchmark">Every Integer</td>
+            <td class="Benchmark">Every&nbsp;Integer</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.5 | 1.7</td>
+			<td class="Zipline">1.5&nbsp;|&nbsp;1.7</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">5.7 | 6.0</td>
+			<td class="Kotlin Sequence">5.7&nbsp;|&nbsp;6.0</td>
 			<comment></comment>
-			<td class="Jayield">1.0 | 5.6</td>
-			<td class="StreamEx">1.4 | 1.3</td>
-			<td class="jOOλ">0.8 | 0.8</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">1.0&nbsp;|&nbsp;5.6</td>
+			<td class="StreamEx">1.4&nbsp;|&nbsp;1.3</td>
+			<td class="jOOλ">0.8&nbsp;|&nbsp;0.8</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.0 | 1.0</td>
-			<td class="Protonpack">1.0 | 0.8</td>
+			<td class="Guava">1.0&nbsp;|&nbsp;1.0</td>
+			<td class="Protonpack">1.0&nbsp;|&nbsp;0.8</td>
         </tr>
         <tr>
-            <td class="Benchmark">Every Random String</td>
+            <td class="Benchmark">Every&nbsp;Random&nbsp;String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.3 | 1.5</td>
+			<td class="Zipline">1.3&nbsp;|&nbsp;1.5</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">4.4 | 3.5</td>
+			<td class="Kotlin Sequence">4.4&nbsp;|&nbsp;3.5</td>
 			<comment></comment>
-			<td class="Jayield">7.9 | 7.0</td>
-			<td class="StreamEx">1.3 | 1.7</td>
-			<td class="jOOλ">0.8 | 0.9</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">7.9&nbsp;|&nbsp;7.0</td>
+			<td class="StreamEx">1.3&nbsp;|&nbsp;1.7</td>
+			<td class="jOOλ">0.8&nbsp;|&nbsp;0.9</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.2 | 1.0</td>
-			<td class="Protonpack">1.2 | 2.3</td>
+			<td class="Guava">1.2&nbsp;|&nbsp;1.0</td>
+			<td class="Protonpack">1.2&nbsp;|&nbsp;2.3</td>
         </tr>
         <tr>
-            <td class="Benchmark">Find String</td>
+            <td class="Benchmark">Find&nbsp;String</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.1 | 1.0</td>
+			<td class="Zipline">1.1&nbsp;|&nbsp;1.0</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">2.0 | 1.4</td>
+			<td class="Kotlin Sequence">2.0&nbsp;|&nbsp;1.4</td>
 			<comment></comment>
-			<td class="Jayield">2.2 | 1.7</td>
-			<td class="StreamEx">1.1 | 1.1</td>
-			<td class="jOOλ">0.8 | 0.9</td>
-			<td class="Vavr">0.2 | 0.1</td>
+			<td class="Jayield">2.2&nbsp;|&nbsp;1.7</td>
+			<td class="StreamEx">1.1&nbsp;|&nbsp;1.1</td>
+			<td class="jOOλ">0.8&nbsp;|&nbsp;0.9</td>
+			<td class="Vavr">0.2&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.1 | 0.9</td>
-			<td class="Protonpack">1.1 | 1.5</td>
+			<td class="Guava">1.1&nbsp;|&nbsp;0.9</td>
+			<td class="Protonpack">1.1&nbsp;|&nbsp;1.5</td>
         </tr>
         <tr>
-            <td class="Benchmark">Find Integer</td>
+            <td class="Benchmark">Find&nbsp;Integer</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-			<td class="Zipline">1.2 | 1.1</td>
+			<td class="Zipline">1.2&nbsp;|&nbsp;1.1</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">3.3 | 3.7</td>
+			<td class="Kotlin Sequence">3.3&nbsp;|&nbsp;3.7</td>
 			<comment></comment>
-			<td class="Jayield">5.1 | 7.4</td>
-			<td class="StreamEx">1.3 | 1.2</td>
-			<td class="jOOλ">0.8 | 0.8</td>
-			<td class="Vavr">0.1 | 0.1</td>
+			<td class="Jayield">5.1&nbsp;|&nbsp;7.4</td>
+			<td class="StreamEx">1.3&nbsp;|&nbsp;1.2</td>
+			<td class="jOOλ">0.8&nbsp;|&nbsp;0.8</td>
+			<td class="Vavr">0.1&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.1 | 1.0</td>
-			<td class="Protonpack">1.2 | 1.0</td>
+			<td class="Guava">1.1&nbsp;|&nbsp;1.0</td>
+			<td class="Protonpack">1.2&nbsp;|&nbsp;1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Find Fixed Index</td>
+            <td class="Benchmark">Find&nbsp;Fixed&nbsp;Index</td>
             <td class="TimeComplexity">Constant</td>
             <comment></comment>
-			<td class="Zipline">1.1 | 0.9</td>
+			<td class="Zipline">1.1&nbsp;|&nbsp;0.9</td>
 			<comment></comment>
-			<td class="Kotlin Sequence">1.9 | 2.7</td>
+			<td class="Kotlin Sequence">1.9&nbsp;|&nbsp;2.7</td>
 			<comment></comment>
-			<td class="Jayield">1.4 | 5.3</td>
-			<td class="StreamEx">1.2 | 1.3</td>
-			<td class="jOOλ">0.7 | 0.8</td>
-			<td class="Vavr">0.2 | 0.1</td>
+			<td class="Jayield">1.4&nbsp;|&nbsp;5.3</td>
+			<td class="StreamEx">1.2&nbsp;|&nbsp;1.3</td>
+			<td class="jOOλ">0.7&nbsp;|&nbsp;0.8</td>
+			<td class="Vavr">0.2&nbsp;|&nbsp;0.1</td>
 			<comment></comment>
-			<td class="Guava">1.0 | 0.9</td>
-			<td class="Protonpack">1.2 | 1.0</td>
+			<td class="Guava">1.0&nbsp;|&nbsp;0.9</td>
+			<td class="Protonpack">1.2&nbsp;|&nbsp;1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Zip Primes with Values</td>
+            <td class="Benchmark">Zip&nbsp;Primes</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
-            <td class="Zipline">1.2 | 1.2</td>
+            <td class="Zipline">1.2&nbsp;|&nbsp;1.2</td>
             <comment></comment>
-            <td class="Kotlin Sequence">1.6 | 1.3</td>
+            <td class="Kotlin Sequence">1.6&nbsp;|&nbsp;1.3</td>
             <comment></comment>
-            <td class="Jayield">1.6 | 1.2</td>
-            <td class="StreamEx">0.9 | 1.1</td>
-            <td class="jOOλ">0.9 | 1.1</td>
-            <td class="Vavr">0.3 | 0.7</td>
+            <td class="Jayield">1.6&nbsp;|&nbsp;1.2</td>
+            <td class="StreamEx">0.9&nbsp;|&nbsp;1.1</td>
+            <td class="jOOλ">0.9&nbsp;|&nbsp;1.1</td>
+            <td class="Vavr">0.3&nbsp;|&nbsp;0.7</td>
             <comment></comment>
-            <td class="Guava">0.9 | 1.1</td>
-            <td class="Protonpack">1.0 | 1.0</td>
+            <td class="Guava">0.9&nbsp;|&nbsp;1.1</td>
+            <td class="Protonpack">1.0&nbsp;|&nbsp;1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Zip Top Artist & Track(1)</td>
+            <td class="Benchmark">Zip&nbsp;Top&nbsp;Artist&nbsp;&&nbsp;Track(1)</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
             <td class="Zipline">1.1</td>
@@ -413,7 +413,7 @@ displayed, separated in a pipe format, like so:
             <td class="Protonpack">1.0</td>
         </tr>
         <tr>
-            <td class="Benchmark">Zip Artists in Top10(2)</td>
+            <td class="Benchmark">Zip&nbsp;Artists&nbsp;in&nbsp;Top10(2)</td>
             <td class="TimeComplexity">Linear</td>
             <comment></comment>
             <td class="Zipline">1.1</td>
