@@ -205,6 +205,14 @@ public class SequenceBenchmarkUtils {
         return value % 2 != 0;
     }
 
+    public static boolean isPositive(Integer value) {
+        return value > 0;
+    }
+
+    public static <T> Stream<T> addFilter(Stream<T> src, Predicate<T> pred) {
+        return src.filter(pred);
+    }
+
     public static void assertEveryEvenValidity(boolean stream,
                                                boolean streamEx,
                                                boolean query,
