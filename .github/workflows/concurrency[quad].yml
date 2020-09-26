@@ -23,7 +23,7 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -rf text -rff quad.log -i 10 -wi 5 -f 1 -r 30 -w 30 --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=4" Parallel -p COLLECTION_SIZE=100,200,400,600,800,1000,10000,100000
+        run: java -jar target/benchmarks.jar -rf text -rff quad.log -i 10 -wi 5 -f 1 -r 30 -w 30 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=4" Parallel -p COLLECTION_SIZE=100,500,1000,10000,100000
 
       - name: Upload results
         uses: actions/upload-artifact@v2
