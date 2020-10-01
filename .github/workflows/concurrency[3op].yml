@@ -1,0 +1,32 @@
+name: Concurrency[3op]
+
+on:
+  push:
+    branches:
+      - concurrency/three
+      - all-benchmarks
+
+jobs:
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build artifacts
+        run: mvn clean install
+
+      - name: Run Benchmark
+        run: java -jar target/benchmarks.jar -rf text -rff single.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=1" SingleThreadedBenchmark.three -p COLLECTION_SIZE=2350,2700,3000,3350,3700,4000,4350 && java -jar target/benchmarks.jar -rf text -rff double.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=2" ParallelBenchmark.three -p COLLECTION_SIZE=2350,2700,3000,3350,3700,4000,4350 && java -jar target/benchmarks.jar -rf text -rff quad.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=4" ParallelBenchmark.three -p COLLECTION_SIZE=2350,2700,3000,3350,3700,4000,4350 && java -jar target/benchmarks.jar -rf text -rff octa.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=8" ParallelBenchmark.three -p COLLECTION_SIZE=2350,2700,3000,3350,3700,4000,4350
+
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Concurrency[3op]
+          path: ./*.log

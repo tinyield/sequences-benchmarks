@@ -209,6 +209,10 @@ public class SequenceBenchmarkUtils {
         return value > 0;
     }
 
+    public static Integer increment(Integer value) {
+        return value + 1;
+    }
+
     public static <T> Stream<T> addFilter(Stream<T> src, Predicate<T> pred) {
         return src.filter(pred);
     }
