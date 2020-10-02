@@ -23,7 +23,7 @@ jobs:
         run: mvn clean install
 
       - name: Run Benchmark
-        run: java -jar target/benchmarks.jar -rf text -rff single.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=1" SingleThreadedBenchmark.seven -p COLLECTION_SIZE=1000,1150,1300,1450,1600,1750,1900 && java -jar target/benchmarks.jar -rf text -rff double.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=2" ParallelBenchmark.seven -p COLLECTION_SIZE=1000,1150,1300,1450,1600,1750,1900 && java -jar target/benchmarks.jar -rf text -rff quad.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=4" ParallelBenchmark.seven -p COLLECTION_SIZE=1000,1150,1300,1450,1600,1750,1900 && java -jar target/benchmarks.jar -rf text -rff octa.log -i 5 -wi 2 -f 1 -r 60 -w 60 -tu m --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=8" ParallelBenchmark.seven -p COLLECTION_SIZE=1000,1150,1300,1450,1600,1750,1900
+        run: java -jar target/benchmarks.jar -rf text -rff single.log -i 5 -wi 2 -f 1 -r 60 -w 60 --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=1" SingleThreadedBenchmark.seven -p COLLECTION_SIZE=714,857,1000,1143,1286,1429,1571,1714,1857,2000,2143 && java -jar target/benchmarks.jar -rf text -rff double.log -i 5 -wi 2 -f 1 -r 60 -w 60 --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=2" ParallelBenchmark.seven -p COLLECTION_SIZE=714,857,1000,1143,1286,1429,1571,1714,1857,2000,2143 && java -jar target/benchmarks.jar -rf text -rff quad.log -i 5 -wi 2 -f 1 -r 60 -w 60 --jvmArgs "-Xms6G -Xmx6G -XX:ActiveProcessorCount=4" ParallelBenchmark.seven -p COLLECTION_SIZE=714,857,1000,1143,1286,1429,1571,1714,1857,2000,2143
 
       - name: Upload results
         uses: actions/upload-artifact@v2

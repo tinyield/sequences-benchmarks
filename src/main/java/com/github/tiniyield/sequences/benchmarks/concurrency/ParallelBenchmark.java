@@ -98,4 +98,49 @@ public class ParallelBenchmark {
                 .map(SequenceBenchmarkUtils::increment)
                 .forEach(bh::consume);
     }
+
+    @Benchmark
+    public void eight(Blackhole bh) {
+        provider.asStream().parallel()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void nine(Blackhole bh) {
+        provider.asStream().parallel()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void ten(Blackhole bh) {
+        provider.asStream().parallel()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
 }
