@@ -141,6 +141,221 @@ public class SingleThreadedBenchmark {
                 .filter(SequenceBenchmarkUtils::isPositive)
                 .forEach(bh::consume);
     }
+
+    @Benchmark
+    public void eleven(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void twelve(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void thirteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void fourteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void fifteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void sixteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void seventeen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void eighteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void nineteen(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void twenty(Blackhole bh) {
+        provider.asStream()
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .map(SequenceBenchmarkUtils::increment)
+                .filter(SequenceBenchmarkUtils::isPositive)
+                .forEach(bh::consume);
+    }
 }
 
 
