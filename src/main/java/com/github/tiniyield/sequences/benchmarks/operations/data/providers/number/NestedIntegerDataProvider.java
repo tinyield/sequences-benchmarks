@@ -36,6 +36,14 @@ public class NestedIntegerDataProvider {
         return result.stream();
     }
 
+    public Stream<Stream<Integer>> asParallelStream() {
+        List<Stream<Integer>> result = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            result.add(Stream.of(1).parallel());
+        }
+        return result.stream().parallel();
+    }
+
 
     public StreamEx<StreamEx<Integer>> asStreamEx() {
         List<StreamEx<Integer>> result = new ArrayList<>(size);

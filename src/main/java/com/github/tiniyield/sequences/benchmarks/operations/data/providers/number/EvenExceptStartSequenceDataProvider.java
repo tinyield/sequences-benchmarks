@@ -8,7 +8,7 @@ public class EvenExceptStartSequenceDataProvider extends AbstractBaseDataProvide
     private final Integer[] data;
 
     public EvenExceptStartSequenceDataProvider(int size) {
-        data = IntegerArrayGenerator.getAllEvenExceptStart(size);
+        data = IntegerArrayGenerator.box(IntegerArrayGenerator.getAllEvenExceptStart(size));
     }
 
     @Override

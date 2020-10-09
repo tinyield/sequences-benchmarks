@@ -1,7 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenExceptEndDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenExceptEndDataProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +18,7 @@ public class FindFirstInEndBenchmark extends FindFirstBenchmark {
 
     @Setup
     public void init() {
-        initEvenExceptEndDataProvider(COLLECTION_SIZE);
-        provider = getEvenExceptEndDataProvider();
+        provider = getEvenExceptEndDataProvider(COLLECTION_SIZE);
     }
 
 }

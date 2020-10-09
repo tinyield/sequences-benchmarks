@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.first;
+package com.github.tiniyield.sequences.benchmarks.concurrency.first;
 
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -9,16 +9,16 @@ import org.openjdk.jmh.annotations.State;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenExceptMiddleDataProvider;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenExceptEndDataProvider;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class FindFirstInMiddleBenchmark extends FindFirstBenchmark {
+public class FindFirstInEndParallelBenchmark extends FindFirstParallelBenchmark {
 
     @Setup
     public void init() {
-        provider = getEvenExceptMiddleDataProvider(COLLECTION_SIZE);
+        provider = getEvenExceptEndDataProvider(COLLECTION_SIZE);
     }
 
 }

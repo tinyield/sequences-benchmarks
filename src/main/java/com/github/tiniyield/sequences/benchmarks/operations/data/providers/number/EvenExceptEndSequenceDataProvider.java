@@ -8,7 +8,7 @@ public class EvenExceptEndSequenceDataProvider extends AbstractBaseDataProvider<
     private final Integer[] data;
 
     public EvenExceptEndSequenceDataProvider(int size) {
-        data = IntegerArrayGenerator.getAllEvenExceptEnd(size);
+        data = IntegerArrayGenerator.box(IntegerArrayGenerator.getAllEvenExceptEnd(size));
     }
 
     @Override

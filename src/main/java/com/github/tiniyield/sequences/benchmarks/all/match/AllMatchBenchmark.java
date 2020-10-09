@@ -2,10 +2,10 @@ package com.github.tiniyield.sequences.benchmarks.all.match;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertEveryEvenValidity;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getEvenDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initEvenDataProvider;
 
 import java.util.concurrent.TimeUnit;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -26,40 +26,41 @@ public class AllMatchBenchmark extends AbstractSequenceOperationsBenchmark imple
 
     @Param({"10000"})
     private int COLLECTION_SIZE;
+    private EvenSequenceDataProvider provider;
 
     @Setup
     public void setup() {
         super.init();
-        initEvenDataProvider(COLLECTION_SIZE);
+        provider = getEvenDataProvider(COLLECTION_SIZE);
         assertEveryEvenValidity(getStream(), getStreamEx(), getQuery(), getJool(), getVavr());
     }
 
     private boolean getStream() {
-        return stream.isEveryEven(getEvenDataProvider().asStream());
+        return stream.isEveryEven(provider.asStream());
     }
 
     private boolean getStreamEx() {
-        return streamEx.isEveryEven(getEvenDataProvider().asStreamEx());
+        return streamEx.isEveryEven(provider.asStreamEx());
     }
 
     private boolean getQuery() {
-        return query.isEveryEven(getEvenDataProvider().asQuery());
+        return query.isEveryEven(provider.asQuery());
     }
 
     private boolean getJool() {
-        return jool.isEveryEven(getEvenDataProvider().asSeq());
+        return jool.isEveryEven(provider.asSeq());
     }
 
     private boolean getVavr() {
-        return vavr.isEveryEven(getEvenDataProvider().asVavrStream());
+        return vavr.isEveryEven(provider.asVavrStream());
     }
 
     private boolean getKotlin() {
-        return kotlin.isEveryEven(getEvenDataProvider().asSequence());
+        return kotlin.isEveryEven(provider.asSequence());
     }
 
     private boolean getJKotlin() {
-        return jkotlin.isEveryEven(getEvenDataProvider().asSequence());
+        return jkotlin.isEveryEven(provider.asSequence());
     }
 
     @Override

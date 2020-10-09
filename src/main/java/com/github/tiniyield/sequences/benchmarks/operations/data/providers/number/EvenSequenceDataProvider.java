@@ -8,7 +8,7 @@ public class EvenSequenceDataProvider extends AbstractBaseDataProvider<Integer> 
     private final Integer[] data;
 
     public EvenSequenceDataProvider(int size) {
-        data = IntegerArrayGenerator.getAllEven(size);
+        data = IntegerArrayGenerator.box(IntegerArrayGenerator.getAllEven(size));
     }
 
     @Override

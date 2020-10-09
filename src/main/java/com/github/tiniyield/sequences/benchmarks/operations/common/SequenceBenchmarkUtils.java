@@ -40,27 +40,27 @@ public class SequenceBenchmarkUtils {
     private static EvenExceptMiddleSequenceDataProvider EVEN_EXCEPT_MIDDLE_DATA_PROVIDER;
     private static EvenExceptEndSequenceDataProvider EVEN_EXCEPT_END_DATA_PROVIDER;
 
-    public static void initEvenExceptEndDataProvider(int size) {
+    private static void initEvenExceptEndDataProvider(int size) {
         EVEN_EXCEPT_END_DATA_PROVIDER = new EvenExceptEndSequenceDataProvider(size);
     }
 
-    public static void initEvenExceptMiddleDataProvider(int size) {
+    private static void initEvenExceptMiddleDataProvider(int size) {
         EVEN_EXCEPT_MIDDLE_DATA_PROVIDER = new EvenExceptMiddleSequenceDataProvider(size);
     }
 
-    public static void initEvenExceptStartDataProvider(int size) {
+    private static void initEvenExceptStartDataProvider(int size) {
         EVEN_EXCEPT_START_DATA_PROVIDER = new EvenExceptStartSequenceDataProvider(size);
     }
 
-    public static void initEvenDataProvider(int size) {
+    private static void initEvenDataProvider(int size) {
         EVEN_DATA_PROVIDER = new EvenSequenceDataProvider(size);
     }
 
-    public static void initValueDataProvider(int size) {
+    private static void initValueDataProvider(int size) {
         VALUE_DATA_PROVIDER = new ValueDataProvider(size);
     }
 
-    public static void initNumbersDataProvider(int size) {
+    private static void initNumbersDataProvider(int size) {
         NUMBERS_DATA_PROVIDER = new IntegerDataProvider(size);
     }
 
@@ -169,11 +169,17 @@ public class SequenceBenchmarkUtils {
         );
     }
 
-    public static IntegerDataProvider getNumbersDataProvider() {
+    public static IntegerDataProvider getNumbersDataProvider(int size) {
+        if(NUMBERS_DATA_PROVIDER == null) {
+            initNumbersDataProvider(size);
+        }
         return NUMBERS_DATA_PROVIDER;
     }
 
-    public static ValueDataProvider getValueDataProvider() {
+    public static ValueDataProvider getValueDataProvider(int size) {
+        if(VALUE_DATA_PROVIDER == null) {
+            initValueDataProvider(size);
+        }
         return VALUE_DATA_PROVIDER;
     }
 
@@ -227,19 +233,31 @@ public class SequenceBenchmarkUtils {
         }
     }
 
-    public static EvenSequenceDataProvider getEvenDataProvider() {
+    public static EvenSequenceDataProvider getEvenDataProvider(int size) {
+        if(EVEN_DATA_PROVIDER == null) {
+            initEvenDataProvider(size);
+        }
         return EVEN_DATA_PROVIDER;
     }
 
-    public static EvenExceptStartSequenceDataProvider getEvenExceptStartDataProvider() {
+    public static EvenExceptStartSequenceDataProvider getEvenExceptStartDataProvider(int size) {
+        if(EVEN_EXCEPT_START_DATA_PROVIDER == null) {
+            initEvenExceptStartDataProvider(size);
+        }
         return EVEN_EXCEPT_START_DATA_PROVIDER;
     }
 
-    public static EvenExceptMiddleSequenceDataProvider getEvenExceptMiddleDataProvider() {
+    public static EvenExceptMiddleSequenceDataProvider getEvenExceptMiddleDataProvider(int size) {
+        if(EVEN_EXCEPT_MIDDLE_DATA_PROVIDER == null) {
+            initEvenExceptMiddleDataProvider(size);
+        }
         return EVEN_EXCEPT_MIDDLE_DATA_PROVIDER;
     }
 
-    public static EvenExceptEndSequenceDataProvider getEvenExceptEndDataProvider() {
+    public static EvenExceptEndSequenceDataProvider getEvenExceptEndDataProvider(int size) {
+        if(EVEN_EXCEPT_END_DATA_PROVIDER == null) {
+            initEvenExceptEndDataProvider(size);
+        }
         return EVEN_EXCEPT_END_DATA_PROVIDER;
     }
 

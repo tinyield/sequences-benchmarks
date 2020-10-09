@@ -5,14 +5,20 @@ import com.github.tiniyield.sequences.benchmarks.operations.data.providers.Abstr
 
 public class IntegerDataProvider extends AbstractBaseDataProvider<Integer> {
 
-    private final Integer[] data;
+    private final int[] data;
+    private final Integer[] boxed;
 
     public IntegerDataProvider(int size) {
         data = IntegerArrayGenerator.get(size);
+        boxed = IntegerArrayGenerator.box(data);
     }
 
     @Override
     protected Integer[] data() {
+        return boxed;
+    }
+
+    public int[] unboxed() {
         return data;
     }
 }

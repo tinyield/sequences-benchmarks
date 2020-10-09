@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.first;
+package com.github.tiniyield.sequences.benchmarks.concurrency.first;
 
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -14,7 +14,7 @@ import static com.github.tiniyield.sequences.benchmarks.operations.common.Sequen
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public class FindFirstInMiddleBenchmark extends FindFirstBenchmark {
+public class FindFirstInMiddleParallelBenchmark extends FindFirstParallelBenchmark {
 
     @Setup
     public void init() {

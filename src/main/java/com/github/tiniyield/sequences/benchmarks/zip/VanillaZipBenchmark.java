@@ -1,5 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -20,8 +22,6 @@ import java.util.stream.Stream;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertZipPrimeWithValueValidity;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getNumbersDataProvider;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.getValueDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initNumbersDataProvider;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.initValueDataProvider;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -30,13 +30,15 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
 
     @Param({"10000"})
     protected int COLLECTION_SIZE;
+    private IntegerDataProvider numbersProvider;
+    private ValueDataProvider valuesProvider;
 
     @Override
     @Setup
     public void init() {
 
-        initNumbersDataProvider(COLLECTION_SIZE);
-        initValueDataProvider(COLLECTION_SIZE);
+        numbersProvider = getNumbersDataProvider(COLLECTION_SIZE);
+        valuesProvider = getValueDataProvider(COLLECTION_SIZE);
         assertZipPrimeWithValueValidity(
                 getGuava(),
                 getJool(),
@@ -53,68 +55,68 @@ public class VanillaZipBenchmark extends AbstractZipBenchmark<Pair<Integer, Valu
 
     @Override
     protected io.vavr.collection.Stream<Pair<Integer, Value>> getVavr() {
-        return vavr.zipPrimeWithValue(getNumbersDataProvider().asVavrStream(),
-                getValueDataProvider().asVavrStream());
+        return vavr.zipPrimeWithValue(numbersProvider.asVavrStream(),
+                valuesProvider.asVavrStream());
     }
 
     @Override
     protected StreamEx<Pair<Integer, Value>> getStreamEx() {
-        return streamEx.zipPrimeWithValue(getNumbersDataProvider().asStreamEx(),
-                getValueDataProvider().asStreamEx());
+        return streamEx.zipPrimeWithValue(numbersProvider.asStreamEx(),
+                valuesProvider.asStreamEx());
     }
 
     @Override
     protected Stream<Pair<Integer, Value>> getZipline() {
-        return zipline.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                getValueDataProvider().asStream());
+        return zipline.zipPrimeWithValue(numbersProvider.asStream(),
+                valuesProvider.asStream());
     }
 
     @Override
     protected Stream<Pair<Integer, Value>> getProtonpack() {
-        return protonpack.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                getValueDataProvider().asStream());
+        return protonpack.zipPrimeWithValue(numbersProvider.asStream(),
+                valuesProvider.asStream());
     }
 
     @Override
     protected Stream<Pair<Integer, Value>> getStream() {
-        return stream.zipPrimeWithValue(getNumbersDataProvider().asStream(),
-                getValueDataProvider().asStream());
+        return stream.zipPrimeWithValue(numbersProvider.asStream(),
+                valuesProvider.asStream());
     }
 
     @Override
     protected Query<Pair<Integer, Value>> getQuery() {
-        return query.zipPrimeWithValue(getNumbersDataProvider().asQuery(), getValueDataProvider().asQuery());
+        return query.zipPrimeWithValue(numbersProvider.asQuery(), valuesProvider.asQuery());
     }
 
     @Override
     protected Stream<Pair<Integer, Value>> getGuava() {
         return guava.zipPrimeWithValue(
-                getNumbersDataProvider().asStream(),
-                getValueDataProvider().asStream()
+                numbersProvider.asStream(),
+                valuesProvider.asStream()
         );
     }
 
     @Override
     protected Seq<Pair<Integer, Value>> getJool() {
         return jool.zipPrimeWithValue(
-                getNumbersDataProvider().asSeq(),
-                getValueDataProvider().asSeq()
+                numbersProvider.asSeq(),
+                valuesProvider.asSeq()
         );
     }
 
     @Override
     protected Sequence<Pair<Integer, Value>> getKotlin() {
         return kotlin.zipPrimeWithValue(
-                getNumbersDataProvider().asSequence(),
-                getValueDataProvider().asSequence()
+                numbersProvider.asSequence(),
+                valuesProvider.asSequence()
         );
     }
 
     @Override
     protected Sequence<Pair<Integer, Value>> getJKotlin() {
         return jkotlin.zipPrimeWithValue(
-                getNumbersDataProvider().asSequence(),
-                getValueDataProvider().asSequence()
+                numbersProvider.asSequence(),
+                valuesProvider.asSequence()
         );
     }
 
