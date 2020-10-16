@@ -1,6 +1,7 @@
-package com.github.tiniyield.sequences.benchmarks.concurrency.max;
+package com.github.tiniyield.sequences.benchmarks.concurrency.math.sine;
 
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
+import org.apache.commons.math3.util.FastMath;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -17,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class ArraysMaxBenchmark {
+public class SlowSinBenchmark {
+
     @Param({"10000"})
     private int COLLECTION_SIZE;
     private IntegerDataProvider provider;
@@ -30,11 +32,20 @@ public class ArraysMaxBenchmark {
 
     @Benchmark
     public void parallel(Blackhole bh) {
-        bh.consume(Arrays.stream(provider.unboxed()).parallel().reduce(Integer.MIN_VALUE, Math::max));
+        bh.consume(
+                Arrays.stream(provider.unboxed())
+                        .parallel()
+                        .mapToDouble(Sine::slowSin)
+                        .reduce(Double.MIN_VALUE, Math::max)
+        );
     }
 
     @Benchmark
     public void sequential(Blackhole bh) {
-        bh.consume(Arrays.stream(provider.unboxed()).reduce(Integer.MIN_VALUE, Math::max));
+        bh.consume(
+                Arrays.stream(provider.unboxed())
+                        .mapToDouble(Sine::slowSin)
+                        .reduce(Double.MIN_VALUE, Math::max)
+        );
     }
 }

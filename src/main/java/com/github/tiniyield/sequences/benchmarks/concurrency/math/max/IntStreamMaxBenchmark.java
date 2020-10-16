@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.concurrency.max;
+package com.github.tiniyield.sequences.benchmarks.concurrency.math.max;
 
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import org.openjdk.jmh.annotations.Benchmark;
