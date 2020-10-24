@@ -32,7 +32,7 @@ public class AllMatchParallelBenchmark extends AbstractSequenceOperationsBenchma
     }
 
     private boolean getStream() {
-        return stream.isEveryEven(provider.asStream().parallel());
+        return stream.isEveryEven(provider.asStream());
     }
 
     private boolean getStreamParallel() {
