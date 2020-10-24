@@ -82,6 +82,11 @@
             <version>0.9.3</version>
         </dependency>
         <dependency>
+            <groupId>com.pivovarit</groupId>
+            <artifactId>parallel-collectors</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.9.10</version>
