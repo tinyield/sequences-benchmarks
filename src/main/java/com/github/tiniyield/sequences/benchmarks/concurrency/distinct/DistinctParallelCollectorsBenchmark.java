@@ -40,8 +40,9 @@ public class DistinctParallelCollectorsBenchmark {
     }
 
     @TearDown
-    public void tearDown() {
+    public void tearDown() throws InterruptedException {
         executor.shutdown();
+        executor.awaitTermination(60, TimeUnit.SECONDS);
     }
 
 
