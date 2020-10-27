@@ -32,20 +32,12 @@
 package com.github.tiniyield.sequences.benchmarks.every;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import io.vavr.collection.Stream;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.List;
@@ -55,10 +47,10 @@ import java.util.function.BiPredicate;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
+public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmark {
 
     @Param({"100"})
-    protected int COLLECTION_SIZE;
+    public int COLLECTION_SIZE;
 
 
     protected abstract List<T> getListA();
@@ -76,61 +68,51 @@ public abstract class EveryBenchmark<T, U> extends AbstractZipOperationsBenchmar
         this.init();
     }
 
-    @Override
     @Benchmark
     public final void stream(Blackhole bh) {
         bh.consume(stream.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void streamEx(Blackhole bh) {
         bh.consume(streamEx.every(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void jayield(Blackhole bh) {
         bh.consume(query.every(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void jool(Blackhole bh) {
         bh.consume(jool.every(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void vavr(Blackhole bh) {
         bh.consume(vavr.every(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void protonpack(Blackhole bh) {
         bh.consume(protonpack.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void guava(Blackhole bh) {
         bh.consume(guava.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public final void zipline(Blackhole bh) {
         bh.consume(zipline.every(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(kotlin.every(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void jkotlin(Blackhole bh) {
         bh.consume(jkotlin.every(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));

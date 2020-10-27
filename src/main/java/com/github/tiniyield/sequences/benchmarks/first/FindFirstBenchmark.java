@@ -1,29 +1,20 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
-import java.util.concurrent.TimeUnit;
-
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-
 import com.github.tiniyield.sequences.benchmarks.AbstractSequenceOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.ISequenceBenchmark;
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.AbstractBaseDataProvider;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+
+import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBenchmark implements ISequenceBenchmark {
+public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBenchmark {
 
     @Param({"10000"})
-    protected int COLLECTION_SIZE;
+    public int COLLECTION_SIZE;
     protected AbstractBaseDataProvider<Integer> provider;
 
     @Setup
@@ -63,44 +54,37 @@ public abstract class FindFirstBenchmark extends AbstractSequenceOperationsBench
         return jkotlin.findFirst(provider.asSequence()).orElseThrow(RuntimeException::new);
     }
 
-    @Override
     @Benchmark
     public final void stream(Blackhole bh) { // With Auxiliary Function
         bh.consume(getStream());
     }
 
-    @Override
     @Benchmark
     public final void streamEx(Blackhole bh) {
         bh.consume(getStreamEx());
     }
 
-    @Override
     @Benchmark
     public final void jayield(Blackhole bh) {
         bh.consume(getQuery());
     }
 
-    @Override
     @Benchmark
     public final void jool(Blackhole bh) {
         bh.consume(getJool());
     }
 
 
-    @Override
     @Benchmark
     public final void vavr(Blackhole bh) {
         bh.consume(getVavr());
     }
 
-    @Override
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(getKotlin());
     }
 
-    @Override
     @Benchmark
     public void jkotlin(Blackhole bh) {
         bh.consume(getJKotlin());

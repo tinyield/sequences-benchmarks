@@ -31,37 +31,26 @@
 
 package com.github.tiniyield.sequences.benchmarks.find;
 
+import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
+import io.vavr.collection.Stream;
+import kotlin.sequences.SequencesKt;
+import one.util.streamex.StreamEx;
+import org.jayield.Query;
+import org.jooq.lambda.Seq;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-
-import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
-
-import io.vavr.collection.Stream;
-import kotlin.sequences.SequencesKt;
-import one.util.streamex.StreamEx;
-
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
+public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark {
 
     @Param({"1000"})
-    protected int COLLECTION_SIZE;
+    public int COLLECTION_SIZE;
 
     protected abstract List<T> getListA();
     protected abstract List<T> getListB();
@@ -84,62 +73,52 @@ public abstract class FindBenchmark<T> extends AbstractZipOperationsBenchmark im
         this.update();
     }
 
-    @Override
     @Benchmark
     public void stream(Blackhole bh) {
         bh.consume(stream.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void streamEx(Blackhole bh) {
         bh.consume(streamEx.find(StreamEx.of(getListA()), StreamEx.of(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void jayield(Blackhole bh) {
         bh.consume(query.find(Query.fromList(getListA()), Query.fromList(getListB()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void jool(Blackhole bh) {
         bh.consume(jool.find(Seq.seq(getListA()), Seq.seq(getListB()), getPredicate()));
     }
 
-    @Override // could be replaced by corresponds
     @Benchmark
     public void vavr(Blackhole bh) {
         bh.consume(vavr.find(Stream.ofAll(getListA()), Stream.ofAll(getListB()), getPredicate()));
     }
 
 
-    @Override
     @Benchmark
     public void protonpack(Blackhole bh) {
         bh.consume(protonpack.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void guava(Blackhole bh) {
         bh.consume(guava.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void zipline(Blackhole bh) {
         bh.consume(zipline.find(getListA().stream(), getListB().stream(), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void kotlin(Blackhole bh) {
         bh.consume(kotlin.find(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));
     }
 
-    @Override
     @Benchmark
     public void jkotlin(Blackhole bh) {
         bh.consume(jkotlin.find(SequencesKt.asSequence(getListA().iterator()), SequencesKt.asSequence(getListB().iterator()), getPredicate()));

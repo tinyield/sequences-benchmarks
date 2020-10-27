@@ -1,20 +1,13 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import com.github.tiniyield.sequences.benchmarks.AbstractZipOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.IZipBenchmark;
 import kotlin.Unit;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.concurrent.TimeUnit;
@@ -23,7 +16,7 @@ import java.util.stream.Stream;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBenchmark implements IZipBenchmark {
+public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBenchmark {
 
     protected abstract io.vavr.collection.Stream<T> getVavr();
 
@@ -54,25 +47,21 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
         this.init();
     }
 
-    @Override
     @Benchmark
     public final void stream(Blackhole bh) { // With Auxiliary Function
         getStream().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void streamEx(Blackhole bh) {
         getStreamEx().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void jayield(Blackhole bh) {
         getQuery().traverse(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void jool(Blackhole bh) {
         getJool().forEach(bh::consume);
@@ -80,31 +69,26 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
 
     // Other Sequences based benchmarks
 
-    @Override
     @Benchmark
     public final void vavr(Blackhole bh) {
         getVavr().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void protonpack(Blackhole bh) {
         getProtonpack().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void guava(Blackhole bh) {
         getGuava().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void zipline(Blackhole bh) {
         getZipline().forEach(bh::consume);
     }
 
-    @Override
     @Benchmark
     public final void kotlin(Blackhole bh) {
         SequencesKt.forEach(getKotlin(), elem -> {
@@ -113,7 +97,6 @@ public abstract class AbstractZipBenchmark<T> extends AbstractZipOperationsBench
         });
     }
 
-    @Override
     @Benchmark
     public final void jkotlin(Blackhole bh) {
         SequencesKt.forEach(getJKotlin(), elem -> {
