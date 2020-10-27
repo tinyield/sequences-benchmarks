@@ -41,10 +41,6 @@ public class QueryOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zip(values, Pair::with);
     }
 
-    public boolean isEveryEven(Query<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
-    }
-
     public Optional<Integer> findFirst(Query<Integer> numbers) {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }

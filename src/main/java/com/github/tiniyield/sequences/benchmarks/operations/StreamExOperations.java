@@ -43,10 +43,6 @@ public class StreamExOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zipWith(values, Pair::with);
     }
 
-    public boolean isEveryEven(StreamEx<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
-    }
-
     public Optional<Integer> findFirst(StreamEx<Integer> numbers) {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }

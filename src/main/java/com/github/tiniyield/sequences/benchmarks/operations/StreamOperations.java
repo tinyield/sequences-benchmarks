@@ -44,10 +44,6 @@ public class StreamOperations {
         return zip(numbers.filter(SequenceBenchmarkUtils::isPrime), values, Pair::with);
     }
 
-    public boolean isEveryEven(Stream<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
-    }
-
     public Optional<Integer> findFirst(Stream<Integer> numbers) {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }

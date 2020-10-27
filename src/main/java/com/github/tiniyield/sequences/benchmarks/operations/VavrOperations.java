@@ -43,10 +43,6 @@ public class VavrOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zipWith(values, Pair::with);
     }
 
-    public boolean isEveryEven(Stream<Integer> numbers) {
-        return numbers.forAll(SequenceBenchmarkUtils::isEven);
-    }
-
     public Option<Integer> findFirst(Stream<Integer> numbers) {
         return numbers.find(SequenceBenchmarkUtils::isOdd);
     }

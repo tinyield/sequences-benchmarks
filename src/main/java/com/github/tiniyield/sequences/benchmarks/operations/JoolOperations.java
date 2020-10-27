@@ -39,10 +39,6 @@ public class JoolOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zip(values, Pair::with);
     }
 
-    public boolean isEveryEven(Seq<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
-    }
-
     public Optional<Integer> findFirst(Seq<Integer> numbers) {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }

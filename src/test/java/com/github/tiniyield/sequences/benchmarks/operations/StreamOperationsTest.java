@@ -131,18 +131,6 @@ public class StreamOperationsTest {
     }
 
     @Test
-    public void testIsEveryEvenSuccess() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertTrue(instance.isEveryEven(provider.asStream()));
-    }
-
-    @Test
-    public void testIsEveryEvenFailure() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 1);
-        assertFalse(instance.isEveryEven(provider.asStream()));
-    }
-
-    @Test
     public void testEverySuccess() {
         assertTrue(instance.every(numbers, values, (number, value) -> value.value == number));
     }

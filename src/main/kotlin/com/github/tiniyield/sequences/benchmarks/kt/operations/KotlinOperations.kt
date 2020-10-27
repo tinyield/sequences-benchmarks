@@ -32,10 +32,6 @@ open class KotlinOperations {
                 .zip(values) { value0: Int, value1: Value -> Pair.with(value0, value1) }
     }
 
-    fun isEveryEven(numbers: Sequence<Int>): Boolean {
-        return numbers.all { value: Int -> SequenceBenchmarkUtils.isEven(value) }
-    }
-
     fun findFirst(numbers: Sequence<Int?>): Optional<Int> {
         return Optional.ofNullable(numbers.find { value: Int? -> SequenceBenchmarkUtils.isOdd(value) })
     }

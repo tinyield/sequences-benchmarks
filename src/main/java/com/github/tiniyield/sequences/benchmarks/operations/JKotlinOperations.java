@@ -49,10 +49,6 @@ public class JKotlinOperations {
         );
     }
 
-    public boolean isEveryEven(Sequence<Integer> numbers) {
-        return SequencesKt.all(numbers, SequenceBenchmarkUtils::isEven);
-    }
-
     public Optional<Integer> findFirst(Sequence<Integer> numbers) {
         return Optional.ofNullable(SequencesKt.first(SequencesKt.filter(numbers, SequenceBenchmarkUtils::isOdd)));
     }
