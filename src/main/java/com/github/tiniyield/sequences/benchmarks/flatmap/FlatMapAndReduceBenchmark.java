@@ -1,7 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.flatmap;
 
-import com.github.tiniyield.sequences.benchmarks.AbstractSequenceOperationsBenchmark;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.NestedIntegerDataProvider;
+import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class FlatMapAndReduceBenchmark extends AbstractSequenceOperationsBenchmark {
+public class FlatMapAndReduceBenchmark {
 
     @Param({"10000"})
     public int COLLECTION_SIZE;
@@ -46,44 +45,101 @@ public class FlatMapAndReduceBenchmark extends AbstractSequenceOperationsBenchma
         return SequencesKt.asSequence(source.iterator());
     }
 
+    public Integer flatMapAndReduceStream(Stream<Stream<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    public Integer flatMapAndReduceStreamEx(StreamEx<StreamEx<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    public Integer flatMapAndReduceQuery(Query<Query<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    public Integer flatMapAndReduceJool(Seq<Seq<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    public Integer flatMapAndReduceVavr(io.vavr.collection.Stream<io.vavr.collection.Stream<Integer>> input) {
+        return input.flatMap(i -> i).reduce(Integer::sum);
+    }
+
+    public Integer flatMapAndReduceJKotlin(Sequence<Sequence<Integer>> input) {
+        return SequencesKt.reduce(
+                SequencesKt.flatMap(
+                        input,
+                        i -> i
+                ),
+                Integer::sum
+        );
+    }
+
+    public Integer sumStream() {
+        return flatMapAndReduceStream(getNestedSequence(List::stream, List::stream));
+    }
+
+    public Integer sumStreamEx() {
+        return flatMapAndReduceStreamEx(getNestedSequence(StreamEx::of, StreamEx::of));
+    }
+
+    public Integer sumQuery() {
+        return flatMapAndReduceQuery(getNestedSequence(l -> Query.of(l.toArray(Integer[]::new)), Query::fromList));
+    }
+
+    public Integer sumJool() {
+        return flatMapAndReduceJool(getNestedSequence(Seq::seq, Seq::seq));
+    }
+
+    public Integer sumVavr() {
+        return flatMapAndReduceVavr(getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll));
+    }
+
+    public Integer sumKotlin() {
+        return FlatmapAndReduceKt.flatMapAndReduce(getNestedSequence(this::toKotlinSequence, this::toKotlinSequence));
+    }
+
+    public Integer sumJKotlin() {
+        return flatMapAndReduceJKotlin(getNestedSequence(this::toKotlinSequence, this::toKotlinSequence));
+    }
+
     @Setup
     public void setup() {
-        super.init();
         data = getNestedList();
     }
 
     @Benchmark
     public void stream(Blackhole bh) {
-        bh.consume(stream.flatMapAndReduce(getNestedSequence(List::stream, List::stream)));
+        bh.consume(sumStream());
     }
 
     @Benchmark
     public void streamEx(Blackhole bh) {
-        bh.consume(streamEx.flatMapAndReduce(getNestedSequence(StreamEx::of, StreamEx::of)));
+        bh.consume(sumStreamEx());
     }
 
     @Benchmark
     public void jayield(Blackhole bh) {
-        bh.consume(query.flatMapAndReduce(getNestedSequence(Query::fromList, Query::fromList)));
+        bh.consume(sumQuery());
     }
 
     @Benchmark
     public void jool(Blackhole bh) {
-        bh.consume(jool.flatMapAndReduce(getNestedSequence(Seq::seq, Seq::seq)));
+        bh.consume(sumJool());
     }
 
     @Benchmark
     public void vavr(Blackhole bh) {
-        bh.consume(vavr.flatMapAndReduce(getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll)));
+        bh.consume(sumVavr());
     }
 
     @Benchmark
     public void kotlin(Blackhole bh) {
-        bh.consume(kotlin.flatMapAndReduce(getNestedSequence(this::toKotlinSequence, this::toKotlinSequence)));
+        bh.consume(sumKotlin());
     }
 
     @Benchmark
     public void jkotlin(Blackhole bh) {
-        bh.consume(jkotlin.flatMapAndReduce(getNestedSequence(this::toKotlinSequence, this::toKotlinSequence)));
+        bh.consume(sumJKotlin());
     }
 }
