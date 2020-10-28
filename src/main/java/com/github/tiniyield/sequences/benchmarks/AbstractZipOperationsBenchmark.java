@@ -10,6 +10,7 @@ public abstract class AbstractZipOperationsBenchmark extends AbstractSequenceOpe
     protected ZiplineOperations zipline;
     protected GuavaOperations guava;
 
+    @Override
     protected void init() {
         super.init();
         protonpack = new ProtonpackOperations();

@@ -1,9 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.operations.common;
 
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptEndSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptMiddleSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptStartSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
@@ -27,32 +23,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
-
 public class SequenceBenchmarkUtils {
 
     private static IntegerDataProvider NUMBERS_DATA_PROVIDER;
     private static ValueDataProvider VALUE_DATA_PROVIDER;
-    private static EvenSequenceDataProvider EVEN_DATA_PROVIDER;
-    private static EvenExceptStartSequenceDataProvider EVEN_EXCEPT_START_DATA_PROVIDER;
-    private static EvenExceptMiddleSequenceDataProvider EVEN_EXCEPT_MIDDLE_DATA_PROVIDER;
-    private static EvenExceptEndSequenceDataProvider EVEN_EXCEPT_END_DATA_PROVIDER;
-
-    private static void initEvenExceptEndDataProvider(int size) {
-        EVEN_EXCEPT_END_DATA_PROVIDER = new EvenExceptEndSequenceDataProvider(size);
-    }
-
-    private static void initEvenExceptMiddleDataProvider(int size) {
-        EVEN_EXCEPT_MIDDLE_DATA_PROVIDER = new EvenExceptMiddleSequenceDataProvider(size);
-    }
-
-    private static void initEvenExceptStartDataProvider(int size) {
-        EVEN_EXCEPT_START_DATA_PROVIDER = new EvenExceptStartSequenceDataProvider(size);
-    }
-
-    private static void initEvenDataProvider(int size) {
-        EVEN_DATA_PROVIDER = new EvenSequenceDataProvider(size);
-    }
 
     private static void initValueDataProvider(int size) {
         VALUE_DATA_PROVIDER = new ValueDataProvider(size);
@@ -209,60 +183,8 @@ public class SequenceBenchmarkUtils {
         return value % 2 != 0;
     }
 
-    public static boolean isPositive(Integer value) {
-        return value > 0;
-    }
-
     public static Integer increment(Integer value) {
         return value + 1;
     }
 
-    public static <T> Stream<T> addFilter(Stream<T> src, Predicate<T> pred) {
-        return src.filter(pred);
-    }
-
-    public static void assertEveryEvenValidity(boolean stream,
-                                               boolean streamEx,
-                                               boolean query,
-                                               boolean jool,
-                                               boolean vavr) {
-        if (!(stream == streamEx == query == jool == vavr)) {
-            throw new RuntimeException("Results were not as expected");
-        }
-    }
-
-    public static EvenSequenceDataProvider getEvenDataProvider(int size) {
-        if(EVEN_DATA_PROVIDER == null) {
-            initEvenDataProvider(size);
-        }
-        return EVEN_DATA_PROVIDER;
-    }
-
-    public static EvenExceptStartSequenceDataProvider getEvenExceptStartDataProvider(int size) {
-        if(EVEN_EXCEPT_START_DATA_PROVIDER == null) {
-            initEvenExceptStartDataProvider(size);
-        }
-        return EVEN_EXCEPT_START_DATA_PROVIDER;
-    }
-
-    public static EvenExceptMiddleSequenceDataProvider getEvenExceptMiddleDataProvider(int size) {
-        if(EVEN_EXCEPT_MIDDLE_DATA_PROVIDER == null) {
-            initEvenExceptMiddleDataProvider(size);
-        }
-        return EVEN_EXCEPT_MIDDLE_DATA_PROVIDER;
-    }
-
-    public static EvenExceptEndSequenceDataProvider getEvenExceptEndDataProvider(int size) {
-        if(EVEN_EXCEPT_END_DATA_PROVIDER == null) {
-            initEvenExceptEndDataProvider(size);
-        }
-        return EVEN_EXCEPT_END_DATA_PROVIDER;
-    }
-
-    public static void assertFindResult(Integer jool, Integer stream, Integer streamEx, Integer query, Integer vavr) {
-        if (!(stream.equals(streamEx) && stream.equals(query) && stream.equals(jool) &&
-                stream.equals(vavr) && stream.equals(ODD))) {
-            throw new RuntimeException("Results were not odd");
-        }
-    }
 }

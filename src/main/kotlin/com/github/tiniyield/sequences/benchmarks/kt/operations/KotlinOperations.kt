@@ -14,7 +14,7 @@ open class KotlinOperations {
                                       tracks: Sequence<Pair<Country, Sequence<Track>>>): Sequence<Triplet<Country, Artist, Track>> {
         return artists.zip(tracks)
                 .map { pair -> SequenceBenchmarkKtSequenceUtils.TO_TOP_BY_COUNTRY_TRIPLET.apply(pair.first, pair.second) }
-                .distinctBy { triplet -> triplet.getValue1() }
+                .distinctBy { triplet -> triplet.value1 }
     }
 
     fun artistsInTopTenWithTopTenTracksByCountry(artists: Sequence<Pair<Country, Sequence<Artist>>>,

@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.assertEveryEvenValidity;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -67,7 +66,6 @@ public class AllMatchBenchmark {
     @Setup
     public void setup() {
         data = getAllEvenArray();
-        assertEveryEvenValidity(isEveryEvenStream(), isEveryEvenStreamEx(), isEveryEvenQuery(), isEveryEvenJool(), isEveryEvenVavr());
     }
 
     public boolean isEveryEvenStream() {
