@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 
 public class StreamOperationsTest {
@@ -125,13 +127,4 @@ public class StreamOperationsTest {
         assertFalse(instance.findFirst(provider.asStream()).isPresent());
     }
 
-    @Test
-    public void testFindSuccess() {
-        assertNotNull(instance.find(numbers, otherNumbers, (number, value) -> value < number));
-    }
-
-    @Test
-    public void testFindFailure() {
-        assertNull(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2));
-    }
 }

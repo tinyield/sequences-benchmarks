@@ -9,12 +9,12 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.distinctByKey;
-import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.*;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_DATA_TRIPLET_BY_COUNTRY;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.TO_TOP_BY_COUNTRY_TRIPLET;
 import static com.google.common.collect.Streams.zip;
 
 public class GuavaOperations {
@@ -36,10 +36,4 @@ public class GuavaOperations {
         return zip(numbers.filter(SequenceBenchmarkUtils::isPrime), values, Pair::with);
     }
 
-    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
-        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
-    }
 }

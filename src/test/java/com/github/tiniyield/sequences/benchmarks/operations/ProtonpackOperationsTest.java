@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class ProtonpackOperationsTest {
 
@@ -110,15 +110,5 @@ public class ProtonpackOperationsTest {
             assertEquals(expected.get(i).getValue0(), actual.get(i).getValue0());
             assertEquals(expected.get(i).getValue1(), actual.get(i).getValue1());
         }
-    }
-
-    @Test
-    public void testFindSuccess() {
-        assertNotNull(instance.find(numbers, otherNumbers, (number, value) -> value < number));
-    }
-
-    @Test
-    public void testFindFailure() {
-        assertNull(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2));
     }
 }

@@ -12,9 +12,7 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 public class JKotlinOperations {
 
@@ -51,15 +49,6 @@ public class JKotlinOperations {
 
     public Optional<Integer> findFirst(Sequence<Integer> numbers) {
         return Optional.ofNullable(SequencesKt.first(SequencesKt.filter(numbers, SequenceBenchmarkUtils::isOdd)));
-    }
-
-    public <T> T find(Sequence<T> q1, Sequence<T> q2, BiPredicate<T, T> predicate) {
-        return SequencesKt.first(
-                SequencesKt.filter(
-                        SequencesKt.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null),
-                        Objects::nonNull
-                )
-        );
     }
 
 }

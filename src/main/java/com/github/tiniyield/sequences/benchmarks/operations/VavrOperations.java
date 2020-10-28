@@ -12,10 +12,10 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkVavrUtils.*;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkVavrUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkVavrUtils.TO_DATA_TRIPLET_BY_COUNTRY;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkVavrUtils.TO_TOP_BY_COUNTRY_TRIPLET;
 
 public class VavrOperations {
 
@@ -41,10 +41,6 @@ public class VavrOperations {
 
     public Option<Integer> findFirst(Stream<Integer> numbers) {
         return numbers.find(SequenceBenchmarkUtils::isOdd);
-    }
-
-    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
-        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull).getOrNull();
     }
 
 }

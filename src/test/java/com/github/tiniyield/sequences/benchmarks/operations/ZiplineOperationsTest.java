@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class ZiplineOperationsTest {
 
@@ -112,13 +112,4 @@ public class ZiplineOperationsTest {
         }
     }
 
-    @Test
-    public void testFindSuccess() {
-        assertNotNull(instance.find(numbers, otherNumbers, (number, value) -> value < number));
-    }
-
-    @Test
-    public void testFindFailure() {
-        assertNull(instance.find(numbers, otherNumbers, (number, value) -> value == number * 2));
-    }
 }

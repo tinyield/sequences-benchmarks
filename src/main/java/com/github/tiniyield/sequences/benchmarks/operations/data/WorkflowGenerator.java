@@ -17,7 +17,11 @@ import com.github.tiniyield.sequences.benchmarks.first.FindFirstInEndBenchmark;
 import com.github.tiniyield.sequences.benchmarks.first.FindFirstInMiddleBenchmark;
 import com.github.tiniyield.sequences.benchmarks.flatmap.FlatMapAndReduceBenchmark;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.util.HashMap;
 
 public class WorkflowGenerator {

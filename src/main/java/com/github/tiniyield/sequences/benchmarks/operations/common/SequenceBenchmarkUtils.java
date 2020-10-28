@@ -1,6 +1,10 @@
 package com.github.tiniyield.sequences.benchmarks.operations.common;
 
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.*;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptEndSequenceDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptMiddleSequenceDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptStartSequenceDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;

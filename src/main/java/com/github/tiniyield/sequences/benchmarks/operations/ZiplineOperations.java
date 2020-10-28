@@ -11,8 +11,6 @@ import org.javatuples.Triplet;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 public class ZiplineOperations {
@@ -47,11 +45,4 @@ public class ZiplineOperations {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).map(v -> Pair.with(v, iter.next()));
     }
 
-    public <T> T find(Stream<T> q1, Stream<T> q2, BiPredicate<T, T> predicate) {
-        Iterator<T> it = q2.iterator();
-        return q1.map(t -> predicate.test(t, it.next()) ? t : null)
-                 .filter(Objects::nonNull)
-                 .findFirst()
-                 .orElse(null);
-    }
 }

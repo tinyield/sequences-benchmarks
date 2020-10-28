@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.*;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ARTISTS_DATA;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.COUNTRY_DATA;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.TRACKS_DATA;
 import static java.util.Locale.ENGLISH;
 
 public class SequenceBenchmarkStreamExUtils {
