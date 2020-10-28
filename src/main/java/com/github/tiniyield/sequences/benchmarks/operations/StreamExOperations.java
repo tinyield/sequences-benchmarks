@@ -11,7 +11,6 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -39,10 +38,5 @@ public class StreamExOperations {
     public StreamEx<Pair<Integer, Value>> zipPrimeWithValue(StreamEx<Integer> numbers, StreamEx<Value> values) {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zipWith(values, Pair::with);
     }
-
-    public Optional<Integer> findFirst(StreamEx<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
-    }
-
 
 }

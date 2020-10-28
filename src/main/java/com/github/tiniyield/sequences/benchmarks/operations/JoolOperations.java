@@ -11,7 +11,6 @@ import org.javatuples.Triplet;
 import org.jooq.lambda.Seq;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.TO_DATA_TRIPLET_BY_COUNTRY;
@@ -34,10 +33,6 @@ public class JoolOperations {
 
     public Seq<Pair<Integer, Value>> zipPrimeWithValue(Seq<Integer> numbers, Seq<Value> values) {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zip(values, Pair::with);
-    }
-
-    public Optional<Integer> findFirst(Seq<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
 }

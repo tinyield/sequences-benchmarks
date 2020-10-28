@@ -12,7 +12,6 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Optional;
 
 public class JKotlinOperations {
 
@@ -45,10 +44,6 @@ public class JKotlinOperations {
                 values,
                 Pair::with
         );
-    }
-
-    public Optional<Integer> findFirst(Sequence<Integer> numbers) {
-        return Optional.ofNullable(SequencesKt.first(SequencesKt.filter(numbers, SequenceBenchmarkUtils::isOdd)));
     }
 
 }

@@ -10,7 +10,6 @@ import org.javatuples.Triplet;
 import org.jayield.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.distinctByKey;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkQueryUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
@@ -35,10 +34,6 @@ public class QueryOperations {
 
     public Query<Pair<Integer, Value>> zipPrimeWithValue(Query<Integer> numbers, Query<Value> values) {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zip(values, Pair::with);
-    }
-
-    public Optional<Integer> findFirst(Query<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
 }

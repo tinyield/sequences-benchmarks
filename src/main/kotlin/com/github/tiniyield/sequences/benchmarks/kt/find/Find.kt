@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.kt
+package com.github.tiniyield.sequences.benchmarks.kt.find
 
 import java.util.*
 import java.util.function.BiPredicate

@@ -31,7 +31,7 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.sequences.benchmarks.kt.FindKt;
+import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;

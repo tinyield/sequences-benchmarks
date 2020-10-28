@@ -9,7 +9,6 @@ import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils.distinctByKey;
@@ -39,10 +38,6 @@ public class StreamOperations {
 
     public Stream<Pair<Integer, Value>> zipPrimeWithValue(Stream<Integer> numbers, Stream<Value> values) {
         return zip(numbers.filter(SequenceBenchmarkUtils::isPrime), values, Pair::with);
-    }
-
-    public Optional<Integer> findFirst(Stream<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
 }

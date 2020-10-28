@@ -115,16 +115,4 @@ public class VavrOperationsTest {
         }
     }
 
-    @Test
-    public void testFindFirstSuccess() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
-        assertTrue(instance.findFirst(provider.asVavrStream()).isDefined());
-    }
-
-    @Test
-    public void testFindFirstFailure() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertFalse(instance.findFirst(provider.asVavrStream()).isDefined());
-    }
-
 }

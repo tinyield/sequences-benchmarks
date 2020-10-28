@@ -7,7 +7,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import io.vavr.collection.Stream;
-import io.vavr.control.Option;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -37,10 +36,6 @@ public class VavrOperations {
 
     public Stream<Pair<Integer, Value>> zipPrimeWithValue(Stream<Integer> numbers, Stream<Value> values) {
         return numbers.filter(SequenceBenchmarkUtils::isPrime).zipWith(values, Pair::with);
-    }
-
-    public Option<Integer> findFirst(Stream<Integer> numbers) {
-        return numbers.find(SequenceBenchmarkUtils::isOdd);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
-import com.github.tiniyield.sequences.benchmarks.kt.FindKt;
+import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
 import one.util.streamex.StreamEx;

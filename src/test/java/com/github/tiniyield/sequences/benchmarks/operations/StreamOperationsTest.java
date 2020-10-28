@@ -115,16 +115,4 @@ public class StreamOperationsTest {
         }
     }
 
-    @Test
-    public void testFindFirstSuccess() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
-        assertTrue(instance.findFirst(provider.asStream()).isPresent());
-    }
-
-    @Test
-    public void testFindFirstFailure() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertFalse(instance.findFirst(provider.asStream()).isPresent());
-    }
-
 }

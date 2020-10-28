@@ -114,16 +114,4 @@ public class JoolOperationsTest {
         }
     }
 
-    @Test
-    public void testFindFirstSuccess() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(0, 1);
-        assertTrue(instance.findFirst(provider.asSeq()).isPresent());
-    }
-
-    @Test
-    public void testFindFirstFailure() {
-        TestDataProvider<Integer> provider = new TestDataProvider<>(2, 2);
-        assertFalse(instance.findFirst(provider.asSeq()).isPresent());
-    }
-
 }

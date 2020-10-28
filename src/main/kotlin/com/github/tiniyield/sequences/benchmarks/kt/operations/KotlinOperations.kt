@@ -8,7 +8,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value
 import org.javatuples.Pair
 import org.javatuples.Triplet
-import java.util.*
 
 open class KotlinOperations {
     fun zipTopArtistAndTrackByCountry(artists: Sequence<Pair<Country, Sequence<Artist>>>,
@@ -30,8 +29,5 @@ open class KotlinOperations {
                 .zip(values) { value0: Int, value1: Value -> Pair.with(value0, value1) }
     }
 
-    fun findFirst(numbers: Sequence<Int?>): Optional<Int> {
-        return Optional.ofNullable(numbers.find { value: Int? -> SequenceBenchmarkUtils.isOdd(value) })
-    }
 
 }
