@@ -113,16 +113,6 @@ public class ZiplineOperationsTest {
     }
 
     @Test
-    public void testEverySuccess() {
-        assertTrue(instance.every(numbers, values, (number, value) -> value.value == number));
-    }
-
-    @Test
-    public void testEveryFailure() {
-        assertFalse(instance.every(numbers, values, (number, value) -> value.value != number));
-    }
-
-    @Test
     public void testFindSuccess() {
         assertNotNull(instance.find(numbers, otherNumbers, (number, value) -> value < number));
     }

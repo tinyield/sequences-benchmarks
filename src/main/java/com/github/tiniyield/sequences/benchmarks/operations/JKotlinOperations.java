@@ -53,10 +53,6 @@ public class JKotlinOperations {
         return Optional.ofNullable(SequencesKt.first(SequencesKt.filter(numbers, SequenceBenchmarkUtils::isOdd)));
     }
 
-    public <T, U> boolean every(Sequence<T> q1, Sequence<U> q2, BiPredicate<T, U> predicate) {
-        return SequencesKt.all(SequencesKt.zip(q1, q2, predicate::test), Boolean.TRUE::equals);
-    }
-
     public <T> T find(Sequence<T> q1, Sequence<T> q2, BiPredicate<T, T> predicate) {
         return SequencesKt.first(
                 SequencesKt.filter(

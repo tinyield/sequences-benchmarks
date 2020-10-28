@@ -41,10 +41,6 @@ public class QueryOperations {
         return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst();
     }
 
-    public <T, U> boolean every(Query<T> q1, Query<U> q2, BiPredicate<T, U> predicate) {
-        return q1.zip(q2, predicate::test).allMatch(Boolean.TRUE::equals);
-    }
-
     public <T> T find(Query<T> q1, Query<T> q2, BiPredicate<T, T> predicate) {
         return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                  .filter(Objects::nonNull)
