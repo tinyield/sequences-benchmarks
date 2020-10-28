@@ -1,11 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
-import static java.lang.String.format;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-
 import com.github.tiniyield.sequences.benchmarks.every.EveryIntegerBenchmark;
 import com.github.tiniyield.sequences.benchmarks.kt.operations.KotlinOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.JKotlinOperations;
@@ -18,6 +12,12 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.ApiKey;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import kotlin.sequences.SequencesKt;
 import org.jayield.Query;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
+import static java.lang.String.format;
 
 
 public class DataLoader {

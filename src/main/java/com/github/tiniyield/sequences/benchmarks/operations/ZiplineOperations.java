@@ -1,20 +1,19 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.BiPredicate;
-import java.util.stream.Stream;
-
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-
 import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
 public class ZiplineOperations {
 

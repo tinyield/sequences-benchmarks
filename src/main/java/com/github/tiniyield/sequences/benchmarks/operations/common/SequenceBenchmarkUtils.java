@@ -1,6 +1,18 @@
 package com.github.tiniyield.sequences.benchmarks.operations.common;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.*;
+import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import com.google.common.collect.Lists;
+import kotlin.sequences.Sequence;
+import one.util.streamex.StreamEx;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.jayield.Query;
+import org.jooq.lambda.Seq;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,25 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Lists;
-import kotlin.sequences.Sequence;
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptEndSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptMiddleSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenExceptStartSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.EvenSequenceDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.object.ValueDataProvider;
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
-
-import one.util.streamex.StreamEx;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
 
 public class SequenceBenchmarkUtils {
 

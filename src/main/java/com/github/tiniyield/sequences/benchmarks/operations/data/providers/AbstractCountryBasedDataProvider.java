@@ -1,15 +1,14 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.providers;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-
 import kotlin.collections.ArraysKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.jayield.Query;
+import org.jooq.lambda.Seq;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public abstract class AbstractCountryBasedDataProvider<T> implements ICountryBasedDataProvider<T> {
 

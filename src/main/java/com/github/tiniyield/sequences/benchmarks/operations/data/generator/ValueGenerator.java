@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.generator;
 
-import java.util.stream.Stream;
-
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+
+import java.util.stream.Stream;
 
 public class ValueGenerator {
 

@@ -1,12 +1,12 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MockData {
 

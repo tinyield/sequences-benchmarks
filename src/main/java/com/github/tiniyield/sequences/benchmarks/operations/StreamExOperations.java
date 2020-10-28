@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils.TO_DATA_TRIPLET_BY_COUNTRY;
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamExUtils.TO_TOP_BY_COUNTRY_TRIPLET;
@@ -58,7 +57,4 @@ public class StreamExOperations {
                 .orElse(null);
     }
 
-    public Integer flatMapAndReduce(StreamEx<StreamEx<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
 }

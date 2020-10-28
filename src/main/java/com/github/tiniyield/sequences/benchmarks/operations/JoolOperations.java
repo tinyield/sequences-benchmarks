@@ -1,24 +1,21 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
 
-import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.TO_ARTISTS_IN_TOP_TEN_WITH_SONGS_IN_TOP_TEN_BY_COUNTRY;
-import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.TO_DATA_TRIPLET_BY_COUNTRY;
-import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.TO_TOP_BY_COUNTRY_TRIPLET;
+import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.jooq.lambda.Seq;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-import org.jooq.lambda.Seq;
-
-import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkJoolUtils.*;
 
 public class JoolOperations {
 
@@ -55,7 +52,4 @@ public class JoolOperations {
                  .orElse(null);
     }
 
-    public Integer flatMapAndReduce(Seq<Seq<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
 }

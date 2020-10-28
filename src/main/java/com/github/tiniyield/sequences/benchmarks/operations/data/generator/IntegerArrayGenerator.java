@@ -1,11 +1,11 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.generator;
 
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
-
 import java.util.Arrays;
 import java.util.stream.IntStream;
+
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
 
 public class IntegerArrayGenerator {
 

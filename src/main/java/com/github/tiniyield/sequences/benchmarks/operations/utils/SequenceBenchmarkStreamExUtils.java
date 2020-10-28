@@ -1,23 +1,19 @@
 package com.github.tiniyield.sequences.benchmarks.operations.utils;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ARTISTS_DATA;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.COUNTRY_DATA;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.TRACKS_DATA;
-import static java.util.Locale.ENGLISH;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import one.util.streamex.StreamEx;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
-
-import one.util.streamex.StreamEx;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.*;
+import static java.util.Locale.ENGLISH;
 
 public class SequenceBenchmarkStreamExUtils {
 

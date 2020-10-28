@@ -66,13 +66,4 @@ public class JKotlinOperations {
         );
     }
 
-    public Integer flatMapAndReduce(Sequence<Sequence<Integer>> input) {
-        return SequencesKt.reduce(
-                SequencesKt.flatMap(
-                        input,
-                        i -> i
-                ),
-                Integer::sum
-        );
-    }
 }

@@ -1,12 +1,12 @@
 
 package com.github.tiniyield.sequences.benchmarks.operations.model.track;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+import java.util.Objects;
 
 public class Track {
 

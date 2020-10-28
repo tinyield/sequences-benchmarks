@@ -1,14 +1,14 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.tiniyield.sequences.benchmarks.operations.data.loader.FileLoader;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.AbstractCountryBasedDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.CountriesDataProvider;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
 
 public class TracksDataProvider extends AbstractCountryBasedDataProvider<Track> {
     private final Map<String, Track[]> data;

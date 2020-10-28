@@ -1,18 +1,14 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.loader;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class CountriesLoader {
 

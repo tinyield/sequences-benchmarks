@@ -1,7 +1,12 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.loader;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
-import static java.lang.String.format;
+import com.github.tiniyield.sequences.benchmarks.operations.model.ApiKey;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,13 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.github.tiniyield.sequences.benchmarks.operations.model.ApiKey;
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
+import static java.lang.String.format;
 
 public class FileLoader {
 

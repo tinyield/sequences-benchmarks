@@ -1,23 +1,19 @@
 package com.github.tiniyield.sequences.benchmarks.operations.utils;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ARTISTS_DATA;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.COUNTRY_DATA;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.TEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.TRACKS_DATA;
-import static java.util.Locale.ENGLISH;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
+import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.jayield.Query;
 
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-import org.jayield.Query;
-
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.*;
+import static java.util.Locale.ENGLISH;
 
 public class SequenceBenchmarkQueryUtils {
 

@@ -1,13 +1,12 @@
 package com.github.tiniyield.sequences.benchmarks.operations.data.providers;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+import kotlin.sequences.Sequence;
+import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 
-import kotlin.sequences.Sequence;
-import one.util.streamex.StreamEx;
+import java.util.List;
+import java.util.stream.Stream;
 
 public interface ICountryBasedDataProvider<T> {
 
