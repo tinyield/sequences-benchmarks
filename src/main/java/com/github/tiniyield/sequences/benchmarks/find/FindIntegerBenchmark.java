@@ -33,7 +33,6 @@ package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.codepoetics.protonpack.StreamUtils;
 import com.github.tiniyield.sequences.benchmarks.kt.FindKt;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
@@ -58,6 +57,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.zip;
 
@@ -75,11 +75,13 @@ public class FindIntegerBenchmark {
     @Setup
     public void init() {
         index = 0;
-        lstA = new IntegerDataProvider(COLLECTION_SIZE)
-                .asStream()
+        lstA = IntStream
+                .rangeClosed(0, COLLECTION_SIZE)
+                .boxed()
                 .collect(Collectors.toList());
-        lstB = new IntegerDataProvider(COLLECTION_SIZE)
-                .asStream()
+        lstB = IntStream
+                .rangeClosed(0, COLLECTION_SIZE)
+                .boxed()
                 .map(v -> -1)
                 .collect(Collectors.toList());
     }

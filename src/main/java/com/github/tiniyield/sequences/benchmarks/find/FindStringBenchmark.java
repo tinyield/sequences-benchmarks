@@ -2,7 +2,6 @@ package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.codepoetics.protonpack.StreamUtils;
 import com.github.tiniyield.sequences.benchmarks.kt.FindKt;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.number.IntegerDataProvider;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
@@ -27,6 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.utils.SequenceBenchmarkStreamUtils.zip;
 
@@ -44,14 +44,14 @@ public class FindStringBenchmark {
     @Setup
     public void init() {
         index = 0;
-        lstA = new IntegerDataProvider(COLLECTION_SIZE)
-                .asStream()
-                .map(String::valueOf)
+        lstA = IntStream
+                .rangeClosed(0, COLLECTION_SIZE)
+                .mapToObj(String::valueOf)
                 .collect(Collectors.toList());
-        lstB = new IntegerDataProvider(COLLECTION_SIZE)
-                .asStream()
+        lstB = IntStream
+                .rangeClosed(0, COLLECTION_SIZE)
                 .map(v -> -1)
-                .map(String::valueOf)
+                .mapToObj(String::valueOf)
                 .collect(Collectors.toList());
     }
 
