@@ -2,6 +2,7 @@
 package com.github.tiniyield.sequences.benchmarks.operations.model.track;
 
 import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Image;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

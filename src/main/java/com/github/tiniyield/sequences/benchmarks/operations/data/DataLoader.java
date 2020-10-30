@@ -8,16 +8,11 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
-import static java.lang.String.format;
-
 
 public class DataLoader {
 
     public static void main(String[] args) {
-//        loadFromApi();
-        WorkflowGenerator.generateWorkflows();
-//        manualTest();
+        loadFromApi();
     }
 
     public static void loadFromApi() {
@@ -25,9 +20,6 @@ public class DataLoader {
         ArtistsLoader artistsLoader = new ArtistsLoader();
         TracksLoader trackLoader = new TracksLoader();
         loadCountries().forEach(country -> {
-            if (!SILENT) {
-                System.out.println(format("Loading for %s", country));
-            }
             try {
                 artistsLoader.fetch(apiKey, country);
                 trackLoader.fetch(apiKey, country);

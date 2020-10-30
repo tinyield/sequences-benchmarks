@@ -1,7 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.all.match;
 
 import com.github.tiniyield.sequences.benchmarks.kt.all.match.IsEveryEvenKt;
-import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import kotlin.collections.ArraysKt;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -39,28 +38,32 @@ public class AllMatchBenchmark {
         return numbers;
     }
 
+    public static boolean isEven(Integer value) {
+        return value % 2 == 0;
+    }
+
     public boolean isEveryEven(Stream<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
+        return numbers.allMatch(AllMatchBenchmark::isEven);
     }
 
     public boolean isEveryEven(StreamEx<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
+        return numbers.allMatch(AllMatchBenchmark::isEven);
     }
 
     public boolean isEveryEven(Query<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
+        return numbers.allMatch(AllMatchBenchmark::isEven);
     }
 
     public boolean isEveryEven(Seq<Integer> numbers) {
-        return numbers.allMatch(SequenceBenchmarkUtils::isEven);
+        return numbers.allMatch(AllMatchBenchmark::isEven);
     }
 
     public boolean isEveryEven(io.vavr.collection.Stream<Integer> numbers) {
-        return numbers.forAll(SequenceBenchmarkUtils::isEven);
+        return numbers.forAll(AllMatchBenchmark::isEven);
     }
 
     public boolean isEveryEven(Sequence<Integer> numbers) {
-        return SequencesKt.all(numbers, SequenceBenchmarkUtils::isEven);
+        return SequencesKt.all(numbers, AllMatchBenchmark::isEven);
     }
 
     @Setup

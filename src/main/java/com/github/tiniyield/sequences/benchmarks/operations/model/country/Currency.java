@@ -1,8 +1,9 @@
-
 package com.github.tiniyield.sequences.benchmarks.operations.model.country;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 public class Currency {
 
@@ -40,4 +41,27 @@ public class Currency {
         this.symbol = symbol;
     }
 
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", symbol='" + symbol + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Currency)) return false;
+        Currency currency = (Currency) o;
+        return Objects.equals(code, currency.code) &&
+                Objects.equals(name, currency.name) &&
+                Objects.equals(symbol, currency.symbol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, symbol);
+    }
 }

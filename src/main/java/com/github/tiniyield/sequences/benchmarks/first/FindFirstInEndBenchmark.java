@@ -1,7 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
 import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
-import com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkUtils;
 import kotlin.collections.ArraysKt;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -48,27 +47,27 @@ public class FindFirstInEndBenchmark {
     }
 
     public Integer findFirst(Seq<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst().orElse(null);
+        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
     public Integer findFirst(Stream<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst().orElse(null);
+        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
     public Integer findFirst(StreamEx<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst().orElse(null);
+        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
     public Integer findFirst(Query<Integer> numbers) {
-        return numbers.filter(SequenceBenchmarkUtils::isOdd).findFirst().orElse(null);
+        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
     public Integer findFirst(io.vavr.collection.Stream<Integer> numbers) {
-        return numbers.find(SequenceBenchmarkUtils::isOdd).getOrNull();
+        return numbers.find(IsOdd::isOdd).getOrNull();
     }
 
     public Integer findFirst(Sequence<Integer> numbers) {
-        return SequencesKt.firstOrNull(SequencesKt.filter(numbers, SequenceBenchmarkUtils::isOdd));
+        return SequencesKt.firstOrNull(SequencesKt.filter(numbers, IsOdd::isOdd));
     }
 
     public Integer findFirstInJool() {

@@ -11,9 +11,10 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
-import static org.testng.Assert.*;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class FindFirstInEndBenchmarkTest {
 

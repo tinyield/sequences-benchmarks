@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.SILENT;
 import static java.lang.String.format;
 
 public class FileLoader {
@@ -45,9 +44,7 @@ public class FileLoader {
                                                                      .getFile()));
             return gson.fromJson(reader, ApiKey.class);
         } catch (FileNotFoundException e) {
-            if (!SILENT) {
-                System.out.println("could not load lastfm api key");
-            }
+            System.out.println("could not load lastfm api key");
             throw new RuntimeException(e);
         }
     }
@@ -70,9 +67,7 @@ public class FileLoader {
             JsonReader reader = new JsonReader(new InputStreamReader(getClass().getResourceAsStream(file)));
             result = gson.fromJson(reader, type);
         } catch (NullPointerException e) {
-            if (!SILENT) {
-                System.out.println(String.format("could not load data for file %s", file));
-            }
+            System.out.println(String.format("could not load data for file %s", file));
             throw new RuntimeException(e);
         }
         return result;

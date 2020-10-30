@@ -1,8 +1,9 @@
-
 package com.github.tiniyield.sequences.benchmarks.operations.model.country;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 public class Translations {
 
@@ -117,4 +118,41 @@ public class Translations {
         this.fa = fa;
     }
 
+    @Override
+    public String toString() {
+        return "Translations{" +
+                "de='" + de + '\'' +
+                ", es='" + es + '\'' +
+                ", fr='" + fr + '\'' +
+                ", ja='" + ja + '\'' +
+                ", it='" + it + '\'' +
+                ", br='" + br + '\'' +
+                ", pt='" + pt + '\'' +
+                ", nl='" + nl + '\'' +
+                ", hr='" + hr + '\'' +
+                ", fa='" + fa + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Translations)) return false;
+        Translations that = (Translations) o;
+        return Objects.equals(de, that.de) &&
+                Objects.equals(es, that.es) &&
+                Objects.equals(fr, that.fr) &&
+                Objects.equals(ja, that.ja) &&
+                Objects.equals(it, that.it) &&
+                Objects.equals(br, that.br) &&
+                Objects.equals(pt, that.pt) &&
+                Objects.equals(nl, that.nl) &&
+                Objects.equals(hr, that.hr) &&
+                Objects.equals(fa, that.fa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(de, es, fr, ja, it, br, pt, nl, hr, fa);
+    }
 }

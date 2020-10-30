@@ -1,8 +1,9 @@
-
 package com.github.tiniyield.sequences.benchmarks.operations.model.country;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 public class Language {
 
@@ -51,4 +52,29 @@ public class Language {
         this.nativeName = nativeName;
     }
 
+    @Override
+    public String toString() {
+        return "Language{" +
+                "iso6391='" + iso6391 + '\'' +
+                ", iso6392='" + iso6392 + '\'' +
+                ", name='" + name + '\'' +
+                ", nativeName='" + nativeName + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Language)) return false;
+        Language language = (Language) o;
+        return Objects.equals(iso6391, language.iso6391) &&
+                Objects.equals(iso6392, language.iso6392) &&
+                Objects.equals(name, language.name) &&
+                Objects.equals(nativeName, language.nativeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(iso6391, iso6392, name, nativeName);
+    }
 }

@@ -1,7 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
-import com.github.tiniyield.sequences.benchmarks.find.FindIntegerBenchmark;
-import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
@@ -13,9 +11,10 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.EVEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.SequenceBenchmarkConstants.ODD;
-import static org.testng.Assert.*;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class FindFirstInMiddleBenchmarkTest {
 
