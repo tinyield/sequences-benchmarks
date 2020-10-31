@@ -315,7 +315,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Stream.of(tracks.data.get(country.getName()))));
 
-        return artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        return artistsInTopTenWithTopTenTracksByCountryZipline(artistsByCountry, tracksByCountry);
     }
 
     public Stream<Pair<Country, List<Artist>>> getProtonpack() {
