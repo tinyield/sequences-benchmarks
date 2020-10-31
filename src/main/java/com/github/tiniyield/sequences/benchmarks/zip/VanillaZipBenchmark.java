@@ -6,7 +6,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperatio
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import kotlin.Unit;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 import org.javatuples.Pair;
 import org.jayield.Query;
@@ -28,7 +27,9 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Streams.zip;
 import static kotlin.collections.ArraysKt.asSequence;
+import static kotlin.sequences.SequencesKt.filter;
 import static kotlin.sequences.SequencesKt.forEach;
+import static kotlin.sequences.SequencesKt.zip;
 
 /**
  * VanillaZipBenchmark
@@ -67,11 +68,11 @@ public class VanillaZipBenchmark {
      * @return an array of Integers
      */
     public Integer[] getNumbers() {
-        Integer[] numbers = new Integer[COLLECTION_SIZE];
+        Integer[] ns = new Integer[COLLECTION_SIZE];
         for (int i = 0; i < COLLECTION_SIZE; i++) {
-            numbers[i] = i;
+            ns[i] = i;
         }
-        return numbers;
+        return ns;
     }
 
     /**
@@ -225,11 +226,7 @@ public class VanillaZipBenchmark {
      * @return a Kotlin {@link Sequence} in Java of Pairs between prime numbers and values
      */
     public Sequence<Pair<Integer, Value>> zipPrimeWithValue(Sequence<Integer> numbers, Sequence<Value> values) {
-        return SequencesKt.zip(
-                SequencesKt.filter(numbers, IsPrime::isPrime),
-                values,
-                Pair::with
-        );
+        return zip(filter(numbers, IsPrime::isPrime), values, Pair::with);
     }
 
     /**

@@ -3,7 +3,6 @@ package com.github.tiniyield.sequences.benchmarks.flatmap;
 import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
@@ -18,7 +17,6 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;

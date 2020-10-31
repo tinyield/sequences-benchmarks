@@ -10,6 +10,8 @@ import java.util.stream.StreamSupport;
 
 public class CustomStreamOperations {
 
+    private CustomStreamOperations() {
+    }
 
     public static <A, B, C> Stream<C> zip(Stream<? extends A> a,
                                           Stream<? extends B> b,

@@ -13,7 +13,6 @@ import com.github.tiniyield.sequences.benchmarks.operations.model.country.Countr
 import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
 import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
 import kotlin.Unit;
-import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -41,6 +40,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Streams.zip;
 import static java.util.Locale.ENGLISH;
 import static kotlin.collections.ArraysKt.asSequence;
+import static kotlin.collections.CollectionsKt.asSequence;
 import static kotlin.sequences.SequencesKt.distinctBy;
 import static kotlin.sequences.SequencesKt.filter;
 import static kotlin.sequences.SequencesKt.first;
@@ -175,7 +175,6 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
 
         zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).traverse(bh::consume);
     }
-
 
     /**
      * Runs this benchmark using {@link Seq}s in it's pipeline
@@ -324,7 +323,7 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     @Benchmark
     public final void jkotlin(Blackhole bh) {
         Function1<Country, Boolean> isNonEnglishSpeaking = country -> none(
-                map(CollectionsKt.asSequence(country.getLanguages()), Language::getIso6391),
+                map(asSequence(country.getLanguages()), Language::getIso6391),
                 ENGLISH.getLanguage()::equals
         );
 

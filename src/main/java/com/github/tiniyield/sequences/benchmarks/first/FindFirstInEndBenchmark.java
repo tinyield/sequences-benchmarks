@@ -1,7 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
 import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
-import kotlin.collections.ArraysKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 import org.jayield.Query;
@@ -22,6 +21,7 @@ import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
+import static kotlin.collections.ArraysKt.asSequence;
 import static kotlin.sequences.SequencesKt.filter;
 import static kotlin.sequences.SequencesKt.firstOrNull;
 
@@ -122,7 +122,7 @@ public class FindFirstInEndBenchmark {
      */
     @Benchmark
     public void kotlin(Blackhole bh) {
-        bh.consume(FirstKt.findFirst(ArraysKt.asSequence(data)));
+        bh.consume(FirstKt.findFirst(asSequence(data)));
     }
 
     /**
@@ -131,7 +131,7 @@ public class FindFirstInEndBenchmark {
      */
     @Benchmark
     public void jkotlin(Blackhole bh) {
-        bh.consume(findFirst(ArraysKt.asSequence(data)));
+        bh.consume(findFirst(asSequence(data)));
     }
 
 

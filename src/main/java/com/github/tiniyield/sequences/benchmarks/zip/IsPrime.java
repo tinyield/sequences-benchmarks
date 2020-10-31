@@ -1,6 +1,10 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 public class IsPrime {
+
+    private IsPrime() {
+    }
+
     public static boolean isPrime(Integer value) {
         if (value <= 1) {
             return false;

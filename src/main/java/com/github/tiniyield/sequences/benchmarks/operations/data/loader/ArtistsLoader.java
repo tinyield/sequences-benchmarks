@@ -35,7 +35,7 @@ public class ArtistsLoader {
             Gson gson = new Gson();
             TopArtistsLastFmResponse data = gson.fromJson(reader, TopArtistsLastFmResponse.class);
 
-            if(data != null && data.getTopartists() != null && data.getTopartists().getArtist().size() > 0) {
+            if (data != null && data.getTopartists() != null && !data.getTopartists().getArtist().isEmpty()) {
                 List<Artist> artists = data.getTopartists().getArtist();
                 FileWriter writer = new FileWriter(format(ARTISTS_PATH_TEMPLATE, country));
                 gson.toJson(artists, writer);

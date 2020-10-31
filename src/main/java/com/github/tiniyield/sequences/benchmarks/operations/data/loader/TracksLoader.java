@@ -35,7 +35,7 @@ public class TracksLoader {
             Gson gson = new Gson();
             TopTrackLastFmResponse data = gson.fromJson(reader, TopTrackLastFmResponse.class);
 
-            if(data != null && data.getTracks() != null && data.getTracks().getTrack().size() > 0) {
+            if (data != null && data.getTracks() != null && !data.getTracks().getTrack().isEmpty()) {
                 List<Track> artists = data.getTracks().getTrack();
                 FileWriter writer = new FileWriter(format(TRACKS_PATH_TEMPLATE, country));
                 gson.toJson(artists, writer);

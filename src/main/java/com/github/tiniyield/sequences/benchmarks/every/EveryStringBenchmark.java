@@ -5,7 +5,6 @@ import com.github.tiniyield.sequences.benchmarks.kt.every.EveryKt;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
@@ -30,6 +29,7 @@ import java.util.stream.IntStream;
 import static com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations.zip;
 import static kotlin.collections.CollectionsKt.asSequence;
 import static kotlin.sequences.SequencesKt.all;
+import static kotlin.sequences.SequencesKt.zip;
 
 /**
  * EveryStringBenchmark
@@ -253,7 +253,7 @@ public class EveryStringBenchmark {
      * @return true if all values in the zipped sequence are true, false otherwise.
      */
     public <T, U> boolean every(Sequence<T> q1, Sequence<U> q2, BiPredicate<T, U> predicate) {
-        return all(SequencesKt.zip(q1, q2, predicate::test), Boolean.TRUE::equals);
+        return all(zip(q1, q2, predicate::test), Boolean.TRUE::equals);
     }
 
 }
