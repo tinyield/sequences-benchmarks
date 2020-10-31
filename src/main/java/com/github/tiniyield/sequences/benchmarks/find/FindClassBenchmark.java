@@ -35,6 +35,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
+import kotlin.collections.CollectionsKt;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
@@ -60,18 +61,51 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations.zip;
+import static kotlin.collections.CollectionsKt.asSequence;
+import static kotlin.sequences.SequencesKt.filter;
+import static kotlin.sequences.SequencesKt.firstOrNull;
+import static kotlin.sequences.SequencesKt.zip;
 
+/**
+ * FindClassBenchmark
+ * The `find` between two sequences is an operation that, based on a user defined
+ * predicate, finds two elements that match, returning one of them in the process.
+ *
+ * Pipeline:
+ * Sequence.of(new Value[]{new Value(1), new Value(2),..., new Value(...)})
+ * .zip(Sequence.of(new Value[]{new Value(1), new Value(2),..., new Value(...)}), Value::Equals)
+ * .filter(Objects::nonNull)
+ * .findFirst()
+ */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindClassBenchmark {
 
+    /**
+     * The size of the Sequence for this benchmark
+     */
     @Param({"1000"})
     public int COLLECTION_SIZE;
-    public int index;
-    private List<Value> lstA;
-    private List<Value> lstB;
 
+    /**
+     * The current match index, is updated per iteration
+     */
+    public int index;
+
+    /**
+     * A list containing Values initiated with integers from 0 to COLLECTION_SIZE
+     */
+    public List<Value> lstA;
+
+    /**
+     * A list containing Values initiated with -1
+     */
+    public List<Value> lstB;
+
+    /**
+     * Sets up the data sources to be used in this benchmark
+     */
     @Setup
     public void init() {
         index = 0;
@@ -86,6 +120,9 @@ public class FindClassBenchmark {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Updates the match index with each Invocation
+     */
     @Setup(Level.Invocation)
     public void update() {
         index++;
@@ -93,6 +130,114 @@ public class FindClassBenchmark {
         lstB.set(index % COLLECTION_SIZE, new Value(index % COLLECTION_SIZE));
     }
 
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void stream(Blackhole bh) {
+        bh.consume(find(lstA.stream(), lstB.stream(), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link StreamEx}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void streamEx(Blackhole bh) {
+        bh.consume(find(StreamEx.of(lstA), StreamEx.of(lstB), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void jayield(Blackhole bh) {
+        bh.consume(find(Query.fromList(lstA), Query.fromList(lstB), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link Seq}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void jool(Blackhole bh) {
+        bh.consume(find(Seq.seq(lstA), Seq.seq(lstB), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void vavr(Blackhole bh) {
+        bh.consume(find(Stream.ofAll(lstA), Stream.ofAll(lstB), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Protonpack in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void protonpack(Blackhole bh) {
+        bh.consume(findInProtonpack(lstA.stream(), lstB.stream(), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Guava in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void guava(Blackhole bh) {
+        bh.consume(findInGuava(lstA.stream(), lstB.stream(), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s and the
+     * zipline approach in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void zipline(Blackhole bh) {
+        bh.consume(findInZipline(lstA.stream(), lstB.stream(), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(FindKt.find(asSequence(lstA), asSequence(lstB), Value::equals));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(find(asSequence(lstA), asSequence(lstB), Value::equals));
+    }
+
+    /**
+     * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(java.util.stream.Stream<Value> q1, java.util.stream.Stream<Value> q2, BiPredicate<Value, Value> predicate) {
         return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -100,6 +245,11 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of {@link StreamEx} together, using the BiPredicate to let through an element if a match is
+     * made or null otherwise
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(StreamEx<Value> q1, StreamEx<Value> q2, BiPredicate<Value, Value> predicate) {
         return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -107,6 +257,11 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of {@link Query} together, using the BiPredicate to let through an element if a match is made
+     * or null otherwise
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(Query<Value> q1, Query<Value> q2, BiPredicate<Value, Value> predicate) {
         return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -114,6 +269,11 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of {@link Seq} together, using the BiPredicate to let through an element if a match is made or
+     * null otherwise
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(Seq<Value> q1, Seq<Value> q2, BiPredicate<Value, Value> predicate) {
         return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -121,10 +281,20 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of {@link io.vavr.collection.Stream} together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise.
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(Stream<Value> q1, Stream<Value> q2, BiPredicate<Value, Value> predicate) {
         return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull).getOrNull();
     }
 
+    /**
+     * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise, making use of Protonpack.
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value findInProtonpack(java.util.stream.Stream<Value> q1, java.util.stream.Stream<Value> q2, BiPredicate<Value, Value> predicate) {
         return StreamUtils.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -132,7 +302,11 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
-
+    /**
+     * Zips two sequences of {@link Stream} together, using the BiPredicate to let through an element if a match is made
+     * or null otherwise, making use of Guava.
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value findInGuava(java.util.stream.Stream<Value> q1, java.util.stream.Stream<Value> q2, BiPredicate<Value, Value> predicate) {
         return Streams.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
                 .filter(Objects::nonNull)
@@ -140,6 +314,11 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of {@link Stream} together, using the BiPredicate to let through an element if a match is made
+     * or null otherwise, using the zipline approach.
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value findInZipline(java.util.stream.Stream<Value> q1, java.util.stream.Stream<Value> q2, BiPredicate<Value, Value> predicate) {
         Iterator<Value> it = q2.iterator();
         return q1.map(t -> predicate.test(t, it.next()) ? t : null)
@@ -148,103 +327,17 @@ public class FindClassBenchmark {
                 .orElse(null);
     }
 
+    /**
+     * Zips two sequences of Kotlin {@link Sequence}s in Java together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise
+     * @return the found Value if a match was found, null otherwise.
+     */
     public Value find(Sequence<Value> q1, Sequence<Value> q2, BiPredicate<Value, Value> predicate) {
-        return SequencesKt.firstOrNull(
-                SequencesKt.filter(
-                        SequencesKt.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null),
+        return firstOrNull(
+                filter(
+                        zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null),
                         Objects::nonNull
                 )
         );
     }
-
-    public Value findEqualInStream() {
-        return find(lstA.stream(), lstB.stream(), Value::equals);
-    }
-
-    public Value findEqualInStreamEx() {
-        return find(StreamEx.of(lstA), StreamEx.of(lstB), Value::equals);
-    }
-
-    public Value findEqualInQuery() {
-        return find(Query.fromList(lstA), Query.fromList(lstB), Value::equals);
-    }
-
-    public Value findEqualInJool() {
-        return find(Seq.seq(lstA), Seq.seq(lstB), Value::equals);
-    }
-
-    public Value findEqualInVavr() {
-        return find(Stream.ofAll(lstA), Stream.ofAll(lstB), Value::equals);
-    }
-
-    public Value findEqualInProtonpack() {
-        return findInProtonpack(lstA.stream(), lstB.stream(), Value::equals);
-    }
-
-    public Value findEqualInGuava() {
-        return findInGuava(lstA.stream(), lstB.stream(), Value::equals);
-    }
-
-    public Value findEqualInZipline() {
-        return findInZipline(lstA.stream(), lstB.stream(), Value::equals);
-    }
-
-    public Value findEqualInKotlin() {
-        return FindKt.find(SequencesKt.asSequence(lstA.iterator()), SequencesKt.asSequence(lstB.iterator()), Value::equals);
-    }
-
-    public Value findEqualInJKotlin() {
-        return find(SequencesKt.asSequence(lstA.iterator()), SequencesKt.asSequence(lstB.iterator()), Value::equals);
-    }
-
-    @Benchmark
-    public void stream(Blackhole bh) {
-        bh.consume(findEqualInStream());
-    }
-
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(findEqualInStreamEx());
-    }
-
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(findEqualInQuery());
-    }
-
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(findEqualInJool());
-    }
-
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(findEqualInVavr());
-    }
-
-    @Benchmark
-    public void protonpack(Blackhole bh) {
-        bh.consume(findEqualInProtonpack());
-    }
-
-    @Benchmark
-    public void guava(Blackhole bh) {
-        bh.consume(findEqualInGuava());
-    }
-
-    @Benchmark
-    public void zipline(Blackhole bh) {
-        bh.consume(findEqualInZipline());
-    }
-
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(findEqualInKotlin());
-    }
-
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(findEqualInJKotlin());
-    }
-
 }

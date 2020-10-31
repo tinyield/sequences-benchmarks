@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
+import static kotlin.collections.CollectionsKt.asSequence;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
@@ -30,16 +31,16 @@ public class FindStringBenchmarkTest {
     @Test
     public void testSameResultsFind() {
         String expected = String.valueOf(1);
-        assertEquals(instance.findEqualInStream(), expected);
-        assertEquals(instance.findEqualInStreamEx(), expected);
-        assertEquals(instance.findEqualInQuery(), expected);
-        assertEquals(instance.findEqualInJool(), expected);
-        assertEquals(instance.findEqualInProtonpack(), expected);
-        assertEquals(instance.findEqualInVavr(), expected);
-        assertEquals(instance.findEqualInGuava(), expected);
-        assertEquals(instance.findEqualInZipline(), expected);
-        assertEquals(instance.findEqualInKotlin(), expected);
-        assertEquals(instance.findEqualInJKotlin(), expected);
+        assertEquals(instance.find(instance.lstA.stream(), instance.lstB.stream(), String::equals), expected);
+        assertEquals(instance.find(StreamEx.of(instance.lstA), StreamEx.of(instance.lstB), String::equals), expected);
+        assertEquals(instance.find(Query.fromList(instance.lstA), Query.fromList(instance.lstB), String::equals), expected);
+        assertEquals(instance.find(Seq.seq(instance.lstA), Seq.seq(instance.lstB), String::equals), expected);
+        assertEquals(instance.findInProtonpack(instance.lstA.stream(), instance.lstB.stream(), String::equals), expected);
+        assertEquals(instance.find(Stream.ofAll(instance.lstA), Stream.ofAll(instance.lstB), String::equals), expected);
+        assertEquals(instance.findInGuava(instance.lstA.stream(), instance.lstB.stream(), String::equals), expected);
+        assertEquals(instance.findInZipline(instance.lstA.stream(), instance.lstB.stream(), String::equals), expected);
+        assertEquals(FindKt.find(asSequence(instance.lstA), asSequence(instance.lstB), String::equals), expected);
+        assertEquals(instance.find(asSequence(instance.lstA), asSequence(instance.lstB), String::equals), expected);
     }
 
     @Test
