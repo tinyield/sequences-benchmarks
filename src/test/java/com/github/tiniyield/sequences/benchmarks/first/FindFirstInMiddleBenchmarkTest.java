@@ -30,13 +30,13 @@ public class FindFirstInMiddleBenchmarkTest {
     @Test
     public void testSameResultsFind() {
         Integer expected = ODD;
-        assertEquals(instance.findFirstInStream(), expected);
-        assertEquals(instance.findFirstInStreamEx(), expected);
-        assertEquals(instance.findFirstInQuery(), expected);
-        assertEquals(instance.findFirstInJool(), expected);
-        assertEquals(instance.findFirstInVavr(), expected);
-        assertEquals(instance.findFirstInKotlin(), expected);
-        assertEquals(instance.findFirstInJKotlin(), expected);
+        assertEquals(instance.findFirst(Arrays.stream(instance.data)), expected);
+        assertEquals(instance.findFirst(StreamEx.of(instance.data)), expected);
+        assertEquals(instance.findFirst(Query.of(instance.data)), expected);
+        assertEquals(instance.findFirst(Seq.of(instance.data)), expected);
+        assertEquals(instance.findFirst(io.vavr.collection.Stream.of(instance.data)), expected);
+        assertEquals(FirstKt.findFirst(ArraysKt.asSequence(instance.data)), expected);
+        assertEquals(instance.findFirst(ArraysKt.asSequence(instance.data)), expected);
     }
 
     @Test

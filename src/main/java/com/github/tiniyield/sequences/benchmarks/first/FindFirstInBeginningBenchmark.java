@@ -23,16 +23,40 @@ import java.util.stream.Stream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
+import static kotlin.sequences.SequencesKt.filter;
+import static kotlin.sequences.SequencesKt.firstOrNull;
 
+/**
+ * FindFirstInBeginningBenchmark
+ * Benchmarks the usage of the `findFirst()` operator.
+ * The match element is found in the first element.
+ *
+ * Pipeline:
+ * Sequence.of(new Integer[]{ ODD, EVEN, ..., EVEN })
+ * .filter(isOdd)
+ * .findFirst()
+ */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class FindFirstInBeginningBenchmark {
 
+    /**
+     * The size of the Sequence for this benchmark
+     */
     @Param({"10000"})
     public int COLLECTION_SIZE;
+
+    /**
+     * The data source used to benchmark
+     * This data is instantiated using the get method.
+     */
     public Integer[] data;
 
+    /**
+     * Prepares an array with a single ODD element in the beginning.
+     * @return an array of Integers
+     */
     public Integer[] get() {
         Integer[] numbers = new Integer[COLLECTION_SIZE];
         Arrays.fill(numbers, EVEN);
@@ -40,97 +64,130 @@ public class FindFirstInBeginningBenchmark {
         return numbers;
     }
 
+    /**
+     * Sets up the data source to be used in this benchmark
+     */
     @Setup
     public void init() {
         data = get();
     }
 
-    public Integer findFirst(Seq<Integer> numbers) {
-        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
+    /**
+     * Runs this benchmark using {@link Stream}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void stream(Blackhole bh) { // With Auxiliary Function
+        bh.consume(findFirst(Arrays.stream(data)));
     }
 
+    /**
+     * Runs this benchmark using {@link StreamEx}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void streamEx(Blackhole bh) {
+        bh.consume(findFirst(StreamEx.of(data)));
+    }
+
+    /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jayield(Blackhole bh) {
+        bh.consume(findFirst(Query.of(data)));
+    }
+
+    /**
+     * Runs this benchmark using {@link Seq}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jool(Blackhole bh) {
+        bh.consume(findFirst(Seq.of(data)));
+    }
+
+    /**
+     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void vavr(Blackhole bh) {
+        bh.consume(findFirst(io.vavr.collection.Stream.of(data)));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(FirstKt.findFirst(ArraysKt.asSequence(data)));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(findFirst(ArraysKt.asSequence(data)));
+    }
+
+
+    /**
+     * Searches a {@link Stream} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
     public Integer findFirst(Stream<Integer> numbers) {
         return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
+    /**
+     * Searches a {@link StreamEx} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
     public Integer findFirst(StreamEx<Integer> numbers) {
         return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
+
+    /**
+     * Searches a  {@link Query} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
     public Integer findFirst(Query<Integer> numbers) {
         return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
     }
 
+    /**
+     * Searches a {@link Seq} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
+    public Integer findFirst(Seq<Integer> numbers) {
+        return numbers.filter(IsOdd::isOdd).findFirst().orElse(null);
+    }
+
+    /**
+     * Searches a {@link io.vavr.collection.Stream} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
     public Integer findFirst(io.vavr.collection.Stream<Integer> numbers) {
         return numbers.find(IsOdd::isOdd).getOrNull();
     }
 
+    /**
+     * Searches a Kotlin {@link Sequence} in Java for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
     public Integer findFirst(Sequence<Integer> numbers) {
-        return SequencesKt.firstOrNull(SequencesKt.filter(numbers, IsOdd::isOdd));
+        return firstOrNull(filter(numbers, IsOdd::isOdd));
     }
-
-    public Integer findFirstInJool() {
-        return findFirst(Seq.of(data));
-    }
-
-    public Integer findFirstInStream() {
-        return findFirst(Arrays.stream(data));
-    }
-
-    public Integer findFirstInStreamEx() {
-        return findFirst(StreamEx.of(data));
-    }
-
-    public Integer findFirstInQuery() {
-        return findFirst(Query.of(data));
-    }
-
-    public Integer findFirstInVavr() {
-        return findFirst(io.vavr.collection.Stream.of(data));
-    }
-
-    public Integer findFirstInKotlin() {
-        return FirstKt.findFirst(ArraysKt.asSequence(data));
-    }
-
-    public Integer findFirstInJKotlin() {
-        return findFirst(ArraysKt.asSequence(data));
-    }
-
-    @Benchmark
-    public final void stream(Blackhole bh) { // With Auxiliary Function
-        bh.consume(findFirstInStream());
-    }
-
-    @Benchmark
-    public final void streamEx(Blackhole bh) {
-        bh.consume(findFirstInStreamEx());
-    }
-
-    @Benchmark
-    public final void jayield(Blackhole bh) {
-        bh.consume(findFirstInQuery());
-    }
-
-    @Benchmark
-    public final void jool(Blackhole bh) {
-        bh.consume(findFirstInJool());
-    }
-
-    @Benchmark
-    public final void vavr(Blackhole bh) {
-        bh.consume(findFirstInVavr());
-    }
-
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(findFirstInKotlin());
-    }
-
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(findFirstInJKotlin());
-    }
-
-
 }
