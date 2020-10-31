@@ -28,19 +28,39 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations.zip;
+import static kotlin.collections.CollectionsKt.asSequence;
+import static kotlin.sequences.SequencesKt.all;
 
+/**
+ * EveryStringBenchmark
+ * Every is an operation that, based on a user defined predicate, tests if all the
+ * elements of a sequence match between corresponding positions.
+ * <p>
+ * Pipeline:
+ * Sequence.of(new String[]{"1", "2", ..., "..."})
+ * .zip(Sequence.of(new String[]{"1", "2", ..., "..."}), String::Equals)
+ * .allMatch(Boolean.TRUE::equals)
+ */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class EveryStringBenchmark {
+
+    /**
+     * The size of the Sequence for this benchmark
+     */
     @Param({"100"})
     public int COLLECTION_SIZE;
+
     /**
      * lstA and lstB are two Lists with the same String  objects.
      */
-    private List<String> lstA;
-    private List<String> lstB;
+    public List<String> lstA;
+    public List<String> lstB;
 
+    /**
+     * Sets up the data sources to be used in this benchmark
+     */
     @Setup
     public void init() {
         lstB = new ArrayList<>(COLLECTION_SIZE);
@@ -51,132 +71,189 @@ public class EveryStringBenchmark {
         lstB.addAll(lstA);
     }
 
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void stream(Blackhole bh) {
+        bh.consume(every(lstA.stream(), lstB.stream(), String::equals));
+    }
 
+    /**
+     * Runs this benchmark using {@link StreamEx}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void streamEx(Blackhole bh) {
+        bh.consume(every(StreamEx.of(lstA), StreamEx.of(lstB), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jayield(Blackhole bh) {
+        bh.consume(every(Query.fromList(lstA), Query.fromList(lstB), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link Seq}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jool(Blackhole bh) {
+        bh.consume(every(Seq.seq(lstA), Seq.seq(lstB), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void vavr(Blackhole bh) {
+        bh.consume(every(Stream.ofAll(lstA), Stream.ofAll(lstB), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Protonpack in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void protonpack(Blackhole bh) {
+        bh.consume(everyProtonpack(lstA.stream(), lstB.stream(), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Guava in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void guava(Blackhole bh) {
+        bh.consume(everyGuava(lstA.stream(), lstB.stream(), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s and the
+     * zipline approach in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void zipline(Blackhole bh) {
+        bh.consume(everyZipline(lstA.stream(), lstB.stream(), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void kotlin(Blackhole bh) {
+        bh.consume(EveryKt.every(asSequence(lstA), asSequence(lstB), String::equals));
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void jkotlin(Blackhole bh) {
+        bh.consume(every(asSequence(lstA), asSequence(lstB), String::equals));
+    }
+
+    /**
+     * Zips two sequences of {@link java.util.stream.Stream} together mapping the combination of each String to a boolean
+     * with the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(java.util.stream.Stream<T> q1, java.util.stream.Stream<U> q2, BiPredicate<T, U> predicate) {
         return zip(q1, q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link StreamEx} together mapping the combination of each String to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(StreamEx<T> q1, StreamEx<U> q2, BiPredicate<T, U> predicate) {
         return q1.zipWith(q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link Query} together mapping the combination of each String to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(Query<T> q1, Query<U> q2, BiPredicate<T, U> predicate) {
         return q1.zip(q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
-    public <T,U> boolean everyProtonpack(java.util.stream.Stream<T> q1, java.util.stream.Stream<U> q2, BiPredicate<T,U> predicate) {
+    /**
+     * Zips two sequences of {@link java.util.stream.Stream} together mapping the combination of each String to a boolean with
+     * the BiPredicate, making use of Protonpack.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
+    public <T, U> boolean everyProtonpack(java.util.stream.Stream<T> q1, java.util.stream.Stream<U> q2, BiPredicate<T, U> predicate) {
         return StreamUtils.zip(q1, q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link Seq} together mapping the combination of each String to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(Seq<T> q1, Seq<U> q2, BiPredicate<T, U> predicate) {
         return q1.zip(q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link io.vavr.collection.Stream} together mapping the combination of each value to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(Stream<T> q1, Stream<U> q2, BiPredicate<T, U> predicate) {
         return q1.zipWith(q2, predicate::test).forAll(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link Stream} together mapping the combination of each String to a boolean with
+     * the BiPredicate, making use of Guava.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean everyGuava(java.util.stream.Stream<T> q1, java.util.stream.Stream<U> q2, BiPredicate<T, U> predicate) {
         return Streams.zip(q1, q2, predicate::test).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link Stream} together mapping the combination of each String to a boolean with
+     * the BiPredicate, using the zipline approach.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean everyZipline(java.util.stream.Stream<T> q1, java.util.stream.Stream<U> q2, BiPredicate<T, U> predicate) {
         Iterator<U> it = q2.iterator();
         return q1.map(t -> predicate.test(t, it.next())).allMatch(Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of Kotlin {@link Sequence}s in Java together mapping the combination of each String to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
     public <T, U> boolean every(Sequence<T> q1, Sequence<U> q2, BiPredicate<T, U> predicate) {
-        return SequencesKt.all(SequencesKt.zip(q1, q2, predicate::test), Boolean.TRUE::equals);
-    }
-
-    public boolean allEqualStream() {
-        return every(lstA.stream(), lstB.stream(), String::equals);
-    }
-
-    public boolean allEqualStreamEx() {
-        return every(StreamEx.of(lstA), StreamEx.of(lstB), String::equals);
-    }
-
-    public boolean allEqualQuery() {
-        return every(Query.fromList(lstA), Query.fromList(lstB), String::equals);
-    }
-
-    public boolean allEqualJool() {
-        return every(Seq.seq(lstA), Seq.seq(lstB), String::equals);
-    }
-
-    public boolean allEqualVavr() {
-        return every(Stream.ofAll(lstA), Stream.ofAll(lstB), String::equals);
-    }
-
-    public boolean allEqualProtonpack() {
-        return everyProtonpack(lstA.stream(), lstB.stream(), String::equals);
-    }
-
-    public boolean allEqualGuava() {
-        return everyGuava(lstA.stream(), lstB.stream(), String::equals);
-    }
-
-    public boolean allEqualZipline() {
-        return everyZipline(lstA.stream(), lstB.stream(), String::equals);
-    }
-
-    public boolean allEqualKotlin() {
-        return EveryKt.every(SequencesKt.asSequence(lstA.iterator()), SequencesKt.asSequence(lstB.iterator()), String::equals);
-    }
-
-    public boolean allEqualJKotlin() {
-        return every(SequencesKt.asSequence(lstA.iterator()), SequencesKt.asSequence(lstB.iterator()), String::equals);
-    }
-
-    @Benchmark
-    public final void stream(Blackhole bh) {
-        bh.consume(allEqualStream());
-    }
-
-    @Benchmark
-    public final void streamEx(Blackhole bh) {
-        bh.consume(allEqualStreamEx());
-    }
-
-    @Benchmark
-    public final void jayield(Blackhole bh) {
-        bh.consume(allEqualQuery());
-    }
-
-    @Benchmark
-    public final void jool(Blackhole bh) {
-        bh.consume(allEqualJool());
-    }
-
-    @Benchmark
-    public final void vavr(Blackhole bh) {
-        bh.consume(allEqualVavr());
-    }
-
-    @Benchmark
-    public final void protonpack(Blackhole bh) {
-        bh.consume(allEqualProtonpack());
-    }
-
-    @Benchmark
-    public final void guava(Blackhole bh) {
-        bh.consume(allEqualGuava());
-    }
-
-    @Benchmark
-    public final void zipline(Blackhole bh) {
-        bh.consume(allEqualZipline());
-    }
-
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(allEqualKotlin());
-    }
-
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(allEqualJKotlin());
+        return all(SequencesKt.zip(q1, q2, predicate::test), Boolean.TRUE::equals);
     }
 
 }

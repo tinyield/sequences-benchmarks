@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
+import static kotlin.collections.CollectionsKt.asSequence;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -27,16 +28,16 @@ public class EveryIntegerBenchmarkTest {
 
     @Test
     public void testSameResultsEvery() {
-        assertTrue(instance.allEqualStream());
-        assertTrue(instance.allEqualStreamEx());
-        assertTrue(instance.allEqualQuery());
-        assertTrue(instance.allEqualJool());
-        assertTrue(instance.allEqualProtonpack());
-        assertTrue(instance.allEqualVavr());
-        assertTrue(instance.allEqualGuava());
-        assertTrue(instance.allEqualZipline());
-        assertTrue(instance.allEqualKotlin());
-        assertTrue(instance.allEqualJKotlin());
+        assertTrue(instance.every(instance.lstA.stream(), instance.lstB.stream(), Integer::equals));
+        assertTrue(instance.every(StreamEx.of(instance.lstA), StreamEx.of(instance.lstB), Integer::equals));
+        assertTrue(instance.every(Query.fromList(instance.lstA), Query.fromList(instance.lstB), Integer::equals));
+        assertTrue(instance.every(Seq.seq(instance.lstA), Seq.seq(instance.lstB), Integer::equals));
+        assertTrue(instance.every(Stream.ofAll(instance.lstA), Stream.ofAll(instance.lstB), Integer::equals));
+        assertTrue(instance.everyProtonpack(instance.lstA.stream(), instance.lstB.stream(), Integer::equals));
+        assertTrue(instance.everyGuava(instance.lstA.stream(), instance.lstB.stream(), Integer::equals));
+        assertTrue(instance.everyZipline(instance.lstA.stream(), instance.lstB.stream(), Integer::equals));
+        assertTrue(EveryKt.every(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals));
+        assertTrue(instance.every(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals));
     }
 
     @Test
