@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
 import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
 
 @BenchmarkMode(Mode.Throughput)
@@ -34,9 +35,7 @@ public class FindFirstInBeginningBenchmark {
 
     public Integer[] get() {
         Integer[] numbers = new Integer[COLLECTION_SIZE];
-        for (int i = 0; i < COLLECTION_SIZE; i++) {
-            numbers[i] = i;
-        }
+        Arrays.fill(numbers, EVEN);
         numbers[0] = ODD;
         return numbers;
     }
