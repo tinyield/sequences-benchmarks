@@ -91,7 +91,7 @@ public class FlatMapAndReduceBenchmark {
     }
 
     public Integer sumQuery() {
-        return flatMapAndReduceQuery(getNestedSequence(l -> Query.of(l.toArray(Integer[]::new)), Query::fromList));
+        return flatMapAndReduceQuery(getNestedSequence(Query::fromList, Query::fromList));
     }
 
     public Integer sumJool() {
