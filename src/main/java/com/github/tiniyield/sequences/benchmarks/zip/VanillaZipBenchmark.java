@@ -5,7 +5,6 @@ import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipPrimesWithValuesKt;
 import com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations;
 import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
 import kotlin.Unit;
-import kotlin.collections.ArraysKt;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
@@ -28,38 +27,45 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Streams.zip;
+import static kotlin.collections.ArraysKt.asSequence;
+import static kotlin.sequences.SequencesKt.forEach;
 
+/**
+ * VanillaZipBenchmark
+ * Benchmarks zipping a sequence of prime Integers with instances of the class Value.
+ *
+ * Pipeline:
+ * Sequence.of(new Integer[]{1, 2, ..., n})
+ * .filter(isPrime)
+ * .zip(Sequence.of(new Value[]{new Value(1), new Value(2), ..., new Value(n)}), Pair::with)
+ * .forEach(bh::consume)
+ */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class VanillaZipBenchmark {
 
+    /**
+     * The size of the Sequence for this benchmark
+     */
     @Param({"10000"})
     public int COLLECTION_SIZE;
 
-    private Integer[] numbers;
-    private Value[] values;
+    /**
+     * The numbers data source used to benchmark
+     * This data is instantiated using the getNumbers method.
+     */
+    public Integer[] numbers;
+    /**
+     * The values data source used to benchmark
+     * This data is instantiated using the getNumbers method and mapping the numbers to Values.
+     */
+    public Value[] values;
 
-    public static boolean isPrime(Integer value) {
-        if (value <= 1) {
-            return false;
-        }
-        if (value <= 3) {
-            return true;
-        }
-        if (value % 2 == 0) {
-            return false;
-        }
-        int i = 3;
-        while (i * i <= value) {
-            if (value % i == 0) {
-                return false;
-            }
-            i += 2;
-        }
-        return true;
-    }
-
+    /**
+     * Creates an array of Integers from 0 to COLLECTION_SIZE
+     * @return an array of Integers
+     */
     public Integer[] getNumbers() {
         Integer[] numbers = new Integer[COLLECTION_SIZE];
         for (int i = 0; i < COLLECTION_SIZE; i++) {
@@ -68,6 +74,9 @@ public class VanillaZipBenchmark {
         return numbers;
     }
 
+    /**
+     * Sets up the data sources to be used in this benchmark
+     */
     @Setup
     public void init() {
         numbers = getNumbers();
@@ -76,162 +85,218 @@ public class VanillaZipBenchmark {
                 .toArray(Value[]::new);
     }
 
+    /**
+     * Runs this benchmark using {@link Stream}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void stream(Blackhole bh) { // With Auxiliary Function
+        zipPrimeWithValue(Arrays.stream(numbers),Arrays.stream(values)).forEach(bh::consume);
+    }
 
+    /**
+     * Runs this benchmark using {@link StreamEx}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void streamEx(Blackhole bh) {
+        zipPrimeWithValue(StreamEx.of(numbers),StreamEx.of(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jayield(Blackhole bh) {
+        zipPrimeWithValue(Query.of(numbers), Query.of(values)).traverse(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link Seq}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jool(Blackhole bh) {
+        zipPrimeWithValue(Seq.of(numbers),Seq.of(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void vavr(Blackhole bh) {
+        zipPrimeWithValue(io.vavr.collection.Stream.of(numbers), io.vavr.collection.Stream.of(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Protonpack in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void protonpack(Blackhole bh) {
+        zipPrimeWithValueProtonpack(Arrays.stream(numbers),Arrays.stream(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Guava in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void guava(Blackhole bh) {
+        zipPrimeWithValueGuava(Arrays.stream(numbers),Arrays.stream(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s and the
+     * zipline approach in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void zipline(Blackhole bh) {
+        zipPrimeWithValueZipline(Arrays.stream(numbers), Arrays.stream(values)).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void kotlin(Blackhole bh) {
+        forEach(
+                ZipPrimesWithValuesKt.zipPrimeWithValue(asSequence(numbers), asSequence(values)),
+                elem -> {
+                    bh.consume(elem);
+                    return Unit.INSTANCE;
+                }
+        );
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void jkotlin(Blackhole bh) {
+        forEach(
+                zipPrimeWithValue(asSequence(numbers), asSequence(values)),
+                elem -> {
+                    bh.consume(elem);
+                    return Unit.INSTANCE;
+                }
+        );
+    }
+
+    /**
+     * Filters the prime numbers {@link io.vavr.collection.Stream} from the {@param numbers} and then zips the resulting
+     * {@link io.vavr.collection.Stream} sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link io.vavr.collection.Stream} sequence of Pairs between prime numbers and values
+     */
     public io.vavr.collection.Stream<Pair<Integer, Value>> zipPrimeWithValue(io.vavr.collection.Stream<Integer> numbers, io.vavr.collection.Stream<Value> values) {
-        return numbers.filter(VanillaZipBenchmark::isPrime).zipWith(values, Pair::with);
+        return numbers.filter(IsPrime::isPrime).zipWith(values, Pair::with);
     }
 
+    /**
+     * Filters the prime numbers {@link Stream} from the {@param numbers} and then zips the resulting {@link Stream}
+     * sequence with the {@param values}, using Guava
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Stream} sequence of Pairs between prime numbers and values
+     */
     public Stream<Pair<Integer, Value>> zipPrimeWithValueGuava(Stream<Integer> numbers, Stream<Value> values) {
-        return zip(numbers.filter(VanillaZipBenchmark::isPrime), values, Pair::with);
+        return zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
     }
 
+    /**
+     * Filters the kotlin prime numbers {@link Sequence} in Java from the {@param numbers} and then zips the resulting
+     * {@link Sequence} in Java with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a Kotlin {@link Sequence} in Java of Pairs between prime numbers and values
+     */
     public Sequence<Pair<Integer, Value>> zipPrimeWithValue(Sequence<Integer> numbers, Sequence<Value> values) {
         return SequencesKt.zip(
-                SequencesKt.filter(numbers, VanillaZipBenchmark::isPrime),
+                SequencesKt.filter(numbers, IsPrime::isPrime),
                 values,
                 Pair::with
         );
     }
 
+    /**
+     * Filters the prime numbers {@link Stream} from the {@param numbers} and then zips the resulting {@link Stream}
+     * sequence with the {@param values}, using the zipline approach
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Stream} sequence of Pairs between prime numbers and values
+     */
     public Stream<Pair<Integer, Value>> zipPrimeWithValueZipline(Stream<Integer> numbers, Stream<Value> values) {
         Iterator<Value> iter = values.iterator();
-        return numbers.filter(VanillaZipBenchmark::isPrime).map(v -> Pair.with(v, iter.next()));
+        return numbers.filter(IsPrime::isPrime).map(v -> Pair.with(v, iter.next()));
     }
 
+    /**
+     * Filters the prime numbers {@link Stream} from the {@param numbers} and then zips the resulting {@link Stream}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Stream} sequence of Pairs between prime numbers and values
+     */
     public Stream<Pair<Integer, Value>> zipPrimeWithValue(Stream<Integer> numbers, Stream<Value> values) {
-        return CustomStreamOperations.zip(numbers.filter(VanillaZipBenchmark::isPrime), values, Pair::with);
+        return CustomStreamOperations.zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
     }
 
+    /**
+     * Filters the prime numbers {@link StreamEx} from the {@param numbers} and then zips the resulting {@link StreamEx}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link StreamEx} sequence of Pairs between prime numbers and values
+     */
     public StreamEx<Pair<Integer, Value>> zipPrimeWithValue(StreamEx<Integer> numbers, StreamEx<Value> values) {
-        return numbers.filter(VanillaZipBenchmark::isPrime).zipWith(values, Pair::with);
+        return numbers.filter(IsPrime::isPrime).zipWith(values, Pair::with);
     }
 
+    /**
+     * Filters the prime numbers {@link Seq} from the {@param numbers} and then zips the resulting {@link Seq}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Seq} sequence of Pairs between prime numbers and values
+     */
     public Seq<Pair<Integer, Value>> zipPrimeWithValue(Seq<Integer> numbers, Seq<Value> values) {
-        return numbers.filter(VanillaZipBenchmark::isPrime).zip(values, Pair::with);
+        return numbers.filter(IsPrime::isPrime).zip(values, Pair::with);
     }
 
+    /**
+     * Filters the prime numbers {@link Query} from the {@param numbers} and then zips the resulting {@link Query}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Query} sequence of Pairs between prime numbers and values
+     */
     public Query<Pair<Integer, Value>> zipPrimeWithValue(Query<Integer> numbers, Query<Value> values) {
-        return numbers.filter(VanillaZipBenchmark::isPrime).zip(values, Pair::with);
+        return numbers.filter(IsPrime::isPrime).zip(values, Pair::with);
     }
 
+    /**
+     * Filters the prime numbers {@link Stream} from the {@param numbers} and then zips the resulting {@link Stream}
+     * sequence with the {@param values}, using Protonpack
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Stream} sequence of Pairs between prime numbers and values
+     */
     public Stream<Pair<Integer, Value>> zipPrimeWithValueProtonpack(Stream<Integer> numbers, Stream<Value> values) {
-        return StreamUtils.zip(numbers.filter(VanillaZipBenchmark::isPrime), values, Pair::with);
+        return StreamUtils.zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
     }
-
-    protected io.vavr.collection.Stream<Pair<Integer, Value>> getVavr() {
-        return zipPrimeWithValue(io.vavr.collection.Stream.of(numbers),
-                io.vavr.collection.Stream.of(values));
-    }
-
-    protected StreamEx<Pair<Integer, Value>> getStreamEx() {
-        return zipPrimeWithValue(StreamEx.of(numbers),
-                StreamEx.of(values));
-    }
-
-    protected Stream<Pair<Integer, Value>> getZipline() {
-        return zipPrimeWithValueZipline(Arrays.stream(numbers),
-                Arrays.stream(values));
-    }
-
-    protected Stream<Pair<Integer, Value>> getProtonpack() {
-        return zipPrimeWithValueProtonpack(Arrays.stream(numbers),
-                Arrays.stream(values));
-    }
-
-    protected Stream<Pair<Integer, Value>> getStream() {
-        return zipPrimeWithValue(Arrays.stream(numbers),
-                Arrays.stream(values));
-    }
-
-    protected Query<Pair<Integer, Value>> getQuery() {
-        return zipPrimeWithValue(Query.of(numbers), Query.of(values));
-    }
-
-    protected Stream<Pair<Integer, Value>> getGuava() {
-        return zipPrimeWithValueGuava(
-                Arrays.stream(numbers),
-                Arrays.stream(values)
-        );
-    }
-
-    protected Seq<Pair<Integer, Value>> getJool() {
-        return zipPrimeWithValue(
-                Seq.of(numbers),
-                Seq.of(values)
-        );
-    }
-
-    protected Sequence<Pair<Integer, Value>> getKotlin() {
-        return ZipPrimesWithValuesKt.zipPrimeWithValue(
-                ArraysKt.asSequence(numbers),
-                ArraysKt.asSequence(values)
-        );
-    }
-
-    protected Sequence<Pair<Integer, Value>> getJKotlin() {
-        return zipPrimeWithValue(
-                ArraysKt.asSequence(numbers),
-                ArraysKt.asSequence(values)
-        );
-    }
-
-    @Benchmark
-    public final void stream(Blackhole bh) { // With Auxiliary Function
-        getStream().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void streamEx(Blackhole bh) {
-        getStreamEx().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void jayield(Blackhole bh) {
-        getQuery().traverse(bh::consume);
-    }
-
-    @Benchmark
-    public final void jool(Blackhole bh) {
-        getJool().forEach(bh::consume);
-    }
-
-    // Other Sequences based benchmarks
-
-    @Benchmark
-    public final void vavr(Blackhole bh) {
-        getVavr().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void protonpack(Blackhole bh) {
-        getProtonpack().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void guava(Blackhole bh) {
-        getGuava().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void zipline(Blackhole bh) {
-        getZipline().forEach(bh::consume);
-    }
-
-    @Benchmark
-    public final void kotlin(Blackhole bh) {
-        SequencesKt.forEach(getKotlin(), elem -> {
-            bh.consume(elem);
-            return Unit.INSTANCE;
-        });
-    }
-
-    @Benchmark
-    public final void jkotlin(Blackhole bh) {
-        SequencesKt.forEach(getJKotlin(), elem -> {
-            bh.consume(elem);
-            return Unit.INSTANCE;
-        });
-    }
-
 
 }
