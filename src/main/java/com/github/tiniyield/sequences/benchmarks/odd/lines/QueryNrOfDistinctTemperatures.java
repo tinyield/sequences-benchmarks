@@ -1,6 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
+import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -133,6 +134,26 @@ public class QueryNrOfDistinctTemperatures {
                 distinct(
                         map(
                                 OddLinesKt.oddLines(content), // Filter hourly info
+                                line -> parseInt(line.substring(14, 16))
+                        )
+                )
+        );
+    }
+
+
+    @Benchmark
+    public long nrOfTempsKotlinYield(DataSource src) {
+        Sequence<String> content = drop(
+                filter(
+                        asSequence(src.data),
+                        s -> s.charAt(0) != '#'  // Filter comments
+                ),
+                1                        // Skip line: Not available
+        );
+        return count(
+                distinct(
+                        map(
+                                YieldOddLinesKt.yieldOddLines(content), // Filter hourly info
                                 line -> parseInt(line.substring(14, 16))
                         )
                 )
