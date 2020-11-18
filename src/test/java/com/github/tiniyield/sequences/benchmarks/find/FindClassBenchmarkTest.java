@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
 import one.util.streamex.StreamEx;

@@ -2,8 +2,7 @@ package com.github.tiniyield.sequences.benchmarks.zip;
 
 import com.codepoetics.protonpack.StreamUtils;
 import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipPrimesWithValuesKt;
-import com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import kotlin.Unit;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -249,7 +248,7 @@ public class VanillaZipBenchmark {
      * @return a {@link Stream} sequence of Pairs between prime numbers and values
      */
     public Stream<Pair<Integer, Value>> zipPrimeWithValue(Stream<Integer> numbers, Stream<Value> values) {
-        return CustomStreamOperations.zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
+        return StreamZipOperation.zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
     }
 
     /**

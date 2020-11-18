@@ -3,14 +3,13 @@ package com.github.tiniyield.sequences.benchmarks.zip;
 import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsInTopTenWithTopTenTracksByCountryKt;
 import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsKt;
 import com.github.tiniyield.sequences.benchmarks.kt.zip.TracksKt;
-import com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.Artists;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.Tracks;
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.Countries;
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Artists;
+import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Tracks;
+import com.github.tiniyield.sequences.benchmarks.common.data.providers.rest.countries.Countries;
+import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Language;
+import com.github.tiniyield.sequences.benchmarks.common.model.track.Track;
 import com.google.common.collect.Streams;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -378,7 +377,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
             Stream<Pair<Country, Stream<Artist>>> artists,
             Stream<Pair<Country, Stream<Track>>> tracks) {
 
-        return CustomStreamOperations.zip(artists, tracks, (l, r) -> Triplet.with(l.getValue0(), l.getValue1(), r.getValue1()))
+        return StreamZipOperation.zip(artists, tracks, (l, r) -> Triplet.with(l.getValue0(), l.getValue1(), r.getValue1()))
                 .map(triplet -> {
                     List<String> topTenSongsArtistsNames = triplet.getValue2()
                             .limit(TEN)

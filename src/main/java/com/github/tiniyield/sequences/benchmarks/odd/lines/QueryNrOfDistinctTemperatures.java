@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
@@ -67,7 +68,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsStream(DataSource src) {
+    public long nrOfTempsStream(WeatherDataSource src) {
         Stream<String> content = Arrays.stream(src.data)
                 .filter(s -> s.charAt(0) != '#') // Filter comments
                 .skip(1);                       // Skip line: Not available
@@ -78,7 +79,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsStreamEx(DataSource src) {
+    public long nrOfTempsStreamEx(WeatherDataSource src) {
         return oddLines(StreamEx.of(src.data)
                 .filter(s -> s.charAt(0) != '#')// Filter comments
                 .skip(1)                        // Skip line: Not available
@@ -89,7 +90,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsJayield(DataSource src) {
+    public long nrOfTempsJayield(WeatherDataSource src) {
         return Query.of(src.data)
                 .filter(s -> s.charAt(0) != '#')   // Filter comments
                 .skip(1)                           // Skip line: Not available
@@ -100,7 +101,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsJool(DataSource src) {
+    public long nrOfTempsJool(WeatherDataSource src) {
         return oddLines(Seq.of(src.data)
                 .filter(s -> s.charAt(0) != '#') // Filter comments
                 .skip(1)  // Skip line: Not available
@@ -111,7 +112,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsVavr(DataSource src) {
+    public long nrOfTempsVavr(WeatherDataSource src) {
         return oddLines(io.vavr.collection.Stream.of(src.data)
                 .filter(s -> s.charAt(0) != '#')// Filter comments
                 .drop(1) // Skip line: Not available
@@ -122,7 +123,7 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     @Benchmark
-    public long nrOfTempsKotlin(DataSource src) {
+    public long nrOfTempsKotlin(WeatherDataSource src) {
         Sequence<String> content = drop(
                 filter(
                         asSequence(src.data),
@@ -142,7 +143,7 @@ public class QueryNrOfDistinctTemperatures {
 
 
     @Benchmark
-    public long nrOfTempsKotlinYield(DataSource src) {
+    public long nrOfTempsKotlinYield(WeatherDataSource src) {
         Sequence<String> content = drop(
                 filter(
                         asSequence(src.data),

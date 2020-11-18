@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.EVEN;
 import static kotlin.collections.ArraysKt.asSequence;
 import static kotlin.sequences.SequencesKt.all;
 

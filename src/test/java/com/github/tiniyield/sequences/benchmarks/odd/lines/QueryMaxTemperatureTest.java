@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -16,7 +17,7 @@ public class QueryMaxTemperatureTest {
 
     @Test
     public void testSameOutput() {
-        DataSource src = new DataSource();
+        WeatherDataSource src = new WeatherDataSource();
         int expected = 27;
         assertEquals(instance.maxTempStream(src),expected);
         assertEquals(instance.maxTempStreamEx(src),expected);

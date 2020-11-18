@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.kt.zip
 
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.rest.countries.Countries
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country
+import com.github.tiniyield.sequences.benchmarks.common.data.providers.rest.countries.Countries
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country
 
 val countriesProvider = Countries()
 

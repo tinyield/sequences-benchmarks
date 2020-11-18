@@ -1,9 +1,9 @@
 package com.github.tiniyield.sequences.benchmarks.operations;
 
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist;
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country;
+import com.github.tiniyield.sequences.benchmarks.common.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 
 import java.util.List;
 import java.util.stream.Collectors;

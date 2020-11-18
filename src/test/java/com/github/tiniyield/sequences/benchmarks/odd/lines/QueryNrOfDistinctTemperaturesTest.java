@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -15,7 +16,7 @@ public class QueryNrOfDistinctTemperaturesTest {
 
     @Test
     public void testSameOutput() {
-        DataSource src = new DataSource();
+        WeatherDataSource src = new WeatherDataSource();
         int expected = 18;
         assertEquals(instance.nrOfTempsStream(src),expected);
         assertEquals(instance.nrOfTempsStreamEx(src),expected);

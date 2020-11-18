@@ -57,7 +57,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.stream.IntStream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations.zip;
+import static com.github.tiniyield.sequences.benchmarks.zip.StreamZipOperation.zip;
 import static java.util.stream.Collectors.toList;
 import static kotlin.collections.CollectionsKt.asSequence;
 import static kotlin.sequences.SequencesKt.zip;

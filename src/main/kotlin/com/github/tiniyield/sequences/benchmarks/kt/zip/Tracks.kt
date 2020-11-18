@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.kt.zip
 
-import com.github.tiniyield.sequences.benchmarks.operations.data.providers.last.fm.Tracks
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track
+import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Tracks
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country
+import com.github.tiniyield.sequences.benchmarks.common.model.track.Track
 import org.javatuples.Pair
 
 private val provider = Tracks(countriesProvider)

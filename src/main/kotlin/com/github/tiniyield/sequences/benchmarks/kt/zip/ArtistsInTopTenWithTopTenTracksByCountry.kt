@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.kt.zip
 
-import com.github.tiniyield.sequences.benchmarks.operations.model.artist.Artist
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country
-import com.github.tiniyield.sequences.benchmarks.operations.model.track.Track
+import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country
+import com.github.tiniyield.sequences.benchmarks.common.model.track.Track
 import com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark
 import org.javatuples.Pair
 import org.javatuples.Triplet

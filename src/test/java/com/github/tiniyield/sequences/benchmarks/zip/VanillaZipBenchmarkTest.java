@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipPrimesWithValuesKt;
-import com.github.tiniyield.sequences.benchmarks.operations.model.wrapper.Value;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import one.util.streamex.StreamEx;
 import org.javatuples.Pair;
 import org.jayield.Query;

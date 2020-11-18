@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
@@ -65,7 +66,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempStream(DataSource src) {
+    public int maxTempStream(WeatherDataSource src) {
         Stream<String> content = Arrays.stream(src.data)
                 .filter(s -> s.charAt(0) != '#') // Filter comments
                 .skip(1);                       // Skip line: Not available
@@ -76,7 +77,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempStreamEx(DataSource src) {
+    public int maxTempStreamEx(WeatherDataSource src) {
         return oddLines(StreamEx.of(src.data)
                 .filter(s -> s.charAt(0) != '#')// Filter comments
                 .skip(1)                        // Skip line: Not available
@@ -87,7 +88,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempJayield(DataSource src) {
+    public int maxTempJayield(WeatherDataSource src) {
         return Query.of(src.data)
                 .filter(s -> s.charAt(0) != '#')   // Filter comments
                 .skip(1)                           // Skip line: Not available
@@ -98,7 +99,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempJool(DataSource src) {
+    public int maxTempJool(WeatherDataSource src) {
         return oddLines(Seq.of(src.data)
                 .filter(s -> s.charAt(0) != '#') // Filter comments
                 .skip(1)  // Skip line: Not available
@@ -109,7 +110,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempVavr(DataSource src) {
+    public int maxTempVavr(WeatherDataSource src) {
         return oddLines(io.vavr.collection.Stream.of(src.data)
                 .filter(s -> s.charAt(0) != '#')// Filter comments
                 .drop(1) // Skip line: Not available
@@ -120,7 +121,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempKotlin(DataSource src) {
+    public int maxTempKotlin(WeatherDataSource src) {
         Sequence<String> content = drop(
                 filter(
                         asSequence(src.data),
@@ -138,7 +139,7 @@ public class QueryMaxTemperature {
     }
 
     @Benchmark
-    public int maxTempKotlinYield(DataSource src) {
+    public int maxTempKotlinYield(WeatherDataSource src) {
         Sequence<String> content = drop(
                 filter(
                         asSequence(src.data),

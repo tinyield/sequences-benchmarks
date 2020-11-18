@@ -1,7 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.kt.zip
 
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Country
-import com.github.tiniyield.sequences.benchmarks.operations.model.country.Language
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Country
+import com.github.tiniyield.sequences.benchmarks.common.model.country.Language
 import java.util.*
 
 fun isNonEnglishSpeaking(country: Country): Boolean {

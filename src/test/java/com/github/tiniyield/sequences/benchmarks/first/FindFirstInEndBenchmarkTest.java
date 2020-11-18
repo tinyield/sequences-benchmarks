@@ -11,8 +11,8 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.EVEN;
-import static com.github.tiniyield.sequences.benchmarks.operations.common.BenchmarkConstants.ODD;
+import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.ODD;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 

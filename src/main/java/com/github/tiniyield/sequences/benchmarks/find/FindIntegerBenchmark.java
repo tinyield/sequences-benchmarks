@@ -58,7 +58,7 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.github.tiniyield.sequences.benchmarks.operations.CustomStreamOperations.zip;
+import static com.github.tiniyield.sequences.benchmarks.zip.StreamZipOperation.zip;
 import static kotlin.collections.CollectionsKt.asSequence;
 import static kotlin.sequences.SequencesKt.filter;
 import static kotlin.sequences.SequencesKt.firstOrNull;
