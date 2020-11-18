@@ -4,7 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class QueryNrOfDistinctTemperaturesTest {
     private QueryNrOfDistinctTemperatures instance;
@@ -24,5 +24,6 @@ public class QueryNrOfDistinctTemperaturesTest {
         assertEquals(instance.nrOfTempsJool(src),expected);
         assertEquals(instance.nrOfTempsVavr(src),expected);
         assertEquals(instance.nrOfTempsKotlin(src),expected);
+        assertEquals(instance.nrOfTempsKotlinYield(src),expected);
     }
 }

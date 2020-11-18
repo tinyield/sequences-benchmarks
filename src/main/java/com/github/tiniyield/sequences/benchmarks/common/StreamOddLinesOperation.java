@@ -1,4 +1,4 @@
-package com.github.tiniyield.sequences.benchmarks.odd.lines;
+package com.github.tiniyield.sequences.benchmarks.common;
 
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 public class StreamOddLinesOperation {
 
-    static class StreamOddLines<T> extends Spliterators.AbstractSpliterator<T> {
+    public static class StreamOddLines<T> extends Spliterators.AbstractSpliterator<T> {
 
         private static long odd(long l) {
             return l == Long.MAX_VALUE ? l : (l + 1) / 2;
@@ -17,7 +17,7 @@ public class StreamOddLinesOperation {
         final Spliterator<T> source;
         boolean isOdd;
 
-        StreamOddLines(Spliterator<T> source) {
+        public StreamOddLines(Spliterator<T> source) {
             super(odd(source.estimateSize()), source.characteristics());
             this.source = source;
         }

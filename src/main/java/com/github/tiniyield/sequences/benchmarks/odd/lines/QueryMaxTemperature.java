@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.StreamOddLinesOperation;
 import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
@@ -47,8 +48,7 @@ public class QueryMaxTemperature {
     }
 
     public static <T> Stream<T> oddLines(Stream<T> source) {
-        return StreamSupport.stream(
-                new StreamOddLinesOperation.StreamOddLines<>(source.spliterator()), false);
+        return StreamSupport.stream(new StreamOddLinesOperation.StreamOddLines<>(source.spliterator()), false);
     }
 
     public static <T> Seq<T> oddLines(Seq<T> source) {

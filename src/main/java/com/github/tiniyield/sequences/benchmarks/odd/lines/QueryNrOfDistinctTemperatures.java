@@ -1,5 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.odd.lines;
 
+import com.github.tiniyield.sequences.benchmarks.common.StreamOddLinesOperation;
 import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;

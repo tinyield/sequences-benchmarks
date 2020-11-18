@@ -4,7 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class QueryMaxTemperatureTest {
 
@@ -25,6 +25,7 @@ public class QueryMaxTemperatureTest {
         assertEquals(instance.maxTempJool(src),expected);
         assertEquals(instance.maxTempVavr(src),expected);
         assertEquals(instance.maxTempKotlin(src),expected);
+        assertEquals(instance.maxTempKotlinYield(src),expected);
     }
 
 }
