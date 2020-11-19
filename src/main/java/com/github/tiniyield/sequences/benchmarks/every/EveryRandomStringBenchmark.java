@@ -32,11 +32,14 @@
 package com.github.tiniyield.sequences.benchmarks.every;
 
 import com.codepoetics.protonpack.StreamUtils;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.kt.every.EveryKt;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -217,6 +220,16 @@ public class EveryRandomStringBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        bh.consume(every(Lists.immutable.ofAll(lstA).asLazy(), Lists.immutable.ofAll(lstB).asLazy(), String::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together mapping the combination of each String to a boolean
      * with the BiPredicate.
      * @return true if all values in the zipped sequence are true, false otherwise.
@@ -298,4 +311,14 @@ public class EveryRandomStringBenchmark {
         return all(zip(q1, q2, predicate::test), Boolean.TRUE::equals);
     }
 
+    /**
+     * Zips two sequences of {@link LazyIterable} together mapping the combination of each value to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
+    public <T, U> boolean every(LazyIterable<T> q1, LazyIterable<U> q2, BiPredicate<T, U> predicate) {
+        return q1.zip(q2)
+                .collect(p -> predicate.test(p.getOne(), p.getTwo()))
+                .allSatisfy(Boolean.TRUE::equals);
+    }
 }

@@ -3,6 +3,8 @@ package com.github.tiniyield.sequences.benchmarks.first;
 import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.impl.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -134,6 +136,15 @@ public class FindFirstInMiddleBenchmark {
         bh.consume(findFirst(asSequence(data)));
     }
 
+    /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        bh.consume(findFirst(Lists.immutable.of(data).asLazy()));
+    }
+
 
     /**
      * Searches a {@link Stream} sequence for an odd number
@@ -188,5 +199,14 @@ public class FindFirstInMiddleBenchmark {
      */
     public Integer findFirst(Sequence<Integer> numbers) {
         return firstOrNull(filter(numbers, IsOdd::isOdd));
+    }
+
+    /**
+     * Searches a  {@link LazyIterable} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
+    public Integer findFirst(LazyIterable<Integer> numbers) {
+        return numbers.select(IsOdd::isOdd).getFirst();
     }
 }

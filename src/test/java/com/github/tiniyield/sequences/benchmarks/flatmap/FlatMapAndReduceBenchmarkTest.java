@@ -3,6 +3,7 @@ package com.github.tiniyield.sequences.benchmarks.flatmap;
 import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
 import kotlin.collections.CollectionsKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
@@ -28,11 +29,12 @@ public class FlatMapAndReduceBenchmarkTest {
         Integer expected = 3;
         assertEquals(expected, instance.flatMapAndReduceStream(instance.getNestedSequence(List::stream, List::stream)));
         assertEquals(expected, instance.flatMapAndReduceStreamEx(instance.getNestedSequence(StreamEx::of, StreamEx::of)));
-//        assertEquals(expected, instance.flatMapAndReduceQuery(instance.getNestedSequence(Query::fromList, Query::fromList)));
+        assertEquals(expected, instance.flatMapAndReduceQuery(instance.getNestedSequence(Query::fromList, Query::fromList)));
         assertEquals(expected, instance.flatMapAndReduceJool(instance.getNestedSequence(Seq::seq, Seq::seq)));
         assertEquals(expected, instance.flatMapAndReduceVavr(instance.getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll)));
         assertEquals(expected.intValue(), FlatmapAndReduceKt.flatMapAndReduce(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
         assertEquals(expected, instance.flatMapAndReduceJKotlin(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
+        assertEquals(expected, instance.flatMapAndReduceEclipse(instance.getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())));
     }
 
 }

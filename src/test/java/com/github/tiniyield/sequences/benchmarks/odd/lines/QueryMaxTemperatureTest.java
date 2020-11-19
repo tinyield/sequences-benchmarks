@@ -26,6 +26,7 @@ public class QueryMaxTemperatureTest {
         assertEquals(instance.maxTempVavr(src),expected);
         assertEquals(instance.maxTempKotlin(src),expected);
         assertEquals(instance.maxTempKotlinYield(src),expected);
+        assertEquals(instance.maxTempEclipse(src),expected);
     }
 
 }

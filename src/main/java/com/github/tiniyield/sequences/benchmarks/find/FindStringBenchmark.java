@@ -6,6 +6,8 @@ import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -200,6 +202,16 @@ public class FindStringBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void eclipse(Blackhole bh) {
+        bh.consume(find(Lists.immutable.ofAll(lstA).asLazy(), Lists.immutable.ofAll(lstB).asLazy(), String::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
      * @return the found String if a match was found, null otherwise.
@@ -305,5 +317,17 @@ public class FindStringBenchmark {
                         Objects::nonNull
                 )
         );
+    }
+
+    /**
+     * Zips two sequences of {@link LazyIterable} together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise.
+     * @return the found Value if a match was found, null otherwise.
+     */
+    public String find(LazyIterable<String> q1, LazyIterable<String> q2, BiPredicate<String, String> predicate) {
+        return q1.zip(q2)
+                .collect((p) -> predicate.test(p.getOne(), p.getTwo()) ? p.getOne() : null)
+                .select(Objects::nonNull)
+                .getFirst();
     }
 }

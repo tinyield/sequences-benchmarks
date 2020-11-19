@@ -1,8 +1,5 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsInTopTenWithTopTenTracksByCountryKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.TracksKt;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Artists;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Tracks;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.rest.countries.Countries;
@@ -10,22 +7,21 @@ import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.common.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.common.model.country.Language;
 import com.github.tiniyield.sequences.benchmarks.common.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsInTopTenWithTopTenTracksByCountryKt;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsKt;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.TracksKt;
 import com.google.common.collect.Streams;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.impl.factory.Lists;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.Iterator;
@@ -364,6 +360,31 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        org.eclipse.collections.api.block.predicate.Predicate<Country> isNonEnglishSpeaking =
+                country -> Lists.immutable.ofAll(country.getLanguages()).asLazy()
+                        .collect(Language::getIso6391)
+                        .noneSatisfy(ENGLISH.getLanguage()::equals);
+
+        LazyIterable<Pair<Country, LazyIterable<Artist>>> artistsByCountry = Lists.immutable.of(countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> artists.data.containsKey(country.getName()) && artists.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(artists.data.get(country.getName())).asLazy()));
+
+        LazyIterable<Pair<Country, LazyIterable<Track>>> tracksByCountry = Lists.immutable.of(countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(tracks.data.get(country.getName())).asLazy()));
+
+        artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+    }
+
+    /**
      * This method takes in two {@link Stream}s and for each Country, it takes the top ten Artists and the top ten Tracks
      * artist's names and zip them into a Trio. After that it filters the top ten artists by their presence in the
      * top ten Tracks artist's names, returning a Pair with the Country and the resulting Sequence of Artists.
@@ -651,6 +672,38 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
                     return Pair.with(triplet.getValue0(), topTenArtists);
                 }
         );
+    }
+
+    /**
+     * This method takes in two {@link LazyIterable}s and for each Country, it takes the top ten Artists and the top ten Tracks
+     * artist's names and zip them into a Trio. After that it filters the top ten artists by their presence in the
+     * top ten Tracks artist's names, returning a Pair with the Country and the resulting Sequence of Artists.
+     *
+     * @param artists sequence of artists by country
+     * @param tracks  sequence of tracks by country
+     * @return A {@link LazyIterable} consisting of Pairs of Country and Artists that are in that country's top ten and also
+     * have tracks in the top ten of the same country
+     */
+    public LazyIterable<Pair<Country, List<Artist>>> artistsInTopTenWithTopTenTracksByCountry(
+            LazyIterable<Pair<Country, LazyIterable<Artist>>> artists,
+            LazyIterable<Pair<Country, LazyIterable<Track>>> tracks) {
+
+        return artists.zip(tracks)
+                .collect(p -> Triplet.with(p.getOne().getValue0(), p.getOne().getValue1(), p.getTwo().getValue1()))
+                .collect(triplet -> {
+                    List<String> topTenSongsArtistsNames = triplet.getValue2()
+                            .take(TEN)
+                            .collect(Track::getArtist)
+                            .collect(Artist::getName)
+                            .toList();
+
+                    List<Artist> topTenArtists = triplet.getValue1()
+                            .take(TEN)
+                            .select(artist -> topTenSongsArtistsNames.contains(artist.getName()))
+                            .toList();
+                    return Pair.with(triplet.getValue0(), topTenArtists);
+
+                });
     }
 
 

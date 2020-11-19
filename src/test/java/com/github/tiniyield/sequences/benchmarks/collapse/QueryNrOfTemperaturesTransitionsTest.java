@@ -27,6 +27,7 @@ public class QueryNrOfTemperaturesTransitionsTest {
         assertEquals(instance.nrOfTransitionsVavr(src),expected);
         assertEquals(instance.nrOfTransitionsKotlin(src),expected);
         assertEquals(instance.nrOfTransitionsKotlinYield(src),expected);
+        assertEquals(instance.nrOfTransitionsEclipse(src),expected);
     }
 
 }

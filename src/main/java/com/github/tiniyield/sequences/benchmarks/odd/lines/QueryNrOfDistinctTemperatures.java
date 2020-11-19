@@ -7,6 +7,8 @@ import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jayield.Traverser;
 import org.jooq.lambda.Seq;
@@ -16,6 +18,8 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -66,6 +70,36 @@ public class QueryNrOfDistinctTemperatures {
                 isOdd[0] = !isOdd[0];
             });
         };
+    }
+
+    public static <U> LazyIterable<U> oddLines(LazyIterable<U> src) {
+        return Lists.immutable.withAll(() -> {
+            Iterator<U> upstream = src.iterator();
+            return new Iterator<U>() {
+                boolean isOdd = false;
+
+                @Override
+                public boolean hasNext() {
+                    if (!isOdd) {
+                        if (!upstream.hasNext()) {
+                            return false;
+                        } else {
+                            upstream.next();
+                        }
+                    }
+                    isOdd = !isOdd;
+                    return upstream.hasNext();
+                }
+
+                @Override
+                public U next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    return upstream.next();
+                }
+            };
+        }).asLazy();
     }
 
     @Benchmark
@@ -160,5 +194,18 @@ public class QueryNrOfDistinctTemperatures {
                         )
                 )
         );
+    }
+
+    @Benchmark
+    public int nrOfTempsEclipse(WeatherDataSource src) {
+        return oddLines(
+                Lists.immutable.of(src.data).asLazy()
+                        .select(s -> s.charAt(0) != '#')   // Filter comments
+                        .drop(1)                           // Skip line: Not available
+        ) // Filter hourly info
+                .collect(line -> line.substring(14, 16))
+                .distinct()
+                .collectInt(Integer::parseInt)
+                .size();
     }
 }

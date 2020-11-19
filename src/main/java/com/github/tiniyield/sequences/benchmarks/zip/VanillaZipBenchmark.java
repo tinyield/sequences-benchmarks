@@ -6,6 +6,8 @@ import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import kotlin.Unit;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.impl.factory.Lists;
 import org.javatuples.Pair;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
@@ -196,6 +198,15 @@ public class VanillaZipBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        zipPrimeWithValue(Lists.immutable.with(numbers).asLazy(), Lists.immutable.with(values).asLazy()).forEach(bh::consume);
+    }
+
+    /**
      * Filters the prime numbers {@link io.vavr.collection.Stream} from the {@param numbers} and then zips the resulting
      * {@link io.vavr.collection.Stream} sequence with the {@param values}
      * @param numbers the numbers to filter
@@ -293,6 +304,17 @@ public class VanillaZipBenchmark {
      */
     public Stream<Pair<Integer, Value>> zipPrimeWithValueProtonpack(Stream<Integer> numbers, Stream<Value> values) {
         return StreamUtils.zip(numbers.filter(IsPrime::isPrime), values, Pair::with);
+    }
+
+    /**
+     * Filters the prime numbers {@link LazyIterable} from the {@param numbers} and then zips the resulting {@link Query}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Query} sequence of Pairs between prime numbers and values
+     */
+    public LazyIterable<Pair<Integer, Value>> zipPrimeWithValue(LazyIterable<Integer> numbers, LazyIterable<Value> values) {
+        return numbers.select(IsPrime::isPrime).zip(values).collect(p -> Pair.with(p.getOne(), p.getTwo()));
     }
 
 }

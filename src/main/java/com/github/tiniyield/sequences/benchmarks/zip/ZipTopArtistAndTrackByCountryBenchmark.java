@@ -15,6 +15,8 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.impl.factory.Lists;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.jayield.Query;
@@ -347,6 +349,32 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
         });
     }
 
+
+    /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        org.eclipse.collections.api.block.predicate.Predicate<Country> isNonEnglishSpeaking =
+                country -> Lists.immutable.ofAll(country.getLanguages()).asLazy()
+                        .collect(Language::getIso6391)
+                        .noneSatisfy(ENGLISH.getLanguage()::equals);
+
+        LazyIterable<Pair<Country, LazyIterable<Artist>>> artistsByCountry = Lists.immutable.of(countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> artists.data.containsKey(country.getName()) && artists.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(artists.data.get(country.getName())).asLazy()));
+
+        LazyIterable<Pair<Country, LazyIterable<Track>>> tracksByCountry = Lists.immutable.of(countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(tracks.data.get(country.getName())).asLazy()));
+
+        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+    }
+
     /**
      * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
      * and filters the resulting sequence by distinct Artists
@@ -539,11 +567,43 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     }
 
     /**
+     * Takes two {@link LazyIterable}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     * @param artists sequence of artists by country
+     * @param tracks sequence of tracks by country
+     * @return A {@link LazyIterable} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
+     */
+    public LazyIterable<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
+            LazyIterable<Pair<Country, LazyIterable<Artist>>> artists,
+            LazyIterable<Pair<Country, LazyIterable<Track>>> tracks) {
+
+        return artists.zip(tracks)
+                .collect(p -> Triplet.with(
+                        p.getOne().getValue0(),
+                        p.getOne().getValue1().getFirst(),
+                        p.getTwo().getValue1().getFirst()
+                ))
+                .select(distinctByKeyEclipse(Triplet::getValue1));
+    }
+
+    /**
      * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
      * @param keyExtractor the extractor of the elements identity
      * @return a Predicate that will distinct elements by a {@param keyExtractor}
      */
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+
+
+    /**
+     * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
+     * @param keyExtractor the extractor of the elements identity
+     * @return a Predicate that will distinct elements by a {@param keyExtractor}
+     */
+    public static <T> org.eclipse.collections.api.block.predicate.Predicate<T> distinctByKeyEclipse(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
     }

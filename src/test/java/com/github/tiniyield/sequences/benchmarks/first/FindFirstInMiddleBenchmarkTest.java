@@ -4,6 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
@@ -37,6 +38,7 @@ public class FindFirstInMiddleBenchmarkTest {
         assertEquals(instance.findFirst(io.vavr.collection.Stream.of(instance.data)), expected);
         assertEquals(FirstKt.findFirst(ArraysKt.asSequence(instance.data)), expected);
         assertEquals(instance.findFirst(ArraysKt.asSequence(instance.data)), expected);
+        assertEquals(instance.findFirst(Lists.immutable.of(instance.data).asLazy()), expected);
     }
 
     @Test
@@ -50,6 +52,7 @@ public class FindFirstInMiddleBenchmarkTest {
         assertEquals(instance.findFirst(Stream.of(input)), expected);
         assertEquals(FirstKt.findFirst(ArraysKt.asSequence(input)), expected);
         assertEquals(instance.findFirst(ArraysKt.asSequence(input)), expected);
+        assertEquals(instance.findFirst(Lists.immutable.of(input).asLazy()), expected);
     }
 
 
@@ -63,5 +66,6 @@ public class FindFirstInMiddleBenchmarkTest {
         assertNull(instance.findFirst(Stream.of(input)));
         assertNull(FirstKt.findFirst(ArraysKt.asSequence(input)));
         assertNull(instance.findFirst(ArraysKt.asSequence(input)));
+        assertNull(instance.findFirst(Lists.immutable.of(input).asLazy()));
     }
 }

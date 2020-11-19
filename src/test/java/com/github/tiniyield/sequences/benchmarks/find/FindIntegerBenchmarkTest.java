@@ -4,6 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
@@ -41,6 +42,7 @@ public class FindIntegerBenchmarkTest {
         assertEquals(instance.findInZipline(instance.lstA.stream(), instance.lstB.stream(), Integer::equals), expected);
         assertEquals(FindKt.find(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals), expected);
         assertEquals(instance.find(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals), expected);
+        assertEquals(instance.find(Lists.immutable.ofAll(instance.lstA).asLazy(), Lists.immutable.ofAll(instance.lstB).asLazy(), Integer::equals), expected);
     }
 
     @Test
@@ -57,6 +59,7 @@ public class FindIntegerBenchmarkTest {
         assertEquals(instance.findInZipline(Arrays.stream(input), Arrays.stream(input), Integer::equals), expected);
         assertEquals(FindKt.find(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Integer::equals), expected);
         assertEquals(instance.find(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Integer::equals), expected);
+        assertEquals(instance.find(Lists.immutable.of(input).asLazy(), Lists.immutable.of(input).asLazy(), Integer::equals), expected);
     }
 
 
@@ -74,5 +77,6 @@ public class FindIntegerBenchmarkTest {
         assertNull(instance.findInZipline(Arrays.stream(input1), Arrays.stream(input2), Integer::equals));
         assertNull(FindKt.find(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Integer::equals));
         assertNull(instance.find(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Integer::equals));
+        assertNull(instance.find(Lists.immutable.of(input1).asLazy(), Lists.immutable.of(input2).asLazy(), Integer::equals));
     }
 }

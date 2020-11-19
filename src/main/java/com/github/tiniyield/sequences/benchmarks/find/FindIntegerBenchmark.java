@@ -32,11 +32,14 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.codepoetics.protonpack.StreamUtils;
+import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -233,6 +236,16 @@ public class FindIntegerBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void eclipse(Blackhole bh) {
+        bh.consume(find(Lists.immutable.ofAll(lstA).asLazy(), Lists.immutable.ofAll(lstB).asLazy(), Integer::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
      *
@@ -347,5 +360,17 @@ public class FindIntegerBenchmark {
                         Objects::nonNull
                 )
         );
+    }
+
+    /**
+     * Zips two sequences of {@link LazyIterable} together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise.
+     * @return the found Value if a match was found, null otherwise.
+     */
+    public Integer find(LazyIterable<Integer> q1, LazyIterable<Integer> q2, BiPredicate<Integer, Integer> predicate) {
+        return q1.zip(q2)
+                .collect((p) -> predicate.test(p.getOne(), p.getTwo()) ? p.getOne() : null)
+                .select(Objects::nonNull)
+                .getFirst();
     }
 }

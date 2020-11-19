@@ -3,6 +3,8 @@ package com.github.tiniyield.sequences.benchmarks.all.match;
 import com.github.tiniyield.sequences.benchmarks.kt.all.match.IsEveryEvenKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -112,6 +114,7 @@ public class AllMatchBenchmark {
 
     /**
      * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
      * @param bh a Blackhole instance to prevent compiler optimizations
      */
     @Benchmark
@@ -120,7 +123,19 @@ public class AllMatchBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void eclipse(Blackhole bh) {
+        bh.consume(isEveryEven(Lists.mutable.with(data).asLazy()));
+    }
+
+
+    /**
      * Checks if every Integer in a sequence is Even, using {@link Stream}s
+     *
      * @return whether every Integer is even or not
      */
     public boolean isEveryEven(Stream<Integer> numbers) {
@@ -161,6 +176,7 @@ public class AllMatchBenchmark {
 
     /**
      * Checks if every Integer in a sequence is Even, using Kotlin {@link Sequence}s in Java
+     *
      * @return whether every Integer is even or not
      */
     public boolean isEveryEven(Sequence<Integer> numbers) {
@@ -168,7 +184,17 @@ public class AllMatchBenchmark {
     }
 
     /**
+     * Checks if every Integer in a sequence is Even, using {@link LazyIterable}s
+     *
+     * @return whether every Integer is even or not
+     */
+    public boolean isEveryEven(LazyIterable<Integer> numbers) {
+        return numbers.allSatisfy(AllMatchBenchmark::isEven);
+    }
+
+    /**
      * Checks wether or not an Integer is an even value
+     *
      * @param value the Integer to check
      * @return true if the Integer is even, false otherwise
      */

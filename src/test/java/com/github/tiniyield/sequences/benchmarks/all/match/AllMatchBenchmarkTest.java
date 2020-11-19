@@ -4,6 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.all.match.IsEveryEvenKt;
 import kotlin.collections.ArraysKt;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
@@ -48,6 +49,7 @@ public class AllMatchBenchmarkTest {
         assertTrue(instance.isEveryEven(io.vavr.collection.Stream.of(2,2,2)));
         assertTrue(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,2,2})));
         assertTrue(instance.isEveryEven(asSequence(new int[]{2,2,2})));
+        assertTrue(instance.isEveryEven(Lists.immutable.of(2,2,2).asLazy()));
     }
 
     @Test
@@ -59,5 +61,6 @@ public class AllMatchBenchmarkTest {
         assertFalse(instance.isEveryEven(io.vavr.collection.Stream.of(2,1,2)));
         assertFalse(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,1,2})));
         assertFalse(instance.isEveryEven(asSequence(new int[]{2,1,2})));
+        assertFalse(instance.isEveryEven(Lists.immutable.of(2,1,2).asLazy()));
     }
 }

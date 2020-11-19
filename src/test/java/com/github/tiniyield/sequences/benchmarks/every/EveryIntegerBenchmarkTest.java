@@ -4,6 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.every.EveryKt;
 import io.vavr.collection.Stream;
 import kotlin.collections.ArraysKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
@@ -38,6 +39,7 @@ public class EveryIntegerBenchmarkTest {
         assertTrue(instance.everyZipline(instance.lstA.stream(), instance.lstB.stream(), Integer::equals));
         assertTrue(EveryKt.every(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals));
         assertTrue(instance.every(asSequence(instance.lstA), asSequence(instance.lstB), Integer::equals));
+        assertTrue(instance.every(Lists.immutable.ofAll(instance.lstA).asLazy(), Lists.immutable.ofAll(instance.lstB).asLazy(), Integer::equals));
     }
 
     @Test
@@ -53,6 +55,7 @@ public class EveryIntegerBenchmarkTest {
         assertTrue(instance.everyZipline(Arrays.stream(input), Arrays.stream(input), Integer::equals));
         assertTrue(EveryKt.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Integer::equals));
         assertTrue(instance.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Integer::equals));
+        assertTrue(instance.every(Lists.immutable.of(input).asLazy(), Lists.immutable.of(input).asLazy(), Integer::equals));
     }
 
 
@@ -70,6 +73,7 @@ public class EveryIntegerBenchmarkTest {
         assertFalse(instance.everyZipline(Arrays.stream(input1), Arrays.stream(input2), Integer::equals));
         assertFalse(EveryKt.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Integer::equals));
         assertFalse(instance.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Integer::equals));
+        assertFalse(instance.every(Lists.immutable.of(input1).asLazy(), Lists.immutable.of(input2).asLazy(), Integer::equals));
     }
 
 }

@@ -7,6 +7,8 @@ import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jayield.Traverser;
 import org.jooq.lambda.Seq;
@@ -16,16 +18,15 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
 import static kotlin.collections.ArraysKt.asSequence;
-import static kotlin.sequences.SequencesKt.drop;
-import static kotlin.sequences.SequencesKt.filter;
-import static kotlin.sequences.SequencesKt.map;
-import static kotlin.sequences.SequencesKt.maxBy;
+import static kotlin.sequences.SequencesKt.*;
 
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.Throughput)
@@ -36,7 +37,7 @@ public class QueryMaxTemperature {
     }
 
     public static <T> io.vavr.collection.Stream<T> oddLines(io.vavr.collection.Stream<T> source) {
-        if(source.isEmpty()){
+        if (source.isEmpty()) {
             return io.vavr.collection.Stream.empty();
         }
         Option<T> option = source.tail().headOption();
@@ -63,6 +64,36 @@ public class QueryMaxTemperature {
                 isOdd[0] = !isOdd[0];
             });
         };
+    }
+
+    public static <U> LazyIterable<U> oddLines(LazyIterable<U> src) {
+        return Lists.immutable.withAll(() -> {
+            Iterator<U> upstream = src.iterator();
+            return new Iterator<U>() {
+                boolean isOdd = false;
+
+                @Override
+                public boolean hasNext() {
+                    if (!isOdd) {
+                        if (!upstream.hasNext()) {
+                            return false;
+                        } else {
+                            upstream.next();
+                        }
+                    }
+                    isOdd = !isOdd;
+                    return upstream.hasNext();
+                }
+
+                @Override
+                public U next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    return upstream.next();
+                }
+            };
+        }).asLazy();
     }
 
     @Benchmark
@@ -154,5 +185,16 @@ public class QueryMaxTemperature {
                 ),
                 i -> i
         ).intValue();
+    }
+
+    @Benchmark
+    public int maxTempEclipse(WeatherDataSource src) {
+        return oddLines(
+                Lists.immutable.of(src.data).asLazy()
+                        .select(s -> s.charAt(0) != '#')   // Filter comments
+                        .drop(1)                           // Skip line: Not available
+        ) // Filter hourly info
+                .collectInt(line -> parseInt(line.substring(14, 16)))
+                .max();
     }
 }

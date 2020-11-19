@@ -8,6 +8,8 @@ import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jayield.Traverser;
 import org.jooq.lambda.Seq;
@@ -16,6 +18,8 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -116,6 +120,70 @@ public class QueryNrOfTemperaturesTransitions {
         };
     }
 
+    public static <U> LazyIterable<U> oddLines(LazyIterable<U> src) {
+        return Lists.immutable.withAll(() -> {
+            Iterator<U> upstream = src.iterator();
+            return new Iterator<U>() {
+                boolean isOdd = false;
+
+                @Override
+                public boolean hasNext() {
+                    if (!isOdd) {
+                        if (!upstream.hasNext()) {
+                            return false;
+                        } else {
+                            upstream.next();
+                        }
+                    }
+                    isOdd = !isOdd;
+                    return upstream.hasNext();
+                }
+
+                @Override
+                public U next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    return upstream.next();
+                }
+            };
+        }).asLazy();
+    }
+
+    public static <U> LazyIterable<U> collapse(LazyIterable<U> src) {
+        return Lists.immutable.withAll(() -> {
+            Iterator<U> upstream = src.iterator();
+            return new Iterator<U>() {
+                U prev = null;
+                U curr = null;
+
+                @Override
+                public boolean hasNext() {
+                    if(curr != null) {
+                        return true;
+                    }
+                    while(upstream.hasNext() && curr == null){
+                        U item = upstream.next();
+                        if(prev == null || !prev.equals(item)) {
+                            curr = item;
+                        }
+                    }
+                    return curr != null;
+                }
+
+                @Override
+                public U next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    prev = curr;
+                    curr = null;
+                    return prev;
+                }
+            };
+        }).asLazy();
+    }
+
     @Benchmark
     public long nrOfTransitionsStream(WeatherDataSource src) {
         Stream<String> content = Arrays.stream(src.data)
@@ -209,6 +277,17 @@ public class QueryNrOfTemperaturesTransitions {
                         )
                 )
         );
+    }
+
+    @Benchmark
+    public long nrOfTransitionsEclipse(WeatherDataSource src) {
+        LazyIterable<String> content = Lists.immutable.of(src.data).asLazy()
+                .select(s -> s.charAt(0) != '#') // Filter comments
+                .drop(1);                        // Skip line: Not available
+        LazyIterable<String> temps = oddLines(content) // Filter hourly info
+                .collect(line -> line.substring(14, 16));
+        return collapse(temps)
+                .size();
     }
 
 }

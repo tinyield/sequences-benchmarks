@@ -13,6 +13,8 @@ import kotlin.jvm.functions.Function1;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.impl.factory.Lists;
 import org.javatuples.Pair;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
@@ -50,6 +52,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
         List<Pair<Country, List<Artist>>> kotlin = SequencesKt.toList(getKotlin());
         List<Pair<Country, List<Artist>>> jKotlin = SequencesKt.toList(getJKotlin());
         List<Pair<Country, List<Artist>>> zipline = getZipline().collect(Collectors.toList());
+        List<Pair<Country, List<Artist>>> eclipse = getEclipse().toList();
 
         assertTrue(stream.size() == streamEx.size() && stream.containsAll(streamEx) && streamEx.containsAll(stream));
         assertTrue(stream.size() == query.size() && stream.containsAll(query) && query.containsAll(stream));
@@ -59,6 +62,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
         assertTrue(stream.size() == guava.size() && stream.containsAll(guava) && guava.containsAll(stream));
         assertTrue(stream.size() == jKotlin.size() && stream.containsAll(jKotlin) && jKotlin.containsAll(stream));
         assertTrue(stream.size() == zipline.size() && stream.containsAll(zipline) && zipline.containsAll(stream));
+        assertTrue(stream.size() == eclipse.size() && stream.containsAll(eclipse) && eclipse.containsAll(stream));
 
         assertTrue(stream.size() == kotlin.size());
         for (int i = 0; i < stream.size(); i++) {
@@ -256,6 +260,25 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
                 ),
                 country -> Pair.with(country, ArraysKt.asSequence(instance.tracks.data.get(country.getName())))
         );
+
+        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+    }
+
+    public LazyIterable<Pair<Country, List<Artist>>> getEclipse() {
+        org.eclipse.collections.api.block.predicate.Predicate<Country> isNonEnglishSpeaking =
+                country -> Lists.immutable.ofAll(country.getLanguages()).asLazy()
+                        .collect(Language::getIso6391)
+                        .noneSatisfy(ENGLISH.getLanguage()::equals);
+
+        LazyIterable<Pair<Country, LazyIterable<Artist>>> artistsByCountry = Lists.immutable.of(instance.countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(instance.artists.data.get(country.getName())).asLazy()));
+
+        LazyIterable<Pair<Country, LazyIterable<Track>>> tracksByCountry = Lists.immutable.of(instance.countries.data).asLazy()
+                .select(isNonEnglishSpeaking)
+                .select(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
+                .collect(country -> Pair.with(country, Lists.immutable.of(instance.tracks.data.get(country.getName())).asLazy()));
 
         return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
     }

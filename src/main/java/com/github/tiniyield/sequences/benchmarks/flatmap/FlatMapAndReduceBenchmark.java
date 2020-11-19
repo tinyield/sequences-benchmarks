@@ -4,6 +4,8 @@ import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -120,6 +122,7 @@ public class FlatMapAndReduceBenchmark {
 
     /**
      * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
      * @param bh a Blackhole instance to prevent compiler optimizations
      */
     @Benchmark
@@ -128,8 +131,19 @@ public class FlatMapAndReduceBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void eclipse(Blackhole bh) {
+        bh.consume(flatMapAndReduceEclipse(getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())));
+    }
+
+    /**
      * Maps the nested {@link Stream} sequence into an {@link Integer} {@link Stream} and reduces it
      * by summing all values.
+     *
      * @param input the nested sequence
      * @return the sum of all values
      */
@@ -194,12 +208,24 @@ public class FlatMapAndReduceBenchmark {
     }
 
     /**
+     * Maps the nested {@link LazyIterable} sequence into an {@link Integer} {@link LazyIterable} and reduces it
+     * by summing all values.
+     *
+     * @param input the nested sequence
+     * @return the sum of all values
+     */
+    public Integer flatMapAndReduceEclipse(LazyIterable<LazyIterable<Integer>> input) {
+        return input.flatCollect(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    /**
      * Creates a nested sequence mapped by two mappers, one for the inner sequence and one for the outer sequence
+     *
      * @param innerMapper the mapper to create the inner sequence out of a List of Integers
      * @param outerMapper the mapper to create the outer sequence out of a List of inner sequences
      * @return the nested sequence of the desired type
      */
-    public <T,U> T getNestedSequence(Function<List<Integer>, U> innerMapper, Function<List<U>, T> outerMapper) {
+    public <T, U> T getNestedSequence(Function<List<Integer>, U> innerMapper, Function<List<U>, T> outerMapper) {
         List<U> result = new ArrayList<>(COLLECTION_SIZE);
         for (int i = 0; i < COLLECTION_SIZE; i++) {
             result.add(innerMapper.apply(data.get(i)));
