@@ -19,6 +19,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -187,6 +188,17 @@ public class EveryStringBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        bh.consume(every(Sek.of(lstA), Sek.of(lstB), String::equals));
+    }
+
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together mapping the combination of each String to a boolean
      * with the BiPredicate.
      * @return true if all values in the zipped sequence are true, false otherwise.
@@ -277,5 +289,15 @@ public class EveryStringBenchmark {
         return q1.zip(q2)
                 .collect(p -> predicate.test(p.getOne(), p.getTwo()))
                 .allSatisfy(Boolean.TRUE::equals);
+    }
+
+    /**
+     * Zips two sequences of {@link Sek} together mapping the combination of each value to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
+    public <T, U> boolean every(Sek<T> q1, Sek<U> q2, BiPredicate<T, U> predicate) {
+        return q1.zip(q2, predicate::test)
+                .all(Boolean.TRUE::equals);
     }
 }

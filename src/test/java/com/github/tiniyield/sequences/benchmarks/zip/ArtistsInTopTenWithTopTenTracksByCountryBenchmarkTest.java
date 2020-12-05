@@ -20,6 +20,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -53,6 +54,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
         List<Pair<Country, List<Artist>>> jKotlin = SequencesKt.toList(getJKotlin());
         List<Pair<Country, List<Artist>>> zipline = getZipline().collect(Collectors.toList());
         List<Pair<Country, List<Artist>>> eclipse = getEclipse().toList();
+        List<Pair<Country, List<Artist>>> sek = getSek().toList();
 
         assertTrue(stream.size() == streamEx.size() && stream.containsAll(streamEx) && streamEx.containsAll(stream));
         assertTrue(stream.size() == query.size() && stream.containsAll(query) && query.containsAll(stream));
@@ -63,6 +65,7 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
         assertTrue(stream.size() == jKotlin.size() && stream.containsAll(jKotlin) && jKotlin.containsAll(stream));
         assertTrue(stream.size() == zipline.size() && stream.containsAll(zipline) && zipline.containsAll(stream));
         assertTrue(stream.size() == eclipse.size() && stream.containsAll(eclipse) && eclipse.containsAll(stream));
+        assertTrue(stream.size() == sek.size() && stream.containsAll(sek) && sek.containsAll(stream));
 
         assertTrue(stream.size() == kotlin.size());
         for (int i = 0; i < stream.size(); i++) {
@@ -279,6 +282,24 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
                 .select(isNonEnglishSpeaking)
                 .select(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
                 .collect(country -> Pair.with(country, Lists.immutable.of(instance.tracks.data.get(country.getName())).asLazy()));
+
+        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+    }
+
+    public Sek<Pair<Country, List<Artist>>> getSek() {
+        Predicate<Country> isNonEnglishSpeaking = country -> Sek.of(country.getLanguages())
+                .map(Language::getIso6391)
+                .none(ENGLISH.getLanguage()::equals);
+
+        Sek<Pair<Country, Sek<Artist>>> artistsByCountry = Sek.of(instance.countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(instance.artists.data.get(country.getName()))));
+
+        Sek<Pair<Country, Sek<Track>>> tracksByCountry = Sek.of(instance.countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(instance.tracks.data.get(country.getName()))));
 
         return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
     }

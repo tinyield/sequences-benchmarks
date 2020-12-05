@@ -20,6 +20,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.List;
@@ -31,9 +32,9 @@ import java.util.stream.IntStream;
 
 import static com.github.tiniyield.sequences.benchmarks.zip.StreamZipOperation.zip;
 import static kotlin.collections.CollectionsKt.asSequence;
-import static kotlin.sequences.SequencesKt.zip;
 import static kotlin.sequences.SequencesKt.filter;
 import static kotlin.sequences.SequencesKt.firstOrNull;
+import static kotlin.sequences.SequencesKt.zip;
 
 /**
  * FindStringBenchmark
@@ -212,6 +213,16 @@ public class FindStringBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        bh.consume(find(Sek.of(lstA), Sek.of(lstB), String::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
      * @return the found String if a match was found, null otherwise.
@@ -322,12 +333,23 @@ public class FindStringBenchmark {
     /**
      * Zips two sequences of {@link LazyIterable} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise.
-     * @return the found Value if a match was found, null otherwise.
+     * @return the found String if a match was found, null otherwise.
      */
     public String find(LazyIterable<String> q1, LazyIterable<String> q2, BiPredicate<String, String> predicate) {
         return q1.zip(q2)
                 .collect((p) -> predicate.test(p.getOne(), p.getTwo()) ? p.getOne() : null)
                 .select(Objects::nonNull)
                 .getFirst();
+    }
+
+    /**
+     * Zips two {@link Sek}s together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise
+     * @return the found String if a match was found, null otherwise.
+     */
+    public String find(Sek<String> q1, Sek<String> q2, BiPredicate<String, String> predicate) {
+        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                .filter(Objects::nonNull)
+                .firstOrNull();
     }
 }

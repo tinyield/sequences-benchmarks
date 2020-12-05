@@ -8,6 +8,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class FlatMapAndReduceBenchmarkTest {
         assertEquals(expected.intValue(), FlatmapAndReduceKt.flatMapAndReduce(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
         assertEquals(expected, instance.flatMapAndReduceJKotlin(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
         assertEquals(expected, instance.flatMapAndReduceEclipse(instance.getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())));
+        assertEquals(expected, instance.flatMapAndReduceSek(instance.getNestedSequence(Sek::of, Sek::of)));
     }
 
 }

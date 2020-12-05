@@ -32,7 +32,6 @@
 package com.github.tiniyield.sequences.benchmarks.find;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
@@ -52,6 +51,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.List;
@@ -246,6 +246,16 @@ public class FindIntegerBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        bh.consume(find(Sek.of(lstA), Sek.of(lstB), Integer::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
      *
@@ -365,12 +375,23 @@ public class FindIntegerBenchmark {
     /**
      * Zips two sequences of {@link LazyIterable} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise.
-     * @return the found Value if a match was found, null otherwise.
+     * @return the found Integer if a match was found, null otherwise.
      */
     public Integer find(LazyIterable<Integer> q1, LazyIterable<Integer> q2, BiPredicate<Integer, Integer> predicate) {
         return q1.zip(q2)
                 .collect((p) -> predicate.test(p.getOne(), p.getTwo()) ? p.getOne() : null)
                 .select(Objects::nonNull)
                 .getFirst();
+    }
+
+    /**
+     * Zips two {@link Sek}s together, using the BiPredicate to let through an element
+     * if a match is made or null otherwise
+     * @return the found Integer if a match was found, null otherwise.
+     */
+    public Integer find(Sek<Integer> q1, Sek<Integer> q2, BiPredicate<Integer, Integer> predicate) {
+        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+                .filter(Objects::nonNull)
+                .firstOrNull();
     }
 }

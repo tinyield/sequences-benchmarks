@@ -9,6 +9,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 
@@ -39,6 +40,7 @@ public class FindFirstInBeginningBenchmarkTest {
         assertEquals(FirstKt.findFirst(ArraysKt.asSequence(instance.data)), expected);
         assertEquals(instance.findFirst(ArraysKt.asSequence(instance.data)), expected);
         assertEquals(instance.findFirst(Lists.immutable.of(instance.data).asLazy()), expected);
+        assertEquals(instance.findFirst(Sek.of(instance.data)), expected);
     }
 
     @Test
@@ -53,6 +55,7 @@ public class FindFirstInBeginningBenchmarkTest {
         assertEquals(FirstKt.findFirst(ArraysKt.asSequence(input)), expected);
         assertEquals(instance.findFirst(ArraysKt.asSequence(input)), expected);
         assertEquals(instance.findFirst(Lists.immutable.of(input).asLazy()), expected);
+        assertEquals(instance.findFirst(Sek.of(input)), expected);
     }
 
 
@@ -67,6 +70,7 @@ public class FindFirstInBeginningBenchmarkTest {
         assertNull(FirstKt.findFirst(ArraysKt.asSequence(input)));
         assertNull(instance.findFirst(ArraysKt.asSequence(input)));
         assertNull(instance.findFirst(Lists.immutable.of(input).asLazy()));
+        assertNull(instance.findFirst(Sek.of(input)));
     }
 }
 

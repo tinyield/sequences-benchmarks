@@ -16,6 +16,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -123,6 +124,17 @@ public class AllMatchBenchmark {
     }
 
     /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void sek(Blackhole bh) {
+        bh.consume(isEveryEven(Sek.of(data)));
+    }
+
+
+    /**
      * Runs this benchmark using {@link LazyIterable}s in it's pipeline
      *
      * @param bh a Blackhole instance to prevent compiler optimizations
@@ -190,6 +202,15 @@ public class AllMatchBenchmark {
      */
     public boolean isEveryEven(LazyIterable<Integer> numbers) {
         return numbers.allSatisfy(AllMatchBenchmark::isEven);
+    }
+
+    /**
+     * Checks if every Integer in a sequence is Even, using {@link Sek}s
+     *
+     * @return whether every Integer is even or not
+     */
+    public boolean isEveryEven(Sek<Integer> numbers) {
+        return numbers.all(AllMatchBenchmark::isEven);
     }
 
     /**

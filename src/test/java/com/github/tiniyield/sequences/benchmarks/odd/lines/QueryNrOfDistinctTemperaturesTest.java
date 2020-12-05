@@ -26,5 +26,6 @@ public class QueryNrOfDistinctTemperaturesTest {
         assertEquals(instance.nrOfTempsKotlin(src),expected);
         assertEquals(instance.nrOfTempsKotlinYield(src),expected);
         assertEquals(instance.nrOfTempsEclipse(src),expected);
+        assertEquals(instance.nrOfTempsSek(src),expected);
     }
 }

@@ -9,6 +9,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +43,7 @@ public class VanillaZipBenchmarkTest {
         List<Pair<Integer, Value>> jKotlin = toList(instance.zipPrimeWithValue(asSequence(instance.numbers), asSequence(instance.values)));
         List<Pair<Integer, Value>> zipline = instance.zipPrimeWithValueZipline(Arrays.stream(instance.numbers), Arrays.stream(instance.values)).collect(Collectors.toList());
         List<Pair<Integer, Value>> eclipse = instance.zipPrimeWithValue(Lists.immutable.with(instance.numbers).asLazy(), Lists.immutable.with(instance.values).asLazy()).toList();
+        List<Pair<Integer, Value>> sek = toList(instance.zipPrimeWithValue(Sek.of(instance.numbers), Sek.of(instance.values)));
 
         assertTrue(stream.size() == streamEx.size() && stream.containsAll(streamEx) && streamEx.containsAll(stream));
         assertTrue(stream.size() == query.size() && stream.containsAll(query) && query.containsAll(stream));
@@ -52,6 +54,7 @@ public class VanillaZipBenchmarkTest {
         assertTrue(stream.size() == jKotlin.size() && stream.containsAll(jKotlin) && jKotlin.containsAll(stream));
         assertTrue(stream.size() == zipline.size() && stream.containsAll(zipline) && zipline.containsAll(stream));
         assertTrue(stream.size() == eclipse.size() && stream.containsAll(eclipse) && eclipse.containsAll(stream));
+        assertTrue(stream.size() == sek.size() && stream.containsAll(sek) && sek.containsAll(stream));
 
         assertTrue(stream.size() == kotlin.size());
         for (int i = 0; i < stream.size(); i++) {

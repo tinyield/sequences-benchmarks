@@ -16,6 +16,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -63,10 +64,10 @@ public class QueryNrOfDistinctTemperatures {
     }
 
     public static <U> Traverser<U> oddLines(Query<U> src) {
-        return yield -> {
+        return yld -> {
             final boolean[] isOdd = {false};
             src.traverse(item -> {
-                if (isOdd[0]) yield.ret(item);
+                if (isOdd[0]) yld.ret(item);
                 isOdd[0] = !isOdd[0];
             });
         };
@@ -207,5 +208,16 @@ public class QueryNrOfDistinctTemperatures {
                 .distinct()
                 .collectInt(Integer::parseInt)
                 .size();
+    }
+
+    @Benchmark
+    public int nrOfTempsSek(WeatherDataSource src) {
+        return Sek.of(src.data)
+                .filter(s -> s.charAt(0) != '#')
+                .drop(1)
+                .then(YieldOddLinesKt::yieldOddLines)
+                .map(line -> parseInt(line.substring(14, 16)))
+                .distinct()
+                .count();
     }
 }

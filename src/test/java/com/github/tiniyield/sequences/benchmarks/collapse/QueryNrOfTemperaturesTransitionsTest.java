@@ -28,6 +28,7 @@ public class QueryNrOfTemperaturesTransitionsTest {
         assertEquals(instance.nrOfTransitionsKotlin(src),expected);
         assertEquals(instance.nrOfTransitionsKotlinYield(src),expected);
         assertEquals(instance.nrOfTransitionsEclipse(src),expected);
+        assertEquals(instance.nrOfTransitionsSek(src),expected);
     }
 
 }

@@ -23,6 +23,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.List;
@@ -385,6 +386,30 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        Predicate<Country> isNonEnglishSpeaking = country -> Sek.of(country.getLanguages())
+                .map(Language::getIso6391)
+                .none(ENGLISH.getLanguage()::equals);
+
+        Sek<Pair<Country, Sek<Artist>>> artistsByCountry = Sek.of(countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> artists.data.containsKey(country.getName()) && artists.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(artists.data.get(country.getName()))));
+
+        Sek<Pair<Country, Sek<Track>>> tracksByCountry = Sek.of(countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(tracks.data.get(country.getName()))));
+
+        artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+    }
+
+    /**
      * This method takes in two {@link Stream}s and for each Country, it takes the top ten Artists and the top ten Tracks
      * artist's names and zip them into a Trio. After that it filters the top ten artists by their presence in the
      * top ten Tracks artist's names, returning a Pair with the Country and the resulting Sequence of Artists.
@@ -700,6 +725,36 @@ public class ArtistsInTopTenWithTopTenTracksByCountryBenchmark {
                     List<Artist> topTenArtists = triplet.getValue1()
                             .take(TEN)
                             .select(artist -> topTenSongsArtistsNames.contains(artist.getName()))
+                            .toList();
+                    return Pair.with(triplet.getValue0(), topTenArtists);
+
+                });
+    }
+
+    /**
+     * This method takes in two {@link Sek}s and for each Country, it takes the top ten Artists and the top ten Tracks
+     * artist's names and zip them into a Trio. After that it filters the top ten artists by their presence in the
+     * top ten Tracks artist's names, returning a Pair with the Country and the resulting Sequence of Artists.
+     *
+     * @param artists sequence of artists by country
+     * @param tracks  sequence of tracks by country
+     * @return A {@link Sek} consisting of Pairs of Country and Artists that are in that country's top ten and also
+     * have tracks in the top ten of the same country
+     */
+    public Sek<Pair<Country, List<Artist>>> artistsInTopTenWithTopTenTracksByCountry(
+            Sek<Pair<Country, Sek<Artist>>> artists,
+            Sek<Pair<Country, Sek<Track>>> tracks) {
+        return artists.zip(tracks, (l, r) -> Triplet.with(l.getValue0(), l.getValue1(), r.getValue1()))
+                .map(triplet -> {
+                    List<String> topTenSongsArtistsNames = triplet.getValue2()
+                            .take(TEN)
+                            .map(Track::getArtist)
+                            .map(Artist::getName)
+                            .toList();
+
+                    List<Artist> topTenArtists = triplet.getValue1()
+                            .take(TEN)
+                            .filter(artist -> topTenSongsArtistsNames.contains(artist.getName()))
                             .toList();
                     return Pair.with(triplet.getValue0(), topTenArtists);
 

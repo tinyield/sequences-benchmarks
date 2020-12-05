@@ -9,6 +9,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -38,6 +39,7 @@ public class AllMatchBenchmarkTest {
         assertTrue(instance.isEveryEven(io.vavr.collection.Stream.of(instance.data)));
         assertTrue(IsEveryEvenKt.isEveryEven(asSequence(instance.data)));
         assertTrue(instance.isEveryEven(asSequence(instance.data)));
+        assertTrue(instance.isEveryEven(Sek.of(instance.data)));
     }
 
     @Test
@@ -50,6 +52,7 @@ public class AllMatchBenchmarkTest {
         assertTrue(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,2,2})));
         assertTrue(instance.isEveryEven(asSequence(new int[]{2,2,2})));
         assertTrue(instance.isEveryEven(Lists.immutable.of(2,2,2).asLazy()));
+        assertTrue(instance.isEveryEven(Sek.of(2,2,2)));
     }
 
     @Test
@@ -62,5 +65,6 @@ public class AllMatchBenchmarkTest {
         assertFalse(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,1,2})));
         assertFalse(instance.isEveryEven(asSequence(new int[]{2,1,2})));
         assertFalse(instance.isEveryEven(Lists.immutable.of(2,1,2).asLazy()));
+        assertFalse(instance.isEveryEven(Sek.of(2,1,2)));
     }
 }

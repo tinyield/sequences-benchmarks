@@ -29,6 +29,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -376,6 +377,29 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        Predicate<Country> isNonEnglishSpeaking = country -> Sek.of(country.getLanguages())
+                .map(Language::getIso6391)
+                .none(ENGLISH.getLanguage()::equals);
+
+        Sek<Pair<Country, Sek<Artist>>> artistsByCountry = Sek.of(countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> artists.data.containsKey(country.getName()) && artists.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(artists.data.get(country.getName()))));
+
+        Sek<Pair<Country, Sek<Track>>> tracksByCountry = Sek.of(countries.data)
+                .filter(isNonEnglishSpeaking)
+                .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
+                .map(country -> Pair.with(country, Sek.of(tracks.data.get(country.getName()))));
+
+        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+    }
+
+    /**
      * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
      * and filters the resulting sequence by distinct Artists
      * @param artists sequence of artists by country
@@ -585,6 +609,28 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                         p.getTwo().getValue1().getFirst()
                 ))
                 .select(distinctByKeyEclipse(Triplet::getValue1));
+    }
+
+    /**
+     * Takes two {@link Sek}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     * @param artists sequence of artists by country
+     * @param tracks sequence of tracks by country
+     * @return A {@link Sek} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
+     */
+    public Sek<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
+            Sek<Pair<Country, Sek<Artist>>> artists,
+            Sek<Pair<Country, Sek<Track>>> tracks) {
+
+        return artists.zip(
+                tracks,
+                (l, r) -> Triplet.with(
+                        l.getValue0(),
+                        l.getValue1().firstOrNull(),
+                        r.getValue1().firstOrNull()
+                )
+        ).distinctBy(Triplet::getValue1);
     }
 
     /**

@@ -16,6 +16,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -145,6 +146,15 @@ public class FindFirstInMiddleBenchmark {
         bh.consume(findFirst(Lists.immutable.of(data).asLazy()));
     }
 
+    /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void sek(Blackhole bh) {
+        bh.consume(findFirst(Sek.of(data)));
+    }
+
 
     /**
      * Searches a {@link Stream} sequence for an odd number
@@ -208,5 +218,14 @@ public class FindFirstInMiddleBenchmark {
      */
     public Integer findFirst(LazyIterable<Integer> numbers) {
         return numbers.select(IsOdd::isOdd).getFirst();
+    }
+
+    /**
+     * Searches a  {@link Sek} sequence for an odd number
+     * @param numbers the sequence to search in
+     * @return the first odd Integer in the sequence or null if none exists
+     */
+    public Integer findFirst(Sek<Integer> numbers) {
+        return numbers.filter(IsOdd::isOdd).firstOrNull();
     }
 }

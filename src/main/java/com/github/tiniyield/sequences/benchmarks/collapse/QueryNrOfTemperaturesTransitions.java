@@ -5,6 +5,7 @@ import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.collapse.CollapseKt;
 import com.github.tiniyield.sequences.benchmarks.kt.collapse.YieldCollapseKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
+import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -16,6 +17,7 @@ import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -101,21 +103,21 @@ public class QueryNrOfTemperaturesTransitions {
     }
 
     public static <U> Traverser<U> oddLines(Query<U> src) {
-        return yield -> {
+        return yld -> {
             final boolean[] isOdd = {false};
             src.traverse(item -> {
-                if (isOdd[0]) yield.ret(item);
+                if (isOdd[0]) yld.ret(item);
                 isOdd[0] = !isOdd[0];
             });
         };
     }
 
     public static <U> Traverser<U> collapse(Query<U> src) {
-        return yield -> {
+        return yld -> {
             final Object[] prev = {null};
             src.traverse(item -> {
                 if (prev[0] == null || !prev[0].equals(item))
-                    yield.ret((U) (prev[0] = item));
+                    yld.ret((U) (prev[0] = item));
             });
         };
     }
@@ -272,7 +274,7 @@ public class QueryNrOfTemperaturesTransitions {
         return count(
                 YieldCollapseKt.yieldCollapse(
                         map(
-                                OddLinesKt.oddLines(content), // Filter hourly info
+                                YieldOddLinesKt.yieldOddLines(content), // Filter hourly info
                                 line -> line.substring(14, 16)
                         )
                 )
@@ -288,6 +290,17 @@ public class QueryNrOfTemperaturesTransitions {
                 .collect(line -> line.substring(14, 16));
         return collapse(temps)
                 .size();
+    }
+
+    @Benchmark
+    public int nrOfTransitionsSek(WeatherDataSource src) {
+        return Sek.of(src.data)
+                .filter(s -> s.charAt(0) != '#')
+                .drop(1)
+                .then(YieldOddLinesKt::yieldOddLines)
+                .map(line -> line.substring(14, 16))
+                .then(YieldCollapseKt::yieldCollapse)
+                .count();
     }
 
 }

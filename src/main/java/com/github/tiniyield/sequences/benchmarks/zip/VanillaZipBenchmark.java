@@ -1,8 +1,8 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipPrimesWithValuesKt;
 import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipPrimesWithValuesKt;
 import kotlin.Unit;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -20,6 +20,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -198,12 +199,21 @@ public class VanillaZipBenchmark {
     }
 
     /**
-     * Runs this benchmark using {@link Query}s in it's pipeline
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
      * @param bh a Blackhole instance to prevent compiler optimizations
      */
     @Benchmark
     public final void eclipse(Blackhole bh) {
         zipPrimeWithValue(Lists.immutable.with(numbers).asLazy(), Lists.immutable.with(values).asLazy()).forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        zipPrimeWithValue(Sek.of(numbers), Sek.of(values)).forEach(bh::consume);
     }
 
     /**
@@ -315,6 +325,17 @@ public class VanillaZipBenchmark {
      */
     public LazyIterable<Pair<Integer, Value>> zipPrimeWithValue(LazyIterable<Integer> numbers, LazyIterable<Value> values) {
         return numbers.select(IsPrime::isPrime).zip(values).collect(p -> Pair.with(p.getOne(), p.getTwo()));
+    }
+
+    /**
+     * Filters the prime numbers {@link Sek} from the {@param numbers} and then zips the resulting {@link Sek}
+     * sequence with the {@param values}
+     * @param numbers the numbers to filter
+     * @param values the values to pair with
+     * @return a {@link Sek} sequence of Pairs between prime numbers and values
+     */
+    public Sek<Pair<Integer, Value>> zipPrimeWithValue(Sek<Integer> numbers, Sek<Value> values) {
+        return numbers.filter(IsPrime::isPrime).zip(values, Pair::with);
     }
 
 }

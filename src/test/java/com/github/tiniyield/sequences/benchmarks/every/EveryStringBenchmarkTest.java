@@ -9,6 +9,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 
@@ -41,6 +42,7 @@ public class EveryStringBenchmarkTest {
         assertTrue(EveryKt.every(asSequence(instance.lstA), asSequence(instance.lstB), String::equals));
         assertTrue(instance.every(asSequence(instance.lstA), asSequence(instance.lstB), String::equals));
         assertTrue(instance.every(Lists.immutable.ofAll(instance.lstA).asLazy(), Lists.immutable.ofAll(instance.lstB).asLazy(), String::equals));
+        assertTrue(instance.every(Sek.of(instance.lstA), Sek.of(instance.lstB), String::equals));
     }
 
     @Test
@@ -57,6 +59,7 @@ public class EveryStringBenchmarkTest {
         assertTrue(EveryKt.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), String::equals));
         assertTrue(instance.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), String::equals));
         assertTrue(instance.every(Lists.immutable.of(input).asLazy(), Lists.immutable.of(input).asLazy(), String::equals));
+        assertTrue(instance.every(Sek.of(input), Sek.of(input), String::equals));
     }
 
 
@@ -75,6 +78,7 @@ public class EveryStringBenchmarkTest {
         assertFalse(EveryKt.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), String::equals));
         assertFalse(instance.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), String::equals));
         assertFalse(instance.every(Lists.immutable.of(input1).asLazy(), Lists.immutable.of(input2).asLazy(), String::equals));
+        assertFalse(instance.every(Sek.of(input1), Sek.of(input2), String::equals));
     }
 
 }

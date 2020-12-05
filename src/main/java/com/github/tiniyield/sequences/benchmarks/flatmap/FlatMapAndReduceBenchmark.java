@@ -17,6 +17,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +142,16 @@ public class FlatMapAndReduceBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public void sek(Blackhole bh) {
+        bh.consume(flatMapAndReduceSek(getNestedSequence(Sek::of, Sek::of)));
+    }
+
+    /**
      * Maps the nested {@link Stream} sequence into an {@link Integer} {@link Stream} and reduces it
      * by summing all values.
      *
@@ -216,6 +227,17 @@ public class FlatMapAndReduceBenchmark {
      */
     public Integer flatMapAndReduceEclipse(LazyIterable<LazyIterable<Integer>> input) {
         return input.flatCollect(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link Sek} sequence into an {@link Integer} {@link Sek} and reduces it
+     * by summing all values.
+     *
+     * @param input the nested sequence
+     * @return the sum of all values
+     */
+    public Integer flatMapAndReduceSek(Sek<Sek<Integer>> input) {
+        return input.flatMap(i -> i).reduceOrNull(Integer::sum);
     }
 
     /**

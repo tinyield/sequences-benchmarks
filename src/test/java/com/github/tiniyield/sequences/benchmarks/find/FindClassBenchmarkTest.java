@@ -10,6 +10,7 @@ import org.jayield.Query;
 import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 
@@ -44,6 +45,7 @@ public class FindClassBenchmarkTest {
         assertEquals(FindKt.find(asSequence(instance.lstA), asSequence(instance.lstB), Value::equals), expected);
         assertEquals(instance.find(asSequence(instance.lstA), asSequence(instance.lstB), Value::equals), expected);
         assertEquals(instance.find(Lists.immutable.ofAll(instance.lstA).asLazy(), Lists.immutable.ofAll(instance.lstB).asLazy(), Value::equals), expected);
+        assertEquals(instance.find(Sek.of(instance.lstA), Sek.of(instance.lstB), Value::equals), expected);
     }
 
     @Test
@@ -61,6 +63,7 @@ public class FindClassBenchmarkTest {
         assertEquals(FindKt.find(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Value::equals), expected);
         assertEquals(instance.find(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Value::equals), expected);
         assertEquals(instance.find(Lists.immutable.of(input).asLazy(), Lists.immutable.of(input).asLazy(), Value::equals), expected);
+        assertEquals(instance.find(Sek.of(input), Sek.of(input), Value::equals), expected);
     }
 
 
@@ -79,5 +82,6 @@ public class FindClassBenchmarkTest {
         assertNull(FindKt.find(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Value::equals));
         assertNull(instance.find(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Value::equals));
         assertNull(instance.find(Lists.immutable.of(input1).asLazy(), Lists.immutable.of(input2).asLazy(), Value::equals));
+        assertNull(instance.find(Sek.of(input1), Sek.of(input2), Value::equals));
     }
 }

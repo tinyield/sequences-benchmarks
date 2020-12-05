@@ -32,7 +32,6 @@
 package com.github.tiniyield.sequences.benchmarks.every;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.kt.every.EveryKt;
 import com.google.common.collect.Streams;
 import io.vavr.collection.Stream;
@@ -51,6 +50,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
+import com.tinyield.Sek;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -63,8 +63,8 @@ import java.util.stream.IntStream;
 import static com.github.tiniyield.sequences.benchmarks.zip.StreamZipOperation.zip;
 import static java.util.stream.Collectors.toList;
 import static kotlin.collections.CollectionsKt.asSequence;
-import static kotlin.sequences.SequencesKt.zip;
 import static kotlin.sequences.SequencesKt.all;
+import static kotlin.sequences.SequencesKt.zip;
 
 /**
  * EveryRandomStringBenchmark
@@ -230,6 +230,16 @@ public class EveryRandomStringBenchmark {
     }
 
     /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        bh.consume(every(Sek.of(lstA), Sek.of(lstB), String::equals));
+    }
+
+    /**
      * Zips two sequences of {@link java.util.stream.Stream} together mapping the combination of each String to a boolean
      * with the BiPredicate.
      * @return true if all values in the zipped sequence are true, false otherwise.
@@ -320,5 +330,15 @@ public class EveryRandomStringBenchmark {
         return q1.zip(q2)
                 .collect(p -> predicate.test(p.getOne(), p.getTwo()))
                 .allSatisfy(Boolean.TRUE::equals);
+    }
+
+    /**
+     * Zips two sequences of {@link Sek} together mapping the combination of each value to a boolean with
+     * the BiPredicate.
+     * @return true if all values in the zipped sequence are true, false otherwise.
+     */
+    public <T, U> boolean every(Sek<T> q1, Sek<U> q2, BiPredicate<T, U> predicate) {
+        return q1.zip(q2, predicate::test)
+                .all(Boolean.TRUE::equals);
     }
 }

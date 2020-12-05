@@ -16,6 +16,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,7 +27,10 @@ import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
 import static kotlin.collections.ArraysKt.asSequence;
-import static kotlin.sequences.SequencesKt.*;
+import static kotlin.sequences.SequencesKt.drop;
+import static kotlin.sequences.SequencesKt.filter;
+import static kotlin.sequences.SequencesKt.map;
+import static kotlin.sequences.SequencesKt.maxBy;
 
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.Throughput)
@@ -57,10 +61,10 @@ public class QueryMaxTemperature {
     }
 
     public static <U> Traverser<U> oddLines(Query<U> src) {
-        return yield -> {
+        return yld -> {
             final boolean[] isOdd = {false};
             src.traverse(item -> {
-                if (isOdd[0]) yield.ret(item);
+                if (isOdd[0]) yld.ret(item);
                 isOdd[0] = !isOdd[0];
             });
         };
@@ -166,7 +170,7 @@ public class QueryMaxTemperature {
                         line -> parseInt(line.substring(14, 16))
                 ),
                 i -> i
-        ).intValue();
+        );
     }
 
     @Benchmark
@@ -184,7 +188,7 @@ public class QueryMaxTemperature {
                         line -> parseInt(line.substring(14, 16))
                 ),
                 i -> i
-        ).intValue();
+        );
     }
 
     @Benchmark
@@ -196,5 +200,15 @@ public class QueryMaxTemperature {
         ) // Filter hourly info
                 .collectInt(line -> parseInt(line.substring(14, 16)))
                 .max();
+    }
+
+    @Benchmark
+    public int maxTempSek(WeatherDataSource src) {
+        return Sek.of(src.data)
+                .filter(s -> s.charAt(0) != '#')
+                .drop(1)
+                .then(YieldOddLinesKt::yieldOddLines)
+                .map(line -> parseInt(line.substring(14, 16)))
+                .maxByOrNull(i -> i);
     }
 }
