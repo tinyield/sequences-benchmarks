@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11 ]
+        java: [ 15 ]
     name: Run Pipeline
     steps:
       - uses: actions/checkout@master
@@ -20,4 +20,4 @@ jobs:
           java-version: ${{ matrix.java }}
 
       - name: Build and Test
-        run: mvn clean install
+        run: mvn clean install -Dgpg.skip
