@@ -1,6 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.flatmap;
 
-import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
+import com.tinyield.Sek;
 import kotlin.collections.CollectionsKt;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -16,8 +16,6 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-import com.tinyield.Sek;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt.flatMapAndReduce;
 import static kotlin.sequences.SequencesKt.flatMap;
 import static kotlin.sequences.SequencesKt.reduce;
 
@@ -48,6 +47,7 @@ public class FlatMapAndReduceBenchmark {
 
     /**
      * Creates a nested List of a single Integer each
+     *
      * @return the nested List
      */
     public List<List<Integer>> getNestedList() {
@@ -56,188 +56,6 @@ public class FlatMapAndReduceBenchmark {
             result.add(List.of(1));
         }
         return result;
-    }
-
-
-    /**
-     * Sets up the data source to be used in this benchmark
-     */
-    @Setup
-    public void setup() {
-        data = getNestedList();
-    }
-
-    /**
-     * Runs this benchmark using {@link Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void stream(Blackhole bh) {
-        bh.consume(flatMapAndReduceStream(getNestedSequence(List::stream, List::stream)));
-    }
-
-    /**
-     * Runs this benchmark using {@link StreamEx}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(flatMapAndReduceStreamEx(getNestedSequence(StreamEx::of, StreamEx::of)));
-    }
-
-    /**
-     * Runs this benchmark using {@link Query}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(flatMapAndReduceQuery(getNestedSequence(Query::fromList, Query::fromList)));
-    }
-
-    /**
-     * Runs this benchmark using {@link Seq}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(flatMapAndReduceJool(getNestedSequence(Seq::seq, Seq::seq)));
-    }
-
-    /**
-     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(flatMapAndReduceVavr(getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll)));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(FlatmapAndReduceKt.flatMapAndReduce(getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(flatMapAndReduceJKotlin(getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
-    }
-
-    /**
-     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void eclipse(Blackhole bh) {
-        bh.consume(flatMapAndReduceEclipse(getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())));
-    }
-
-    /**
-     * Runs this benchmark using {@link Sek}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void sek(Blackhole bh) {
-        bh.consume(flatMapAndReduceSek(getNestedSequence(Sek::of, Sek::of)));
-    }
-
-    /**
-     * Maps the nested {@link Stream} sequence into an {@link Integer} {@link Stream} and reduces it
-     * by summing all values.
-     *
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceStream(Stream<Stream<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
-
-    /**
-     * Maps the nested {@link StreamEx} sequence into an {@link Integer} {@link StreamEx} and reduces it
-     * by summing all values.
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceStreamEx(StreamEx<StreamEx<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
-
-    /**
-     * Maps the nested {@link Query} sequence into an {@link Integer} {@link Query} and reduces it
-     * by summing all values.
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceQuery(Query<Query<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
-
-    /**
-     * Maps the nested {@link Seq} sequence into an {@link Integer} {@link Seq} and reduces it
-     * by summing all values.
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceJool(Seq<Seq<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
-
-    /**
-     * Maps the nested {@link io.vavr.collection.Stream} sequence into an {@link Integer}
-     * {@link io.vavr.collection.Stream} and reduces it by summing all values.
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceVavr(io.vavr.collection.Stream<io.vavr.collection.Stream<Integer>> input) {
-        return input.flatMap(i -> i).reduce(Integer::sum);
-    }
-
-    /**
-     * Maps the nested Kotlin {@link Sequence} in Java into an {@link Integer} Kotlin {@link Sequence} in Java
-     * and reduces it by summing all values.
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceJKotlin(Sequence<Sequence<Integer>> input) {
-        return reduce(
-                flatMap(
-                        input,
-                        i -> i
-                ),
-                Integer::sum
-        );
-    }
-
-    /**
-     * Maps the nested {@link LazyIterable} sequence into an {@link Integer} {@link LazyIterable} and reduces it
-     * by summing all values.
-     *
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceEclipse(LazyIterable<LazyIterable<Integer>> input) {
-        return input.flatCollect(i -> i).reduce(Integer::sum).orElseThrow(RuntimeException::new);
-    }
-
-    /**
-     * Maps the nested {@link Sek} sequence into an {@link Integer} {@link Sek} and reduces it
-     * by summing all values.
-     *
-     * @param input the nested sequence
-     * @return the sum of all values
-     */
-    public Integer flatMapAndReduceSek(Sek<Sek<Integer>> input) {
-        return input.flatMap(i -> i).reduceOrNull(Integer::sum);
     }
 
     /**
@@ -253,6 +71,140 @@ public class FlatMapAndReduceBenchmark {
             result.add(innerMapper.apply(data.get(i)));
         }
         return outerMapper.apply(result);
+    }
+
+
+    /**
+     * Sets up the data source to be used in this benchmark
+     */
+    @Setup
+    public void setup() {
+        data = getNestedList();
+    }
+
+    /**
+     * Maps the nested {@link Stream} sequence into an {@link Integer} {@link Stream} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+
+    @Benchmark
+    public Integer stream() {
+        return getNestedSequence(List::stream, List::stream)
+                .flatMap(i -> i)
+                .reduce(Integer::sum)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link StreamEx} sequence into an {@link Integer} {@link StreamEx} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer streamEx() {
+        return getNestedSequence(StreamEx::of, StreamEx::of)
+                .flatMap(i -> i)
+                .reduce(Integer::sum)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link Query} sequence into an {@link Integer} {@link Query} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer jayield() {
+        return getNestedSequence(Query::fromList, Query::fromList)
+                .flatMap(i -> i)
+                .reduce(Integer::sum)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link Seq} sequence into an {@link Integer} {@link Seq} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer jool() {
+        return getNestedSequence(Seq::seq, Seq::seq)
+                .flatMap(i -> i)
+                .reduce(Integer::sum)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link io.vavr.collection.Stream} sequence into an {@link Integer}
+     * {@link io.vavr.collection.Stream} and reduces it by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer vavr() {
+        return getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll)
+                .flatMap(i -> i)
+                .reduce(Integer::sum);
+    }
+
+    /**
+     * Maps the nested Kotlin {@link Sequence} into an {@link Integer} Kotlin {@link Sequence}
+     * and reduces it by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer kotlin() {
+        return flatMapAndReduce(getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence));
+    }
+
+    /**
+     * Maps the nested Kotlin {@link Sequence} in Java into an {@link Integer} Kotlin {@link Sequence} in Java
+     * and reduces it by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer jkotlin() {
+        return reduce(
+                flatMap(
+                        getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence),
+                        i -> i
+                ),
+                Integer::sum
+        );
+    }
+
+    /**
+     * Maps the nested {@link LazyIterable} sequence into an {@link Integer} {@link LazyIterable} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer eclipse() {
+        return getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())
+                .flatCollect(i -> i)
+                .reduce(Integer::sum)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    /**
+     * Maps the nested {@link Sek} sequence into an {@link Integer} {@link Sek} and reduces it
+     * by summing all values.
+     *
+     * @return the sum of all values
+     */
+    @Benchmark
+    public Integer sek() {
+        return getNestedSequence(Sek::of, Sek::of)
+                .flatMap(i -> i)
+                .reduceOrNull(Integer::sum);
     }
 
 }

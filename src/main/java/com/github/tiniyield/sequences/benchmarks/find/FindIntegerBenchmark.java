@@ -34,6 +34,7 @@ package com.github.tiniyield.sequences.benchmarks.find;
 import com.codepoetics.protonpack.StreamUtils;
 import com.github.tiniyield.sequences.benchmarks.kt.find.FindKt;
 import com.google.common.collect.Streams;
+import com.tinyield.Sek;
 import io.vavr.collection.Stream;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -50,14 +51,11 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -133,136 +131,14 @@ public class FindIntegerBenchmark {
     }
 
     /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void stream(Blackhole bh) {
-        bh.consume(find(lstA.stream(), lstB.stream(), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link StreamEx}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(find(StreamEx.of(lstA), StreamEx.of(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link Query}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(find(Query.fromList(lstA), Query.fromList(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link Seq}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(find(Seq.seq(lstA), Seq.seq(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(find(Stream.ofAll(lstA), Stream.ofAll(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
-     * with Protonpack in it's pipeline.
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void protonpack(Blackhole bh) {
-        bh.consume(findInProtonpack(lstA.stream(), lstB.stream(), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
-     * with Guava in it's pipeline.
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void guava(Blackhole bh) {
-        bh.consume(findInGuava(lstA.stream(), lstB.stream(), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s and the
-     * zipline approach in it's pipeline.
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void zipline(Blackhole bh) {
-        bh.consume(findInZipline(lstA.stream(), lstB.stream(), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(FindKt.find(asSequence(lstA), asSequence(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(find(asSequence(lstA), asSequence(lstB), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void eclipse(Blackhole bh) {
-        bh.consume(find(Lists.immutable.ofAll(lstA).asLazy(), Lists.immutable.ofAll(lstB).asLazy(), Integer::equals));
-    }
-
-    /**
-     * Runs this benchmark using {@link Sek}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public final void sek(Blackhole bh) {
-        bh.consume(find(Sek.of(lstA), Sek.of(lstB), Integer::equals));
-    }
-
-    /**
      * Zips two sequences of {@link java.util.stream.Stream} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(java.util.stream.Stream<Integer> q1, java.util.stream.Stream<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer stream() {
+        return zip(lstA.stream(), lstB.stream(), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -274,8 +150,10 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(StreamEx<Integer> q1, StreamEx<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer streamEx() {
+        return StreamEx.of(lstA)
+                .zipWith(StreamEx.of(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -287,8 +165,10 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(Query<Integer> q1, Query<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer jayield() {
+        return Query.fromList(lstA)
+                .zip(Query.fromList(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -300,8 +180,10 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(Seq<Integer> q1, Seq<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer jool() {
+        return Seq.seq(lstA)
+                .zip(Seq.seq(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -313,8 +195,12 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(Stream<Integer> q1, Stream<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zipWith(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null).filter(Objects::nonNull).getOrNull();
+    @Benchmark
+    public Integer vavr() {
+        return Stream.ofAll(lstA)
+                .zipWith(Stream.ofAll(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null)
+                .filter(Objects::nonNull)
+                .getOrNull();
     }
 
     /**
@@ -323,8 +209,9 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer findInProtonpack(java.util.stream.Stream<Integer> q1, java.util.stream.Stream<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return StreamUtils.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer protonpack() {
+        return StreamUtils.zip(lstA.stream(), lstB.stream(), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -336,8 +223,9 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer findInGuava(java.util.stream.Stream<Integer> q1, java.util.stream.Stream<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return Streams.zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public Integer guava() {
+        return Streams.zip(lstA.stream(), lstB.stream(), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -349,12 +237,21 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer findInZipline(java.util.stream.Stream<Integer> q1, java.util.stream.Stream<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        Iterator<Integer> it = q2.iterator();
-        return q1.map(t -> predicate.test(t, it.next()) ? t : null)
+    @Benchmark
+    public Integer zipline() {
+        Iterator<Integer> it = lstB.stream().iterator();
+        return lstA.stream().map(t -> t.equals(it.next()) ? t : null)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     */
+    @Benchmark
+    public Integer kotlin() {
+        return FindKt.find(asSequence(lstA), asSequence(lstB), Integer::equals);
     }
 
     /**
@@ -363,10 +260,11 @@ public class FindIntegerBenchmark {
      *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(Sequence<Integer> q1, Sequence<Integer> q2, BiPredicate<Integer, Integer> predicate) {
+    @Benchmark
+    public Integer jkotlin() {
         return firstOrNull(
                 filter(
-                        zip(q1, q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null),
+                        zip(asSequence(lstA), asSequence(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null),
                         Objects::nonNull
                 )
         );
@@ -375,22 +273,29 @@ public class FindIntegerBenchmark {
     /**
      * Zips two sequences of {@link LazyIterable} together, using the BiPredicate to let through an element
      * if a match is made or null otherwise.
+     *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(LazyIterable<Integer> q1, LazyIterable<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zip(q2)
-                .collect((p) -> predicate.test(p.getOne(), p.getTwo()) ? p.getOne() : null)
+    @Benchmark
+    public Integer eclipse() {
+        return Lists.immutable.ofAll(lstA).asLazy()
+                .zip(Lists.immutable.ofAll(lstB).asLazy())
+                .collect(p -> p.getOne().equals(p.getTwo()) ? p.getOne() : null)
                 .select(Objects::nonNull)
                 .getFirst();
     }
 
+
     /**
      * Zips two {@link Sek}s together, using the BiPredicate to let through an element
      * if a match is made or null otherwise
+     *
      * @return the found Integer if a match was found, null otherwise.
      */
-    public Integer find(Sek<Integer> q1, Sek<Integer> q2, BiPredicate<Integer, Integer> predicate) {
-        return q1.zip(q2, (t1, t2) -> predicate.test(t1, t2) ? t1 : null)
+    @Benchmark
+    public final Integer sek() {
+        return Sek.of(lstA)
+                .zip(Sek.of(lstB), (t1, t2) -> t1.equals(t2) ? t1 : null)
                 .filter(Objects::nonNull)
                 .firstOrNull();
     }

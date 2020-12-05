@@ -8,18 +8,17 @@ public class StreamOddLinesOperation {
 
     public static class StreamOddLines<T> extends Spliterators.AbstractSpliterator<T> {
 
-        private static long odd(long l) {
-            return l == Long.MAX_VALUE ? l : (l + 1) / 2;
-        }
-
         final Consumer<T> doNothing = item -> {
         };
         final Spliterator<T> source;
         boolean isOdd;
-
         public StreamOddLines(Spliterator<T> source) {
             super(odd(source.estimateSize()), source.characteristics());
             this.source = source;
+        }
+
+        private static long odd(long l) {
+            return l == Long.MAX_VALUE ? l : (l + 1) / 2;
         }
 
         @Override
@@ -32,7 +31,7 @@ public class StreamOddLinesOperation {
         public void forEachRemaining(Consumer<? super T> action) {
             isOdd = false;
             source.forEachRemaining(item -> {
-                if(isOdd) action.accept(item );
+                if (isOdd) action.accept(item);
                 isOdd = !isOdd;
             });
         }

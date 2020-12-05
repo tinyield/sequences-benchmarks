@@ -1,26 +1,28 @@
 package com.github.tiniyield.sequences.benchmarks.every;
 
-import com.github.tiniyield.sequences.benchmarks.kt.every.EveryKt;
 import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
-import io.vavr.collection.Stream;
-import kotlin.collections.ArraysKt;
-import one.util.streamex.StreamEx;
-import org.eclipse.collections.api.factory.Lists;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.tinyield.Sek;
 
-import java.util.Arrays;
+import java.util.List;
 
-import static kotlin.collections.CollectionsKt.asSequence;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class EveryClassBenchmarkTest {
 
 
+    private final List<Value> expected = List.of(
+            new Value(1),
+            new Value(2),
+            new Value(3),
+            new Value(4),
+            new Value(5),
+            new Value(6),
+            new Value(7),
+            new Value(8),
+            new Value(9),
+            new Value(10)
+    );
     private EveryClassBenchmark instance;
 
     @BeforeMethod
@@ -31,55 +33,68 @@ public class EveryClassBenchmarkTest {
     }
 
     @Test
-    public void testSameResultsEvery() {
-        assertTrue(instance.every(instance.lstA.stream(), instance.lstB.stream(), Value::equals));
-        assertTrue(instance.every(StreamEx.of(instance.lstA), StreamEx.of(instance.lstB), Value::equals));
-        assertTrue(instance.every(Query.fromList(instance.lstA), Query.fromList(instance.lstB), Value::equals));
-        assertTrue(instance.every(Seq.seq(instance.lstA), Seq.seq(instance.lstB), Value::equals));
-        assertTrue(instance.every(Stream.ofAll(instance.lstA), Stream.ofAll(instance.lstB), Value::equals));
-        assertTrue(instance.everyProtonpack(instance.lstA.stream(), instance.lstB.stream(), Value::equals));
-        assertTrue(instance.everyGuava(instance.lstA.stream(), instance.lstB.stream(), Value::equals));
-        assertTrue(instance.everyZipline(instance.lstA.stream(), instance.lstB.stream(), Value::equals));
-        assertTrue(EveryKt.every(asSequence(instance.lstA), asSequence(instance.lstB), Value::equals));
-        assertTrue(instance.every(asSequence(instance.lstA), asSequence(instance.lstB), Value::equals));
-        assertTrue(instance.every(Lists.immutable.ofAll(instance.lstA).asLazy(), Lists.immutable.ofAll(instance.lstB).asLazy(), Value::equals));
-        assertTrue(instance.every(Sek.of(instance.lstA), Sek.of(instance.lstB), Value::equals));
+    public void testInit() {
+        assertThat(instance.lstA.toArray()).hasSameElementsAs(expected);
+        assertThat(instance.lstB.toArray()).hasSameElementsAs(expected);
     }
 
     @Test
-    public void testEverySuccess() {
-        Value[] input = {new Value(1), new Value(2), new Value(3)};
-        assertTrue(instance.every(Arrays.stream(input), Arrays.stream(input), Value::equals));
-        assertTrue(instance.every(StreamEx.of(input), StreamEx.of(input), Value::equals));
-        assertTrue(instance.every(Query.of(input), Query.of(input), Value::equals));
-        assertTrue(instance.every(Seq.of(input), Seq.of(input), Value::equals));
-        assertTrue(instance.everyProtonpack(Arrays.stream(input), Arrays.stream(input), Value::equals));
-        assertTrue(instance.every(Stream.of(input), Stream.of(input), Value::equals));
-        assertTrue(instance.everyGuava(Arrays.stream(input), Arrays.stream(input), Value::equals));
-        assertTrue(instance.everyZipline(Arrays.stream(input), Arrays.stream(input), Value::equals));
-        assertTrue(EveryKt.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Value::equals));
-        assertTrue(instance.every(ArraysKt.asSequence(input), ArraysKt.asSequence(input), Value::equals));
-        assertTrue(instance.every(Lists.immutable.of(input).asLazy(), Lists.immutable.of(input).asLazy(), Value::equals));
-        assertTrue(instance.every(Sek.of(input), Sek.of(input), Value::equals));
+    public void testStream() {
+        assertThat(instance.stream()).isTrue();
     }
-
 
     @Test
-    public void testEveryFailure() {
-        Value[] input1 = {new Value(1), new Value(2), new Value(3)};
-        Value[] input2 = {new Value(1), new Value(1), new Value(1)};
-        assertFalse(instance.every(Arrays.stream(input1), Arrays.stream(input2), Value::equals));
-        assertFalse(instance.every(StreamEx.of(input1), StreamEx.of(input2), Value::equals));
-        assertFalse(instance.every(Query.of(input1), Query.of(input2), Value::equals));
-        assertFalse(instance.every(Seq.of(input1), Seq.of(input2), Value::equals));
-        assertFalse(instance.everyProtonpack(Arrays.stream(input1), Arrays.stream(input2), Value::equals));
-        assertFalse(instance.every(Stream.of(input1), Stream.of(input2), Value::equals));
-        assertFalse(instance.everyGuava(Arrays.stream(input1), Arrays.stream(input2), Value::equals));
-        assertFalse(instance.everyZipline(Arrays.stream(input1), Arrays.stream(input2), Value::equals));
-        assertFalse(EveryKt.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Value::equals));
-        assertFalse(instance.every(ArraysKt.asSequence(input1), ArraysKt.asSequence(input2), Value::equals));
-        assertFalse(instance.every(Lists.immutable.of(input1).asLazy(), Lists.immutable.of(input2).asLazy(), Value::equals));
-        assertFalse(instance.every(Sek.of(input1), Sek.of(input2), Value::equals));
+    public void testStreamEx() {
+        assertThat(instance.streamEx()).isTrue();
     }
 
+    @Test
+    public void testJayield() {
+        assertThat(instance.jayield()).isTrue();
+    }
+
+    @Test
+    public void testJool() {
+        assertThat(instance.jool()).isTrue();
+    }
+
+    @Test
+    public void testVavr() {
+        assertThat(instance.vavr()).isTrue();
+    }
+
+    @Test
+    public void testProtonpack() {
+        assertThat(instance.protonpack()).isTrue();
+    }
+
+    @Test
+    public void testGuava() {
+        assertThat(instance.guava()).isTrue();
+    }
+
+    @Test
+    public void testZipline() {
+        assertThat(instance.zipline()).isTrue();
+    }
+
+    @Test
+    public void testKotlin() {
+        assertThat(instance.kotlin()).isTrue();
+    }
+
+    @Test
+    public void testJkotlin() {
+        assertThat(instance.jkotlin()).isTrue();
+    }
+
+    @Test
+    public void testEclipse() {
+        assertThat(instance.eclipse()).isTrue();
+    }
+
+    @Test
+    public void testSek() {
+        assertThat(instance.sek()).isTrue();
+    }
 }

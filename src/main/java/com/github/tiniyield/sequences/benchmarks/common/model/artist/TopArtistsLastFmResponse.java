@@ -1,4 +1,3 @@
-
 package com.github.tiniyield.sequences.benchmarks.common.model.artist;
 
 import com.google.gson.annotations.Expose;

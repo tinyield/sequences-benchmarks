@@ -1,9 +1,6 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.TracksKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipTopArtistAndTrackByCountryKt;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Artists;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.last.fm.Tracks;
 import com.github.tiniyield.sequences.benchmarks.common.data.providers.rest.countries.Countries;
@@ -11,6 +8,8 @@ import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.common.model.country.Country;
 import com.github.tiniyield.sequences.benchmarks.common.model.country.Language;
 import com.github.tiniyield.sequences.benchmarks.common.model.track.Track;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.ZipTopArtistAndTrackByCountryKt;
+import com.tinyield.Sek;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.sequences.Sequence;
@@ -26,10 +25,8 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
-import com.tinyield.Sek;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -59,20 +56,20 @@ import static kotlin.sequences.SequencesKt.zip;
  * the exact same thing but for the top 50 Tracks.
  * Then zipping both sequences into a Trio of Country, First Artist and First Track and
  * retrieving the distinct elements by Artist.
- *
+ * <p>
  * Pipelines:
  * * Sequence of Artists:
  * * * Sequence.of(countries)
  * * * .filter(isNonEnglishSpeaking)
  * * * .filter(hasArtists)
  * * * .map(Pair.of(country, artists));
- *
+ * <p>
  * * Sequence of Tracks:
  * * * Sequence.of(countries)
  * * * .filter(isNonEnglishSpeaking)
  * * * .filter(hasTracks)
  * * * .map(Pair.of(country, tracks));
- *
+ * <p>
  * * Pipeline:
  * * * artistsByCountry.zip(tracksByCountry, Trio.of(country, topArtist, topTrack))
  * * * .distinctBy(artist)
@@ -86,35 +83,48 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     /**
      * Provider for the Country data
      */
-    public Countries countries;
+    public static final Countries countries = new Countries();
 
     /**
      * Provider for the Artist data by country
      */
-    public Artists artists;
+    public static final Artists artists = new Artists(countries);
 
     /**
      * Provider for the Track data by country
      */
-    public Tracks tracks;
+    public static final Tracks tracks = new Tracks(countries);
 
     /**
-     * Sets up the providers to be used in this benchmark
+     * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
+     *
+     * @param keyExtractor the extractor of the elements identity
+     * @return a Predicate that will distinct elements by a {@param keyExtractor}
      */
-    @Setup()
-    public void setup() {
-        countries = new Countries();
-        artists = new Artists(countries);
-        tracks = new Tracks(countries);
+    public static final <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
+    /**
+     * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
+     *
+     * @param keyExtractor the extractor of the elements identity
+     * @return a Predicate that will distinct elements by a {@param keyExtractor}
+     */
+    public static final <T> org.eclipse.collections.api.block.predicate.Predicate<T> distinctByKeyEclipse(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
 
     /**
-     * Runs this benchmark using {@link Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void stream(Blackhole bh) {
+    public static final Stream<Triplet<Country, Artist, Track>> streamPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -129,15 +139,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Stream.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return StreamZipOperation
+                .zip(artistsByCountry,
+                        tracksByCountry,
+                        (l, r) -> Triplet.with(
+                                l.getValue0(),
+                                l.getValue1().findFirst().orElse(null),
+                                r.getValue1().findFirst().orElse(null)
+                        )
+                ).filter(distinctByKey(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using {@link StreamEx}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link StreamEx}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link StreamEx} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void streamEx(Blackhole bh) {
+    public static final StreamEx<Triplet<Country, Artist, Track>> streamExPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> StreamEx.of(country.getLanguages())
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -152,15 +172,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, StreamEx.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return artistsByCountry
+                .zipWith(tracksByCountry)
+                .map(entry -> {
+                    Pair<Country, StreamEx<Artist>> key = entry.getKey();
+                    return Triplet.with(
+                            key.getValue0(),
+                            key.getValue1().findFirst().orElse(null),
+                            entry.getValue().getValue1().findFirst().orElse(null));
+                }).distinct(Triplet::getValue1);
     }
 
     /**
-     * Runs this benchmark using {@link Query}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link Query}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link Query} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void jayield(Blackhole bh) {
+    public static final Query<Triplet<Country, Artist, Track>> jayieldPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> Query.fromList(country.getLanguages())
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -175,15 +205,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Query.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).traverse(bh::consume);
+        return artistsByCountry
+                .zip(
+                        tracksByCountry,
+                        (l, r) -> Triplet.with(
+                                l.getValue0(),
+                                l.getValue1().findFirst().orElse(null),
+                                r.getValue1().findFirst().orElse(null)
+                        )
+                ).filter(distinctByKey(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using {@link Seq}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link Seq}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link Seq} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void jool(Blackhole bh) {
+    public static final Seq<Triplet<Country, Artist, Track>> joolPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> Seq.seq(country.getLanguages())
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -198,15 +238,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Seq.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return artistsByCountry
+                .zip(tracksByCountry)
+                .map(entry -> {
+                    Pair<Country, Seq<Artist>> key = entry.v1;
+                    return Triplet.with(
+                            key.getValue0(),
+                            key.getValue1().findFirst().orElse(null),
+                            entry.v2.getValue1().findFirst().orElse(null));
+                }).distinct(Triplet::getValue1);
     }
 
     /**
-     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link io.vavr.collection.Stream}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link io.vavr.collection.Stream} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void vavr(Blackhole bh) {
+    public static final io.vavr.collection.Stream<Triplet<Country, Artist, Track>> vavrPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> !io.vavr.collection.Stream.ofAll(country.getLanguages())
                 .map(Language::getIso6391)
                 .exists(ENGLISH.getLanguage()::equals);
@@ -223,17 +273,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                         .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                         .map(country -> Pair.with(country, io.vavr.collection.Stream.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return artistsByCountry
+                .zip(tracksByCountry)
+                .map(entry -> {
+                    Pair<Country, io.vavr.collection.Stream<Artist>> key = entry._1();
+                    return Triplet.with(
+                            key.getValue0(),
+                            key.getValue1().getOrNull(),
+                            entry._2().getValue1().getOrNull());
+                }).distinctBy(Triplet::getValue1);
     }
 
     /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
-     * with Protonpack in it's pipeline.
+     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists, using Protonpack
      *
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void protonpack(Blackhole bh) {
+    public static final Stream<Triplet<Country, Artist, Track>> protonpackPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -248,17 +306,26 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Stream.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountryProtonpack(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return StreamUtils
+                .zip(
+                        artistsByCountry,
+                        tracksByCountry,
+                        (l, r) -> Triplet.with(
+                                l.getValue0(),
+                                l.getValue1().findFirst().orElse(null),
+                                r.getValue1().findFirst().orElse(null)
+                        )
+                ).filter(distinctByKey(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
-     * with Guava in it's pipeline.
+     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists, using Guava
      *
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void guava(Blackhole bh) {
+    public static final Stream<Triplet<Country, Artist, Track>> guavaPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -273,17 +340,25 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Stream.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountryGuava(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return zip(
+                artistsByCountry,
+                tracksByCountry,
+                (l, r) -> Triplet.with(
+                        l.getValue0(),
+                        l.getValue1().findFirst().orElse(null),
+                        r.getValue1().findFirst().orElse(null)
+                )
+        ).filter(distinctByKey(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using {@link java.util.stream.Stream}s and the
-     * zipline approach in it's pipeline.
+     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists, using the zipline approach
      *
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void zipline(Blackhole bh) {
+    public static final Stream<Triplet<Country, Artist, Track>> ziplinePipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
                 .map(Language::getIso6391)
                 .noneMatch(ENGLISH.getLanguage()::equals);
@@ -298,32 +373,22 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Stream.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountryZipline(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        Iterator<Pair<Country, Stream<Artist>>> iter = artistsByCountry.iterator();
+        return tracksByCountry.map(r -> {
+            Track track = r.getValue1().findFirst().orElse(null);
+            Pair<Country, Stream<Artist>> l = iter.next();
+            return Triplet.with(l.getValue0(), l.getValue1().iterator().next(), track);
+        }).filter(distinctByKey(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     * Takes two Kotlin {@link Sequence}s in Java and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists, using Protonpack
      *
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * @return A Kotlin {@link Sequence} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void kotlin(Blackhole bh) {
-        forEach(
-                ZipTopArtistAndTrackByCountryKt.zipTopArtistAndTrackByCountry(ArtistsKt.artistsByCountry(), TracksKt.tracksByCountry()),
-                elem -> {
-                    bh.consume(elem);
-                    return Unit.INSTANCE;
-                }
-        );
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public final void jkotlin(Blackhole bh) {
+    public static final Sequence<Triplet<Country, Artist, Track>> jKotlinPipeline() {
         Function1<Country, Boolean> isNonEnglishSpeaking = country -> none(
                 map(asSequence(country.getLanguages()), Language::getIso6391),
                 ENGLISH.getLanguage()::equals
@@ -344,20 +409,29 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 ),
                 country -> Pair.with(country, asSequence(tracks.data.get(country.getName())))
         );
-        forEach(zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry), elem -> {
-            bh.consume(elem);
-            return Unit.INSTANCE;
-        });
+
+        return distinctBy(
+                map(
+                        zip(artistsByCountry, tracksByCountry),
+                        pair -> Triplet.with(
+                                pair.getFirst().getValue0(),
+                                first(pair.getFirst().getValue1()),
+                                first(pair.getSecond().getValue1()
+                                )
+                        )
+                ),
+                Triplet::getValue1
+        );
     }
 
-
     /**
-     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     * Takes two {@link LazyIterable}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
      *
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * @return A {@link LazyIterable} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void eclipse(Blackhole bh) {
+    public static final LazyIterable<Triplet<Country, Artist, Track>> eclipsePipeline() {
         org.eclipse.collections.api.block.predicate.Predicate<Country> isNonEnglishSpeaking =
                 country -> Lists.immutable.ofAll(country.getLanguages()).asLazy()
                         .collect(Language::getIso6391)
@@ -373,15 +447,24 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .select(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .collect(country -> Pair.with(country, Lists.immutable.of(tracks.data.get(country.getName())).asLazy()));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
+        return artistsByCountry
+                .zip(tracksByCountry)
+                .collect(p -> Triplet.with(
+                        p.getOne().getValue0(),
+                        p.getOne().getValue1().getFirst(),
+                        p.getTwo().getValue1().getFirst()
+                ))
+                .select(distinctByKeyEclipse(Triplet::getValue1));
     }
 
     /**
-     * Runs this benchmark using {@link Sek}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
+     * Takes two {@link Sek}s and zips them into a Trio of Country, First Artist and First Track,
+     * and filters the resulting sequence by distinct Artists
+     *
+     * @return A {@link Sek} consisting of Trios of Country, First Artist and First Track
+     * filtered to have only distinct artists
      */
-    @Benchmark
-    public final void sek(Blackhole bh) {
+    public static final Sek<Triplet<Country, Artist, Track>> sekPipeline() {
         Predicate<Country> isNonEnglishSpeaking = country -> Sek.of(country.getLanguages())
                 .map(Language::getIso6391)
                 .none(ENGLISH.getLanguage()::equals);
@@ -396,235 +479,8 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
                 .filter(country -> tracks.data.containsKey(country.getName()) && tracks.data.get(country.getName()).length > 0)
                 .map(country -> Pair.with(country, Sek.of(tracks.data.get(country.getName()))));
 
-        zipTopArtistAndTrackByCountry(artistsByCountry, tracksByCountry).forEach(bh::consume);
-    }
-
-    /**
-     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            Stream<Pair<Country, Stream<Artist>>> artists,
-            Stream<Pair<Country, Stream<Track>>> tracks) {
-
-        return StreamZipOperation.zip(artists,
-                tracks,
-                (l, r) -> Triplet.with(
-                        l.getValue0(),
-                        l.getValue1().findFirst().orElse(null),
-                        r.getValue1().findFirst().orElse(null)
-                )
-        ).filter(distinctByKey(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two {@link StreamEx}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link StreamEx} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public StreamEx<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            StreamEx<Pair<Country, StreamEx<Artist>>> artists,
-            StreamEx<Pair<Country, StreamEx<Track>>> tracks) {
-
-        return artists.zipWith(tracks).map(entry -> {
-            Pair<Country, StreamEx<Artist>> key = entry.getKey();
-            return Triplet.with(
-                    key.getValue0(),
-                    key.getValue1().findFirst().orElse(null),
-                    entry.getValue().getValue1().findFirst().orElse(null));
-        }).distinct(Triplet::getValue1);
-    }
-
-    /**
-     * Takes two {@link Query}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Query} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Query<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            Query<Pair<Country, Query<Artist>>> artists,
-            Query<Pair<Country, Query<Track>>> tracks) {
-
-        return artists.zip(
-                tracks,
-                (l, r) -> Triplet.with(
-                        l.getValue0(),
-                        l.getValue1().findFirst().orElse(null),
-                        r.getValue1().findFirst().orElse(null)
-                )
-        ).filter(distinctByKey(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two {@link Seq}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Seq} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Seq<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(Seq<Pair<Country, Seq<Artist>>> artists,
-                                                                              Seq<Pair<Country, Seq<Track>>> tracks) {
-        return artists.zip(tracks).map(entry -> {
-            Pair<Country, Seq<Artist>> key = entry.v1;
-            return Triplet.with(
-                    key.getValue0(),
-                    key.getValue1().findFirst().orElse(null),
-                    entry.v2.getValue1().findFirst().orElse(null));
-        }).distinct(Triplet::getValue1);
-    }
-
-    /**
-     * Takes two {@link io.vavr.collection.Stream}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link io.vavr.collection.Stream} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public io.vavr.collection.Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            io.vavr.collection.Stream<Pair<Country, io.vavr.collection.Stream<Artist>>> artists,
-            io.vavr.collection.Stream<Pair<Country, io.vavr.collection.Stream<Track>>> tracks) {
-
-        return artists.zip(tracks).map(entry -> {
-            Pair<Country, io.vavr.collection.Stream<Artist>> key = entry._1();
-            return Triplet.with(
-                    key.getValue0(),
-                    key.getValue1().getOrNull(),
-                    entry._2().getValue1().getOrNull());
-        }).distinctBy(Triplet::getValue1);
-    }
-
-    /**
-     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists, using Protonpack
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountryProtonpack(Stream<Pair<Country, Stream<Artist>>> artists,
-                                                                                           Stream<Pair<Country, Stream<Track>>> tracks) {
-        return StreamUtils.zip(
-                artists,
-                tracks,
-                (l, r) -> Triplet.with(
-                        l.getValue0(),
-                        l.getValue1().findFirst().orElse(null),
-                        r.getValue1().findFirst().orElse(null)
-                )
-        ).filter(distinctByKey(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists, using Guava
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountryGuava(Stream<Pair<Country, Stream<Artist>>> artists,
-                                                                                      Stream<Pair<Country, Stream<Track>>> tracks) {
-        return zip(
-                artists,
-                tracks,
-                (l, r) -> Triplet.with(
-                        l.getValue0(),
-                        l.getValue1().findFirst().orElse(null),
-                        r.getValue1().findFirst().orElse(null)
-                )
-        ).filter(distinctByKey(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two {@link Stream}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists, using the zipline approach
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Stream} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Stream<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountryZipline(
-            Stream<Pair<Country, Stream<Artist>>> artists,
-            Stream<Pair<Country, Stream<Track>>> tracks) {
-
-        Iterator<Pair<Country, Stream<Artist>>> iter = artists.iterator();
-        return tracks.map(r -> {
-            Track track = r.getValue1().findFirst().orElse(null);
-            Pair<Country, Stream<Artist>> l = iter.next();
-            return Triplet.with(l.getValue0(), l.getValue1().iterator().next(), track);
-        }).filter(distinctByKey(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two Kotlin {@link Sequence}s in Java and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists, using Protonpack
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A Kotlin {@link Sequence} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Sequence<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(Sequence<Pair<Country, Sequence<Artist>>> artists,
-                                                                                   Sequence<Pair<Country, Sequence<Track>>> tracks) {
-        return distinctBy(
-                map(
-                        zip(artists, tracks),
-                        pair -> Triplet.with(
-                                pair.getFirst().getValue0(),
-                                first(pair.getFirst().getValue1()),
-                                first(pair.getSecond().getValue1()
-                                )
-                        )
-                ),
-                Triplet::getValue1
-        );
-    }
-
-    /**
-     * Takes two {@link LazyIterable}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link LazyIterable} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public LazyIterable<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            LazyIterable<Pair<Country, LazyIterable<Artist>>> artists,
-            LazyIterable<Pair<Country, LazyIterable<Track>>> tracks) {
-
-        return artists.zip(tracks)
-                .collect(p -> Triplet.with(
-                        p.getOne().getValue0(),
-                        p.getOne().getValue1().getFirst(),
-                        p.getTwo().getValue1().getFirst()
-                ))
-                .select(distinctByKeyEclipse(Triplet::getValue1));
-    }
-
-    /**
-     * Takes two {@link Sek}s and zips them into a Trio of Country, First Artist and First Track,
-     * and filters the resulting sequence by distinct Artists
-     * @param artists sequence of artists by country
-     * @param tracks sequence of tracks by country
-     * @return A {@link Sek} consisting of Trios of Country, First Artist and First Track
-     * filtered to have only distinct artists
-     */
-    public Sek<Triplet<Country, Artist, Track>> zipTopArtistAndTrackByCountry(
-            Sek<Pair<Country, Sek<Artist>>> artists,
-            Sek<Pair<Country, Sek<Track>>> tracks) {
-
-        return artists.zip(
-                tracks,
+        return artistsByCountry.zip(
+                tracksByCountry,
                 (l, r) -> Triplet.with(
                         l.getValue0(),
                         l.getValue1().firstOrNull(),
@@ -634,23 +490,135 @@ public class ZipTopArtistAndTrackByCountryBenchmark {
     }
 
     /**
-     * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
-     * @param keyExtractor the extractor of the elements identity
-     * @return a Predicate that will distinct elements by a {@param keyExtractor}
+     * Runs this benchmark using {@link Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
      */
-    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t));
+    @Benchmark
+    public final void stream(Blackhole bh) {
+        streamPipeline().forEach(bh::consume);
     }
-
 
     /**
-     * This method return a Predicate that will let through only distinct elements according to the {@param keyExtractor}
-     * @param keyExtractor the extractor of the elements identity
-     * @return a Predicate that will distinct elements by a {@param keyExtractor}
+     * Runs this benchmark using {@link StreamEx}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
      */
-    public static <T> org.eclipse.collections.api.block.predicate.Predicate<T> distinctByKeyEclipse(Function<? super T, ?> keyExtractor) {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t));
+    @Benchmark
+    public final void streamEx(Blackhole bh) {
+        streamExPipeline().forEach(bh::consume);
     }
+
+    /**
+     * Runs this benchmark using {@link Query}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void jayield(Blackhole bh) {
+        jayieldPipeline().traverse(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link Seq}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void jool(Blackhole bh) {
+        joolPipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void vavr(Blackhole bh) {
+        vavrPipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Protonpack in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void protonpack(Blackhole bh) {
+        protonpackPipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s in conjunction
+     * with Guava in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void guava(Blackhole bh) {
+        guavaPipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link java.util.stream.Stream}s and the
+     * zipline approach in it's pipeline.
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void zipline(Blackhole bh) {
+        ziplinePipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void kotlin(Blackhole bh) {
+        forEach(
+                ZipTopArtistAndTrackByCountryKt.zipTopArtistAndTrackByCountry(),
+                elem -> {
+                    bh.consume(elem);
+                    return Unit.INSTANCE;
+                }
+        );
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void jkotlin(Blackhole bh) {
+        forEach(jKotlinPipeline(), elem -> {
+            bh.consume(elem);
+            return Unit.INSTANCE;
+        });
+    }
+
+    /**
+     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void eclipse(Blackhole bh) {
+        eclipsePipeline().forEach(bh::consume);
+    }
+
+    /**
+     * Runs this benchmark using {@link Sek}s in it's pipeline
+     *
+     * @param bh a Blackhole instance to prevent compiler optimizations and to evaluate traversal performance
+     */
+    @Benchmark
+    public final void sek(Blackhole bh) {
+        sekPipeline().forEach(bh::consume);
+    }
+
 }

@@ -6,6 +6,6 @@ import java.util.*
 
 fun isNonEnglishSpeaking(country: Country): Boolean {
     return country.languages.asSequence()
-            .map { obj: Language -> obj.iso6391 }
-            .none { anObject: String -> Locale.ENGLISH.language.equals(anObject) }
+        .map { obj: Language -> obj.iso6391 }
+        .none { anObject: String -> Locale.ENGLISH.language.equals(anObject) }
 }

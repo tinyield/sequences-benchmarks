@@ -4,6 +4,7 @@ import com.github.tiniyield.sequences.benchmarks.common.StreamOddLinesOperation;
 import com.github.tiniyield.sequences.benchmarks.common.WeatherDataSource;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
+import com.tinyield.Sek;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -16,7 +17,6 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;

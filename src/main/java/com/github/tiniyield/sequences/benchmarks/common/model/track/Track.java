@@ -1,4 +1,3 @@
-
 package com.github.tiniyield.sequences.benchmarks.common.model.track;
 
 import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;

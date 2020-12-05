@@ -39,4 +39,5 @@ class Collapse<T>(private val upstream: Sequence<T>) : Sequence<T> {
 
     }
 }
+
 fun <T> Sequence<T>.collapse() = Collapse(this)

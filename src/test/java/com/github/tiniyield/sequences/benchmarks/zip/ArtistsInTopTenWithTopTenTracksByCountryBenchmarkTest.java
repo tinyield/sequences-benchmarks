@@ -1,307 +1,175 @@
 package com.github.tiniyield.sequences.benchmarks.zip;
 
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsInTopTenWithTopTenTracksByCountryKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsKt;
-import com.github.tiniyield.sequences.benchmarks.kt.zip.TracksKt;
 import com.github.tiniyield.sequences.benchmarks.common.model.artist.Artist;
 import com.github.tiniyield.sequences.benchmarks.common.model.country.Country;
-import com.github.tiniyield.sequences.benchmarks.common.model.country.Language;
-import com.github.tiniyield.sequences.benchmarks.common.model.track.Track;
-import kotlin.collections.ArraysKt;
-import kotlin.collections.CollectionsKt;
-import kotlin.jvm.functions.Function1;
-import kotlin.sequences.Sequence;
+import com.github.tiniyield.sequences.benchmarks.kt.zip.ArtistsInTopTenWithTopTenTracksByCountryKt;
 import kotlin.sequences.SequencesKt;
-import one.util.streamex.StreamEx;
-import org.eclipse.collections.api.LazyIterable;
-import org.eclipse.collections.impl.factory.Lists;
 import org.javatuples.Pair;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.tinyield.Sek;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.Locale.ENGLISH;
-import static org.testng.Assert.assertTrue;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.eclipsePipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.guavaPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.jKotlinPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.jayieldPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.joolPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.protonpackPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.sekPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.streamExPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.streamPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.vavrPipeline;
+import static com.github.tiniyield.sequences.benchmarks.zip.ArtistsInTopTenWithTopTenTracksByCountryBenchmark.ziplinePipeline;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArtistsInTopTenWithTopTenTracksByCountryBenchmarkTest {
 
-
-    private ArtistsInTopTenWithTopTenTracksByCountryBenchmark instance;
-
-    @BeforeMethod
-    public void setup() {
-        instance = new ArtistsInTopTenWithTopTenTracksByCountryBenchmark();
-        instance.setup();
-    }
+    final int expected = 130;
 
     @Test
-    public void testSameResultsArtistsInTopTenWithTopTenTracksByCountry() {
-        List<Pair<Country, List<Artist>>> stream = getStream().collect(Collectors.toList());
-        List<Pair<Country, List<Artist>>> streamEx = getStreamEx().toList();
-        List<Pair<Country, List<Artist>>> query = getQuery().toList();
-        List<Pair<Country, List<Artist>>> jool = getJool().toList();
-        List<Pair<Country, List<Artist>>> vavr = getVavr().toJavaList();
-        List<Pair<Country, List<Artist>>> protonpack = getProtonpack().collect(Collectors.toList());
-        List<Pair<Country, List<Artist>>> guava = getGuava().collect(Collectors.toList());
-        List<Pair<Country, List<Artist>>> kotlin = SequencesKt.toList(getKotlin());
-        List<Pair<Country, List<Artist>>> jKotlin = SequencesKt.toList(getJKotlin());
-        List<Pair<Country, List<Artist>>> zipline = getZipline().collect(Collectors.toList());
-        List<Pair<Country, List<Artist>>> eclipse = getEclipse().toList();
-        List<Pair<Country, List<Artist>>> sek = getSek().toList();
+    public void testStreamPipeline() {
+        List<Pair<Country, List<Artist>>> actual = streamPipeline().collect(Collectors.toList());
 
-        assertTrue(stream.size() == streamEx.size() && stream.containsAll(streamEx) && streamEx.containsAll(stream));
-        assertTrue(stream.size() == query.size() && stream.containsAll(query) && query.containsAll(stream));
-        assertTrue(stream.size() == jool.size() && stream.containsAll(jool) && jool.containsAll(stream));
-        assertTrue(stream.size() == vavr.size() && stream.containsAll(vavr) && vavr.containsAll(stream));
-        assertTrue(stream.size() == protonpack.size() && stream.containsAll(protonpack) && protonpack.containsAll(stream));
-        assertTrue(stream.size() == guava.size() && stream.containsAll(guava) && guava.containsAll(stream));
-        assertTrue(stream.size() == jKotlin.size() && stream.containsAll(jKotlin) && jKotlin.containsAll(stream));
-        assertTrue(stream.size() == zipline.size() && stream.containsAll(zipline) && zipline.containsAll(stream));
-        assertTrue(stream.size() == eclipse.size() && stream.containsAll(eclipse) && eclipse.containsAll(stream));
-        assertTrue(stream.size() == sek.size() && stream.containsAll(sek) && sek.containsAll(stream));
-
-        assertTrue(stream.size() == kotlin.size());
-        for (int i = 0; i < stream.size(); i++) {
-            Pair<Country, List<Artist>> a = stream.get(i);
-            Pair<Country, List<Artist>> b = kotlin.get(i);
-            assertTrue(
-                    a.getValue0().equals(b.getValue0()) &&
-                            a.getValue1().equals(b.getValue1())
-            );
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
         }
     }
 
+    @Test
+    public void testStreamExPipeline() {
+        List<Pair<Country, List<Artist>>> actual = streamExPipeline().collect(Collectors.toList());
 
-    public io.vavr.collection.Stream<Pair<Country, List<Artist>>> getVavr() {
-        Predicate<Country> isNonEnglishSpeaking = country -> !io.vavr.collection.Stream.ofAll(country.getLanguages())
-                .map(Language::getIso6391)
-                .exists(ENGLISH.getLanguage()::equals);
-
-        io.vavr.collection.Stream<Pair<Country, io.vavr.collection.Stream<Artist>>> artistsByCountry =
-                io.vavr.collection.Stream.of(instance.countries.data)
-                        .filter(isNonEnglishSpeaking)
-                        .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                        .map(country -> Pair.with(country, io.vavr.collection.Stream.of(instance.artists.data.get(country.getName()))));
-
-        io.vavr.collection.Stream<Pair<Country, io.vavr.collection.Stream<Track>>> tracksByCountry =
-                io.vavr.collection.Stream.of(instance.countries.data)
-                        .filter(isNonEnglishSpeaking)
-                        .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                        .map(country -> Pair.with(country, io.vavr.collection.Stream.of(instance.tracks.data.get(country.getName()))));
-
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public StreamEx<Pair<Country, List<Artist>>> getStreamEx() {
-        Predicate<Country> isNonEnglishSpeaking = country -> StreamEx.of(country.getLanguages())
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testJayieldPipeline() {
+        List<Pair<Country, List<Artist>>> actual = jayieldPipeline().toList();
 
-        StreamEx<Pair<Country, StreamEx<Artist>>> artistsByCountry = StreamEx.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, StreamEx.of(instance.artists.data.get(country.getName()))));
-
-        StreamEx<Pair<Country, StreamEx<Track>>> tracksByCountry = StreamEx.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, StreamEx.of(instance.tracks.data.get(country.getName()))));
-
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Stream<Pair<Country, List<Artist>>> getZipline() {
-        Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testJoolPipeline() {
+        List<Pair<Country, List<Artist>>> actual = joolPipeline().toList();
 
-        Stream<Pair<Country, Stream<Artist>>> artistsByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.artists.data.get(country.getName()))));
-
-        Stream<Pair<Country, Stream<Track>>> tracksByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountryZipline(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Stream<Pair<Country, List<Artist>>> getProtonpack() {
-        Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testVavrPipeline() {
+        List<Pair<Country, List<Artist>>> actual = vavrPipeline().toJavaList();
 
-        Stream<Pair<Country, Stream<Artist>>> artistsByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.artists.data.get(country.getName()))));
-
-        Stream<Pair<Country, Stream<Track>>> tracksByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountryProtonpack(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Stream<Pair<Country, List<Artist>>> getStream() {
-        Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testProtonpackPipeline() {
+        List<Pair<Country, List<Artist>>> actual = protonpackPipeline().collect(Collectors.toList());
 
-        Stream<Pair<Country, Stream<Artist>>> artistsByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.artists.data.get(country.getName()))));
-
-        Stream<Pair<Country, Stream<Track>>> tracksByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Query<Pair<Country, List<Artist>>> getQuery() {
-        Predicate<Country> isNonEnglishSpeaking = country -> Query.fromList(country.getLanguages())
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testGuavaPipeline() {
+        List<Pair<Country, List<Artist>>> actual = guavaPipeline().collect(Collectors.toList());
 
-        Query<Pair<Country, Query<Artist>>> artistsByCountry = Query.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Query.of(instance.artists.data.get(country.getName()))));
-
-        Query<Pair<Country, Query<Track>>> tracksByCountry = Query.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Query.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Stream<Pair<Country, List<Artist>>> getGuava() {
-        Predicate<Country> isNonEnglishSpeaking = country -> country.getLanguages().stream()
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testZiplinePipeline() {
+        List<Pair<Country, List<Artist>>> actual = ziplinePipeline().collect(Collectors.toList());
 
-        Stream<Pair<Country, Stream<Artist>>> artistsByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.artists.data.get(country.getName()))));
-
-        Stream<Pair<Country, Stream<Track>>> tracksByCountry = Stream.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Stream.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountryGuava(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Seq<Pair<Country, List<Artist>>> getJool() {
-        Predicate<Country> isNonEnglishSpeaking = country -> Seq.seq(country.getLanguages())
-                .map(Language::getIso6391)
-                .noneMatch(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testKotlinPipeline() {
+        List<Pair<Country, List<Artist>>> actual = SequencesKt.toList(ArtistsInTopTenWithTopTenTracksByCountryKt.artistsInTopTenWithTopTenTracksByCountry());
 
-        Seq<Pair<Country, Seq<Artist>>> artistsByCountry = Seq.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Seq.of(instance.artists.data.get(country.getName()))));
-
-        Seq<Pair<Country, Seq<Track>>> tracksByCountry = Seq.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Seq.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Sequence<Pair<Country, List<Artist>>> getKotlin() {
-        return ArtistsInTopTenWithTopTenTracksByCountryKt.artistsInTopTenWithTopTenTracksByCountry(ArtistsKt.artistsByCountry(), TracksKt.tracksByCountry());
+    @Test
+    public void testJKotlinPipeline() {
+        List<Pair<Country, List<Artist>>> actual = SequencesKt.toList(jKotlinPipeline());
+
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public Sequence<Pair<Country, List<Artist>>> getJKotlin() {
-        Function1<Country, Boolean> isNonEnglishSpeaking = country -> {
-            return SequencesKt.none(
-                    SequencesKt.map(
-                            CollectionsKt.asSequence(country.getLanguages()),
-                            Language::getIso6391
-                    ),
-                    ENGLISH.getLanguage()::equals
-            );
-        };
+    @Test
+    public void testEclipsePipeline() {
+        List<Pair<Country, List<Artist>>> actual = eclipsePipeline().toList();
 
-        Sequence<Pair<Country, Sequence<Artist>>> artistsByCountry = SequencesKt.map(
-                SequencesKt.filter(
-                        SequencesKt.filter(
-                                ArraysKt.asSequence(instance.countries.data),
-                                isNonEnglishSpeaking
-                        ),
-                        country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0
-                ),
-                country -> Pair.with(country, ArraysKt.asSequence(instance.artists.data.get(country.getName())))
-        );
-
-        Sequence<Pair<Country, Sequence<Track>>> tracksByCountry = SequencesKt.map(
-                SequencesKt.filter(
-                        SequencesKt.filter(
-                                ArraysKt.asSequence(instance.countries.data),
-                                isNonEnglishSpeaking
-                        ),
-                        country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0
-                ),
-                country -> Pair.with(country, ArraysKt.asSequence(instance.tracks.data.get(country.getName())))
-        );
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
 
-    public LazyIterable<Pair<Country, List<Artist>>> getEclipse() {
-        org.eclipse.collections.api.block.predicate.Predicate<Country> isNonEnglishSpeaking =
-                country -> Lists.immutable.ofAll(country.getLanguages()).asLazy()
-                        .collect(Language::getIso6391)
-                        .noneSatisfy(ENGLISH.getLanguage()::equals);
+    @Test
+    public void testSekPipeline() {
+        List<Pair<Country, List<Artist>>> actual = sekPipeline().toList();
 
-        LazyIterable<Pair<Country, LazyIterable<Artist>>> artistsByCountry = Lists.immutable.of(instance.countries.data).asLazy()
-                .select(isNonEnglishSpeaking)
-                .select(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .collect(country -> Pair.with(country, Lists.immutable.of(instance.artists.data.get(country.getName())).asLazy()));
-
-        LazyIterable<Pair<Country, LazyIterable<Track>>> tracksByCountry = Lists.immutable.of(instance.countries.data).asLazy()
-                .select(isNonEnglishSpeaking)
-                .select(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .collect(country -> Pair.with(country, Lists.immutable.of(instance.tracks.data.get(country.getName())).asLazy()));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
+        assertThat(actual.size()).isEqualTo(expected);
+        Set<Country> countries = new HashSet<>();
+        for (Pair<Country, List<Artist>> pair : actual) {
+            assertThat(countries.add(pair.getValue0())).isTrue();
+            assertThat(pair.getValue1().size()).isLessThanOrEqualTo(10);
+        }
     }
-
-    public Sek<Pair<Country, List<Artist>>> getSek() {
-        Predicate<Country> isNonEnglishSpeaking = country -> Sek.of(country.getLanguages())
-                .map(Language::getIso6391)
-                .none(ENGLISH.getLanguage()::equals);
-
-        Sek<Pair<Country, Sek<Artist>>> artistsByCountry = Sek.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.artists.data.containsKey(country.getName()) && instance.artists.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Sek.of(instance.artists.data.get(country.getName()))));
-
-        Sek<Pair<Country, Sek<Track>>> tracksByCountry = Sek.of(instance.countries.data)
-                .filter(isNonEnglishSpeaking)
-                .filter(country -> instance.tracks.data.containsKey(country.getName()) && instance.tracks.data.get(country.getName()).length > 0)
-                .map(country -> Pair.with(country, Sek.of(instance.tracks.data.get(country.getName()))));
-
-        return instance.artistsInTopTenWithTopTenTracksByCountry(artistsByCountry, tracksByCountry);
-    }
-
 }

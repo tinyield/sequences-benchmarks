@@ -39,9 +39,9 @@ public class FileLoader {
             Gson gson = new Gson();
 
             JsonReader reader = new JsonReader(new FileReader(Objects.requireNonNull(getClass().getClassLoader()
-                                                                                               .getResource(
-                                                                                                       LASTFM_KEY))
-                                                                     .getFile()));
+                    .getResource(
+                            LASTFM_KEY))
+                    .getFile()));
             return gson.fromJson(reader, ApiKey.class);
         } catch (FileNotFoundException e) {
             System.out.println("could not load lastfm api key");

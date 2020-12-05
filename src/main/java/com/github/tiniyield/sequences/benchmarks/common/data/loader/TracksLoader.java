@@ -25,10 +25,10 @@ public class TracksLoader {
 
     public void fetch(ApiKey key, String country) {
         try (InputStream is = new URI("http",
-                                      "ws.audioscrobbler.com",
-                                      "/2.0/",
-                                      format(TOP_TRACKS_BY_COUNTRY_QUERY_TEMPLATE, country, key.getKey()),
-                                      null
+                "ws.audioscrobbler.com",
+                "/2.0/",
+                format(TOP_TRACKS_BY_COUNTRY_QUERY_TEMPLATE, country, key.getKey()),
+                null
         ).toURL().openStream();
              Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
 

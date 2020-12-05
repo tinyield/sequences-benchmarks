@@ -1,4 +1,3 @@
-
 package com.github.tiniyield.sequences.benchmarks.common.model.country;
 
 import com.google.gson.annotations.Expose;

@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 /**
  * @author Miguel Gamboa
- *         created on 28-03-2017
+ * created on 28-03-2017
  */
 public interface Request {
     /**

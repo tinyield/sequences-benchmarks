@@ -2,7 +2,7 @@ package com.github.tiniyield.sequences.benchmarks.common;
 
 /**
  * @author Miguel Gamboa
- *         created on 12-07-2017
+ * created on 12-07-2017
  */
 
 import com.github.tiniyield.sequences.benchmarks.common.util.FileRequest;

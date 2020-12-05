@@ -6,6 +6,7 @@ import com.github.tiniyield.sequences.benchmarks.kt.collapse.CollapseKt;
 import com.github.tiniyield.sequences.benchmarks.kt.collapse.YieldCollapseKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.OddLinesKt;
 import com.github.tiniyield.sequences.benchmarks.kt.odd.lines.YieldOddLinesKt;
+import com.tinyield.Sek;
 import io.vavr.control.Option;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
@@ -17,7 +18,6 @@ import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
-import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -161,12 +161,12 @@ public class QueryNrOfTemperaturesTransitions {
 
                 @Override
                 public boolean hasNext() {
-                    if(curr != null) {
+                    if (curr != null) {
                         return true;
                     }
-                    while(upstream.hasNext() && curr == null){
+                    while (upstream.hasNext() && curr == null) {
                         U item = upstream.next();
-                        if(prev == null || !prev.equals(item)) {
+                        if (prev == null || !prev.equals(item)) {
                             curr = item;
                         }
                     }

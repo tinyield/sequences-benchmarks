@@ -19,8 +19,9 @@ public class StreamCollapseOperation {
         public boolean tryAdvance(Consumer<? super T> action) {
             T prev = curr;
             boolean hasNext;
-            while ((hasNext = source.tryAdvance(this)) && curr.equals(prev)) { }
-            if(hasNext) action.accept(curr);
+            while ((hasNext = source.tryAdvance(this)) && curr.equals(prev)) {
+            }
+            if (hasNext) action.accept(curr);
             return hasNext;
         }
 

@@ -9,7 +9,7 @@ private val provider = Artists(countriesProvider)
 
 fun artistsByCountry(): Sequence<Pair<Country, Sequence<Artist>>> {
     return countries()
-            .filter { obj: Country -> isNonEnglishSpeaking(obj) }
-            .filter { country: Country -> provider.data.containsKey(country.name) && provider.data[country.name]!!.isNotEmpty() }
-            .map { country: Country -> Pair.with(country, provider.data[country.name]!!.asSequence()) }
+        .filter { obj: Country -> isNonEnglishSpeaking(obj) }
+        .filter { country: Country -> provider.data.containsKey(country.name) && provider.data[country.name]!!.isNotEmpty() }
+        .map { country: Country -> Pair.with(country, provider.data[country.name]!!.asSequence()) }
 }

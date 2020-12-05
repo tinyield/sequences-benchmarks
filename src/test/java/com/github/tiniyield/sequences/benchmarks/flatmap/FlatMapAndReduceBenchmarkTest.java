@@ -1,20 +1,12 @@
 package com.github.tiniyield.sequences.benchmarks.flatmap;
 
-import com.github.tiniyield.sequences.benchmarks.kt.flatmap.FlatmapAndReduceKt;
-import kotlin.collections.CollectionsKt;
-import one.util.streamex.StreamEx;
-import org.eclipse.collections.api.factory.Lists;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.tinyield.Sek;
-
-import java.util.List;
 
 import static org.testng.AssertJUnit.assertEquals;
 
 public class FlatMapAndReduceBenchmarkTest {
+    private final Integer expected = 3;
     private FlatMapAndReduceBenchmark instance;
 
     @BeforeMethod
@@ -26,17 +18,48 @@ public class FlatMapAndReduceBenchmarkTest {
 
 
     @Test
-    public void testSameOutput() {
-        Integer expected = 3;
-        assertEquals(expected, instance.flatMapAndReduceStream(instance.getNestedSequence(List::stream, List::stream)));
-        assertEquals(expected, instance.flatMapAndReduceStreamEx(instance.getNestedSequence(StreamEx::of, StreamEx::of)));
-        assertEquals(expected, instance.flatMapAndReduceQuery(instance.getNestedSequence(Query::fromList, Query::fromList)));
-        assertEquals(expected, instance.flatMapAndReduceJool(instance.getNestedSequence(Seq::seq, Seq::seq)));
-        assertEquals(expected, instance.flatMapAndReduceVavr(instance.getNestedSequence(io.vavr.collection.Stream::ofAll, io.vavr.collection.Stream::ofAll)));
-        assertEquals(expected.intValue(), FlatmapAndReduceKt.flatMapAndReduce(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
-        assertEquals(expected, instance.flatMapAndReduceJKotlin(instance.getNestedSequence(CollectionsKt::asSequence, CollectionsKt::asSequence)));
-        assertEquals(expected, instance.flatMapAndReduceEclipse(instance.getNestedSequence(n -> Lists.immutable.ofAll(n).asLazy(), n -> Lists.immutable.ofAll(n).asLazy())));
-        assertEquals(expected, instance.flatMapAndReduceSek(instance.getNestedSequence(Sek::of, Sek::of)));
+    public void testStream() {
+        assertEquals(expected, instance.stream());
+    }
+
+    @Test
+    public void testSek() {
+        assertEquals(expected, instance.sek());
+    }
+
+    @Test
+    public void testEclipse() {
+        assertEquals(expected, instance.eclipse());
+    }
+
+    @Test
+    public void testJKotlin() {
+        assertEquals(expected, instance.jkotlin());
+    }
+
+    @Test
+    public void testKotlin() {
+        assertEquals(expected, instance.kotlin());
+    }
+
+    @Test
+    public void testVavr() {
+        assertEquals(expected, instance.vavr());
+    }
+
+    @Test
+    public void testJool() {
+        assertEquals(expected, instance.jool());
+    }
+
+    @Test
+    public void testJayield() {
+        assertEquals(expected, instance.jayield());
+    }
+
+    @Test
+    public void testStreamEx() {
+        assertEquals(expected, instance.streamEx());
     }
 
 }

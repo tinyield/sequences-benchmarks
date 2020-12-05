@@ -17,20 +17,19 @@ import org.javatuples.Triplet
  * @return A Kotlin {@link Sequence} in Kotlin consisting of Pairs of Country and Artists that are in that country's top ten and also
  * have tracks in the top ten of the same country
  */
-fun artistsInTopTenWithTopTenTracksByCountry(artists: Sequence<Pair<Country, Sequence<Artist>>>,
-                                             tracks: Sequence<Pair<Country, Sequence<Track>>>): Sequence<Pair<Country, List<Artist>>> {
-    return artists.zip(tracks)
-            .map { pair -> Triplet.with(pair.first.value0, pair.first.value1, pair.second.value1) }
-            .map { triplet ->
-                val topTenSongsArtistsNames = triplet.value2
-                        .take(ArtistsInTopTenWithTopTenTracksByCountryBenchmark.TEN)
-                        .map { obj: Track -> obj.artist }
-                        .map { obj: Artist -> obj.name }
-                        .toList()
-                val artists = triplet.value1
-                        .take(ArtistsInTopTenWithTopTenTracksByCountryBenchmark.TEN)
-                        .filter { artist: Artist -> topTenSongsArtistsNames.contains(artist.name) }
-                        .toList()
-                Pair.with(triplet.value0, artists)
-            }
+fun artistsInTopTenWithTopTenTracksByCountry(): Sequence<Pair<Country, List<Artist>>> {
+    return artistsByCountry().zip(tracksByCountry())
+        .map { pair -> Triplet.with(pair.first.value0, pair.first.value1, pair.second.value1) }
+        .map { triplet ->
+            val topTenSongsArtistsNames = triplet.value2
+                .take(ArtistsInTopTenWithTopTenTracksByCountryBenchmark.TEN)
+                .map { obj: Track -> obj.artist }
+                .map { obj: Artist -> obj.name }
+                .toList()
+            val artists = triplet.value1
+                .take(ArtistsInTopTenWithTopTenTracksByCountryBenchmark.TEN)
+                .filter { artist: Artist -> topTenSongsArtistsNames.contains(artist.name) }
+                .toList()
+            Pair.with(triplet.value0, artists)
+        }
 }

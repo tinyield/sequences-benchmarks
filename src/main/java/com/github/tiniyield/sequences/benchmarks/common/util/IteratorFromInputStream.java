@@ -19,8 +19,9 @@ package com.github.tiniyield.sequences.benchmarks.common.util;
 
 /**
  * @author Miguel Gamboa
- *         created on 02-05-2017
+ * created on 02-05-2017
  */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,11 +42,12 @@ public class IteratorFromInputStream extends AbstractSpliterator<String> {
         this.reader = new BufferedReader(new InputStreamReader(in));
     }
 
+    @Override
     public boolean tryAdvance(Consumer<? super String> action) {
         try {
-            if(reader == null) return false;
+            if (reader == null) return false;
             String line = reader.readLine();
-            if(line == null) {
+            if (line == null) {
                 reader.close();
                 reader = null;
                 return false;

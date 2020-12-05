@@ -8,6 +8,8 @@ import static org.testng.Assert.assertEquals;
 
 public class QueryMaxTemperatureTest {
 
+    private final int expected = 27;
+    private final WeatherDataSource src = new WeatherDataSource();
     private QueryMaxTemperature instance;
 
     @BeforeMethod
@@ -16,18 +18,48 @@ public class QueryMaxTemperatureTest {
     }
 
     @Test
-    public void testSameOutput() {
-        WeatherDataSource src = new WeatherDataSource();
-        int expected = 27;
-        assertEquals(instance.maxTempStream(src),expected);
-        assertEquals(instance.maxTempStreamEx(src),expected);
-        assertEquals(instance.maxTempJayield(src),expected);
-        assertEquals(instance.maxTempJool(src),expected);
-        assertEquals(instance.maxTempVavr(src),expected);
-        assertEquals(instance.maxTempKotlin(src),expected);
-        assertEquals(instance.maxTempKotlinYield(src),expected);
-        assertEquals(instance.maxTempEclipse(src),expected);
-        assertEquals(instance.maxTempSek(src),expected);
+    public void testStream() {
+        assertEquals(instance.maxTempStream(src), expected);
+    }
+
+    @Test
+    public void testSek() {
+        assertEquals(instance.maxTempSek(src), expected);
+    }
+
+    @Test
+    public void testEclipse() {
+        assertEquals(instance.maxTempEclipse(src), expected);
+    }
+
+    @Test
+    public void testKotlinYield() {
+        assertEquals(instance.maxTempKotlinYield(src), expected);
+    }
+
+    @Test
+    public void testKotlin() {
+        assertEquals(instance.maxTempKotlin(src), expected);
+    }
+
+    @Test
+    public void testVavr() {
+        assertEquals(instance.maxTempVavr(src), expected);
+    }
+
+    @Test
+    public void testJool() {
+        assertEquals(instance.maxTempJool(src), expected);
+    }
+
+    @Test
+    public void testJayield() {
+        assertEquals(instance.maxTempJayield(src), expected);
+    }
+
+    @Test
+    public void testStreamEx() {
+        assertEquals(instance.maxTempStreamEx(src), expected);
     }
 
 }

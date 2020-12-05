@@ -23,15 +23,15 @@ import java.io.UncheckedIOException;
 
 /**
  * @author Miguel Gamboa
- *         created on 30-03-2017
+ * created on 30-03-2017
  */
 public class FileRequest implements Request {
     @Override
     public InputStream getBody(String path) {
         String[] parts = path.split("/");
-        path = parts[parts.length-1]
+        path = parts[parts.length - 1]
                 .replaceAll("[,=?&]", "-")
-                .substring(0,68);
+                .substring(0, 68);
         try {
             return ClassLoader.getSystemResource(path).openStream();
         } catch (IOException e) {

@@ -1,26 +1,29 @@
 package com.github.tiniyield.sequences.benchmarks.all.match;
 
-import com.github.tiniyield.sequences.benchmarks.kt.all.match.IsEveryEvenKt;
-import kotlin.collections.ArraysKt;
-import kotlin.sequences.SequencesKt;
-import one.util.streamex.StreamEx;
-import org.eclipse.collections.api.factory.Lists;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.tinyield.Sek;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.List;
 
-import static kotlin.collections.ArraysKt.asSequence;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.EVEN;
+import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.ODD;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AllMatchBenchmarkTest {
 
     private AllMatchBenchmark instance;
+    private final List<Integer> expected = List.of(
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN
+    );
 
     @BeforeMethod
     public void setup() {
@@ -29,42 +32,59 @@ public class AllMatchBenchmarkTest {
         instance.setup();
     }
 
-
     @Test
-    public void testIsEveryEven() {
-        assertTrue(instance.isEveryEven(Arrays.stream(instance.data)));
-        assertTrue(instance.isEveryEven(StreamEx.of(instance.data)));
-        assertTrue(instance.isEveryEven(Query.of(instance.data)));
-        assertTrue(instance.isEveryEven(Seq.of(instance.data)));
-        assertTrue(instance.isEveryEven(io.vavr.collection.Stream.of(instance.data)));
-        assertTrue(IsEveryEvenKt.isEveryEven(asSequence(instance.data)));
-        assertTrue(instance.isEveryEven(asSequence(instance.data)));
-        assertTrue(instance.isEveryEven(Sek.of(instance.data)));
+    public void testIsEven() {
+        assertThat(AllMatchBenchmark.isEven(EVEN)).isTrue();
+        assertThat(AllMatchBenchmark.isEven(ODD)).isFalse();
     }
 
     @Test
-    public void testIsEveryEvenSuccess() {
-        assertTrue(instance.isEveryEven(Stream.of(2,2,2)));
-        assertTrue(instance.isEveryEven(StreamEx.of(2,2,2)));
-        assertTrue(instance.isEveryEven(Query.of(2,2,2)));
-        assertTrue(instance.isEveryEven(Seq.of(2,2,2)));
-        assertTrue(instance.isEveryEven(io.vavr.collection.Stream.of(2,2,2)));
-        assertTrue(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,2,2})));
-        assertTrue(instance.isEveryEven(asSequence(new int[]{2,2,2})));
-        assertTrue(instance.isEveryEven(Lists.immutable.of(2,2,2).asLazy()));
-        assertTrue(instance.isEveryEven(Sek.of(2,2,2)));
+    public void testGetAllEvenArray() {
+        assertThat(instance.getAllEvenArray()).hasSameElementsAs(expected);
     }
 
     @Test
-    public void testIsEveryEvenFailure() {
-        assertFalse(instance.isEveryEven(Stream.of(2,1,2)));
-        assertFalse(instance.isEveryEven(StreamEx.of(2,1,2)));
-        assertFalse(instance.isEveryEven(Query.of(2,1,2)));
-        assertFalse(instance.isEveryEven(Seq.of(2,1,2)));
-        assertFalse(instance.isEveryEven(io.vavr.collection.Stream.of(2,1,2)));
-        assertFalse(IsEveryEvenKt.isEveryEven(asSequence(new int[]{2,1,2})));
-        assertFalse(instance.isEveryEven(asSequence(new int[]{2,1,2})));
-        assertFalse(instance.isEveryEven(Lists.immutable.of(2,1,2).asLazy()));
-        assertFalse(instance.isEveryEven(Sek.of(2,1,2)));
+    public void testStream() {
+        assertThat(instance.stream()).isTrue();
+    }
+
+    @Test
+    public void testStreamEx() {
+        assertThat(instance.streamEx()).isTrue();
+    }
+
+    @Test
+    public void testJayield() {
+        assertThat(instance.jayield()).isTrue();
+    }
+
+    @Test
+    public void testJool() {
+        assertThat(instance.jool()).isTrue();
+    }
+
+    @Test
+    public void testVavr() {
+        assertThat(instance.vavr()).isTrue();
+    }
+
+    @Test
+    public void testKotlin() {
+        assertThat(instance.kotlin()).isTrue();
+    }
+
+    @Test
+    public void testJkotlin() {
+        assertThat(instance.jkotlin()).isTrue();
+    }
+
+    @Test
+    public void testSek() {
+        assertThat(instance.sek()).isTrue();
+    }
+
+    @Test
+    public void testEclipse() {
+        assertThat(instance.eclipse()).isTrue();
     }
 }

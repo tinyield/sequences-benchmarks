@@ -1,4 +1,3 @@
-
 package com.github.tiniyield.sequences.benchmarks.common.model.country;
 
 import com.google.gson.annotations.Expose;
@@ -336,29 +335,29 @@ public class Country {
     @Override
     public int hashCode() {
         return Objects.hash(name,
-                            topLevelDomain,
-                            alpha2Code,
-                            alpha3Code,
-                            callingCodes,
-                            capital,
-                            altSpellings,
-                            region,
-                            subregion,
-                            population,
-                            latlng,
-                            demonym,
-                            area,
-                            gini,
-                            timezones,
-                            borders,
-                            nativeName,
-                            numericCode,
-                            currencies,
-                            languages,
-                            translations,
-                            flag,
-                            regionalBlocs,
-                            cioc);
+                topLevelDomain,
+                alpha2Code,
+                alpha3Code,
+                callingCodes,
+                capital,
+                altSpellings,
+                region,
+                subregion,
+                population,
+                latlng,
+                demonym,
+                area,
+                gini,
+                timezones,
+                borders,
+                nativeName,
+                numericCode,
+                currencies,
+                languages,
+                translations,
+                flag,
+                regionalBlocs,
+                cioc);
     }
 
     @Override

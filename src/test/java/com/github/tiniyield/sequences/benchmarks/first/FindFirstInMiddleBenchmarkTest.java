@@ -1,25 +1,28 @@
 package com.github.tiniyield.sequences.benchmarks.first;
 
-import com.github.tiniyield.sequences.benchmarks.kt.first.FirstKt;
-import io.vavr.collection.Stream;
-import kotlin.collections.ArraysKt;
-import one.util.streamex.StreamEx;
-import org.eclipse.collections.api.factory.Lists;
-import org.jayield.Query;
-import org.jooq.lambda.Seq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.tinyield.Sek;
 
 import java.util.Arrays;
 
 import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.EVEN;
 import static com.github.tiniyield.sequences.benchmarks.common.BenchmarkConstants.ODD;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FindFirstInMiddleBenchmarkTest {
 
+    private final Integer[] expected = {
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            ODD,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+            EVEN,
+    };
     private FindFirstInMiddleBenchmark instance;
 
     @BeforeMethod
@@ -30,46 +33,58 @@ public class FindFirstInMiddleBenchmarkTest {
     }
 
     @Test
-    public void testSameResultsFind() {
-        Integer expected = ODD;
-        assertEquals(instance.findFirst(Arrays.stream(instance.data)), expected);
-        assertEquals(instance.findFirst(StreamEx.of(instance.data)), expected);
-        assertEquals(instance.findFirst(Query.of(instance.data)), expected);
-        assertEquals(instance.findFirst(Seq.of(instance.data)), expected);
-        assertEquals(instance.findFirst(io.vavr.collection.Stream.of(instance.data)), expected);
-        assertEquals(FirstKt.findFirst(ArraysKt.asSequence(instance.data)), expected);
-        assertEquals(instance.findFirst(ArraysKt.asSequence(instance.data)), expected);
-        assertEquals(instance.findFirst(Lists.immutable.of(instance.data).asLazy()), expected);
-        assertEquals(instance.findFirst(Sek.of(instance.data)), expected);
+    public void testGet() {
+        Integer[] actual = instance.get();
+        assertThat(actual).hasSameElementsAs(Arrays.asList(expected));
     }
 
     @Test
-    public void testFindSuccess() {
-        Integer expected = ODD;
-        Integer[] input = {EVEN, ODD, EVEN};
-        assertEquals(instance.findFirst(Arrays.stream(input)), expected);
-        assertEquals(instance.findFirst(StreamEx.of(input)), expected);
-        assertEquals(instance.findFirst(Query.of(input)), expected);
-        assertEquals(instance.findFirst(Seq.of(input)), expected);
-        assertEquals(instance.findFirst(Stream.of(input)), expected);
-        assertEquals(FirstKt.findFirst(ArraysKt.asSequence(input)), expected);
-        assertEquals(instance.findFirst(ArraysKt.asSequence(input)), expected);
-        assertEquals(instance.findFirst(Lists.immutable.of(input).asLazy()), expected);
-        assertEquals(instance.findFirst(Sek.of(input)), expected);
+    public void testInit() {
+        assertThat(instance.data).hasSameElementsAs(Arrays.asList(expected));
     }
 
+    @Test
+    public void testStream() {
+        assertThat(instance.stream()).isEqualTo(ODD);
+    }
 
     @Test
-    public void testFindFailure() {
-        Integer[] input = {EVEN, EVEN, EVEN};
-        assertNull(instance.findFirst(Arrays.stream(input)));
-        assertNull(instance.findFirst(StreamEx.of(input)));
-        assertNull(instance.findFirst(Query.of(input)));
-        assertNull(instance.findFirst(Seq.of(input)));
-        assertNull(instance.findFirst(Stream.of(input)));
-        assertNull(FirstKt.findFirst(ArraysKt.asSequence(input)));
-        assertNull(instance.findFirst(ArraysKt.asSequence(input)));
-        assertNull(instance.findFirst(Lists.immutable.of(input).asLazy()));
-        assertNull(instance.findFirst(Sek.of(input)));
+    public void testStreamEx() {
+        assertThat(instance.streamEx()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testJayield() {
+        assertThat(instance.jayield()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testJool() {
+        assertThat(instance.jool()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testVavr() {
+        assertThat(instance.vavr()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testKotlin() {
+        assertThat(instance.kotlin()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testJkotlin() {
+        assertThat(instance.jkotlin()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testEclipse() {
+        assertThat(instance.eclipse()).isEqualTo(ODD);
+    }
+
+    @Test
+    public void testSek() {
+        assertThat(instance.sek()).isEqualTo(ODD);
     }
 }

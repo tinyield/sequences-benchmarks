@@ -1,6 +1,7 @@
 package com.github.tiniyield.sequences.benchmarks.all.match;
 
 import com.github.tiniyield.sequences.benchmarks.kt.all.match.IsEveryEvenKt;
+import com.tinyield.Sek;
 import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
 import org.eclipse.collections.api.LazyIterable;
@@ -15,8 +16,6 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.infra.Blackhole;
-import com.tinyield.Sek;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +28,10 @@ import static kotlin.sequences.SequencesKt.all;
 /**
  * AllMatchBenchmark
  * Benchmarks the `allMatch()` operation in the different sequence types.
- *
+ * <p>
  * Pipeline:
  * Sequence.of(new Integer[]{ EVEN, EVEN, ..., EVEN })
- *              .allMatch(isEven)
+ * .allMatch(isEven)
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -52,6 +51,27 @@ public class AllMatchBenchmark {
     public Integer[] data;
 
     /**
+     * Checks wether or not an Integer is an even value
+     *
+     * @param value the Integer to check
+     * @return true if the Integer is even, false otherwise
+     */
+    public static final boolean isEven(Integer value) {
+        return value % 2 == 0;
+    }
+
+    /**
+     * Gets an Integer[] filled with the constant EVEN and of size COLLECTION_SIZE
+     *
+     * @return an Integer[] of size COLLECTION_SIZE filled with the constant EVEN
+     */
+    public Integer[] getAllEvenArray() {
+        Integer[] numbers = new Integer[COLLECTION_SIZE];
+        Arrays.fill(numbers, EVEN);
+        return numbers;
+    }
+
+    /**
      * Sets up the data source to be used in this benchmark
      */
     @Setup
@@ -60,130 +80,61 @@ public class AllMatchBenchmark {
     }
 
     /**
-     * Runs this benchmark using {@link Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void stream(Blackhole bh) { // With Auxiliary Function
-        bh.consume(isEveryEven(Arrays.stream(data)));
-    }
-
-    /**
-     * Runs this benchmark using {@link StreamEx}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void streamEx(Blackhole bh) {
-        bh.consume(isEveryEven(StreamEx.of(data)));
-    }
-
-    /**
-     * Runs this benchmark using {@link Query}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jayield(Blackhole bh) {
-        bh.consume(isEveryEven(Query.of(data)));
-    }
-
-    /**
-     * Runs this benchmark using {@link Seq}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jool(Blackhole bh) {
-        bh.consume(isEveryEven(Seq.of(data)));
-    }
-
-    /**
-     * Runs this benchmark using {@link io.vavr.collection.Stream}s in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void vavr(Blackhole bh) {
-        bh.consume(isEveryEven(io.vavr.collection.Stream.of(data)));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void kotlin(Blackhole bh) {
-        bh.consume(IsEveryEvenKt.isEveryEven(asSequence(data)));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void jkotlin(Blackhole bh) {
-        bh.consume(isEveryEven(asSequence(data)));
-    }
-
-    /**
-     * Runs this benchmark using Kotlin {@link Sequence}s in Java in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void sek(Blackhole bh) {
-        bh.consume(isEveryEven(Sek.of(data)));
-    }
-
-
-    /**
-     * Runs this benchmark using {@link LazyIterable}s in it's pipeline
-     *
-     * @param bh a Blackhole instance to prevent compiler optimizations
-     */
-    @Benchmark
-    public void eclipse(Blackhole bh) {
-        bh.consume(isEveryEven(Lists.mutable.with(data).asLazy()));
-    }
-
-
-    /**
      * Checks if every Integer in a sequence is Even, using {@link Stream}s
      *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(Stream<Integer> numbers) {
-        return numbers.allMatch(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean stream() {
+        return Arrays.stream(data).allMatch(AllMatchBenchmark::isEven);
     }
 
     /**
      * Checks if every Integer in a sequence is Even, using {@link StreamEx}s
+     *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(StreamEx<Integer> numbers) {
-        return numbers.allMatch(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean streamEx() {
+        return StreamEx.of(data).allMatch(AllMatchBenchmark::isEven);
     }
 
     /**
      * Checks if every Integer in a sequence is Even, using {@link Query}s
+     *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(Query<Integer> numbers) {
-        return numbers.allMatch(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean jayield() {
+        return Query.of(data).allMatch(AllMatchBenchmark::isEven);
     }
 
     /**
      * Checks if every Integer in a sequence is Even, using {@link Seq}s
+     *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(Seq<Integer> numbers) {
-        return numbers.allMatch(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean jool() {
+        return Seq.of(data).allMatch(AllMatchBenchmark::isEven);
     }
 
     /**
      * Checks if every Integer in a sequence is Even, using {@link io.vavr.collection.Stream}s
+     *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(io.vavr.collection.Stream<Integer> numbers) {
-        return numbers.forAll(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean vavr() {
+        return io.vavr.collection.Stream.of(data).forAll(AllMatchBenchmark::isEven);
+    }
+
+    /**
+     * Runs this benchmark using Kotlin {@link Sequence}s in Kotlin in it's pipeline
+     */
+    @Benchmark
+    public boolean kotlin() {
+        return IsEveryEvenKt.isEveryEven(asSequence(data));
     }
 
     /**
@@ -191,17 +142,9 @@ public class AllMatchBenchmark {
      *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(Sequence<Integer> numbers) {
-        return all(numbers, AllMatchBenchmark::isEven);
-    }
-
-    /**
-     * Checks if every Integer in a sequence is Even, using {@link LazyIterable}s
-     *
-     * @return whether every Integer is even or not
-     */
-    public boolean isEveryEven(LazyIterable<Integer> numbers) {
-        return numbers.allSatisfy(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean jkotlin() {
+        return all(asSequence(data), AllMatchBenchmark::isEven);
     }
 
     /**
@@ -209,28 +152,19 @@ public class AllMatchBenchmark {
      *
      * @return whether every Integer is even or not
      */
-    public boolean isEveryEven(Sek<Integer> numbers) {
-        return numbers.all(AllMatchBenchmark::isEven);
+    @Benchmark
+    public boolean sek() {
+        return Sek.of(data).all(AllMatchBenchmark::isEven);
     }
 
     /**
-     * Checks wether or not an Integer is an even value
+     * Checks if every Integer in a sequence is Even, using {@link LazyIterable}s
      *
-     * @param value the Integer to check
-     * @return true if the Integer is even, false otherwise
+     * @return whether every Integer is even or not
      */
-    public static boolean isEven(Integer value) {
-        return value % 2 == 0;
-    }
-
-    /**
-     * Gets an Integer[] filled with the constant EVEN and of size COLLECTION_SIZE
-     * @return an Integer[] of size COLLECTION_SIZE filled with the constant EVEN
-     */
-    public Integer[] getAllEvenArray() {
-        Integer[] numbers = new Integer[COLLECTION_SIZE];
-        Arrays.fill(numbers, EVEN);
-        return numbers;
+    @Benchmark
+    public boolean eclipse() {
+        return Lists.mutable.with(data).asLazy().allSatisfy(AllMatchBenchmark::isEven);
     }
 
 }
