@@ -31,7 +31,7 @@ public class FileRequest implements Request {
         String[] parts = path.split("/");
         path = parts[parts.length - 1]
                 .replaceAll("[,=?&]", "-")
-                .substring(0, 68);
+                .substring(0, 54);
         try {
             return ClassLoader.getSystemResource(path).openStream();
         } catch (IOException e) {

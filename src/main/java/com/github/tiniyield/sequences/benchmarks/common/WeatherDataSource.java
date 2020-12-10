@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @State(Scope.Benchmark)
 public class WeatherDataSource {
-    static final String path = "past-weather.ashx-q-41.15--8.6167-date-2017-02-01-enddate-2017-04-30.csv";
+    static final String path = "q-Lisbon_format-csv_date-2020-05-08_enddate-2020-11-08.csv";
     static final Request req = new FileRequest();
 
     public final String[] data;

@@ -8,7 +8,7 @@ import static org.testng.Assert.assertEquals;
 
 public class QueryNrOfDistinctTemperaturesTest {
 
-    private final int expected = 18;
+    private final int expected = 12;
     private final WeatherDataSource src = new WeatherDataSource();
     private QueryNrOfDistinctTemperatures instance;
 

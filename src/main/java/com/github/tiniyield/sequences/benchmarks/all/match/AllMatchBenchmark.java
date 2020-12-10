@@ -51,7 +51,7 @@ public class AllMatchBenchmark {
     public Integer[] data;
 
     /**
-     * Checks wether or not an Integer is an even value
+     * Checks whether or not an Integer is an even value
      *
      * @param value the Integer to check
      * @return true if the Integer is even, false otherwise
