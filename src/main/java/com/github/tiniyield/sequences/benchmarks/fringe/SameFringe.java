@@ -193,7 +193,7 @@ public class SameFringe {
 
     @Benchmark
     public boolean jkotlin() {
-        return all(zip(asSequence(treeA.iterator()), asSequence(treeB.iterator()), Value::equals), Boolean.TRUE::equals);
+        return all(zip(SameFringeKt.getLeaves(treeA), SameFringeKt.getLeaves(treeB), Value::equals), Boolean.TRUE::equals);
     }
 
     @Benchmark
@@ -206,8 +206,9 @@ public class SameFringe {
 
     @Benchmark
     public final boolean sek() {
-        return Sek.of(treeA)
-                .zip(Sek.of(treeB), Value::equals)
+        Sek<Value> src = SameFringeKt.getLeaves(treeA)::iterator;
+        return src
+                .zip(SameFringeKt.getLeaves(treeB), Value::equals)
                 .all(Boolean.TRUE::equals);
     }
 }
