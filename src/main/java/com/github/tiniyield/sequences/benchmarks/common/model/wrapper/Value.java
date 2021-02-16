@@ -1,8 +1,10 @@
 package com.github.tiniyield.sequences.benchmarks.common.model.wrapper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
-public class Value {
+public class Value implements Comparable<Value> {
     public final int source;
     public final String text;
 
@@ -26,5 +28,10 @@ public class Value {
     @Override
     public int hashCode() {
         return Objects.hash(source, text);
+    }
+
+    @Override
+    public int compareTo(@NotNull Value o) {
+        return Integer.compare(source, o.source);
     }
 }
