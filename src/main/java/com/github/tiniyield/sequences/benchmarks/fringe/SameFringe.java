@@ -5,11 +5,14 @@ import com.github.tiniyield.sequences.benchmarks.common.model.wrapper.Value;
 import com.github.tiniyield.sequences.benchmarks.kt.fringe.SameFringeKt;
 import com.google.common.collect.Streams;
 import com.tinyield.Sek;
+import kotlin.sequences.Sequence;
 import one.util.streamex.StreamEx;
+import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.factory.Lists;
 import org.jayield.Advancer;
 import org.jayield.Query;
 import org.jayield.Traverser;
+import org.jetbrains.annotations.NotNull;
 import org.jooq.lambda.Seq;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -32,7 +35,6 @@ import java.util.stream.StreamSupport;
 import static com.github.tiniyield.sequences.benchmarks.zip.StreamZipOperation.zip;
 import static java.util.stream.Stream.generate;
 import static kotlin.sequences.SequencesKt.all;
-import static kotlin.sequences.SequencesKt.asSequence;
 import static kotlin.sequences.SequencesKt.zip;
 
 @BenchmarkMode(Mode.Throughput)
@@ -54,17 +56,17 @@ public class SameFringe {
 
     public static Query<Value> getLeavesQuery(BinTree<Value> src) {
         Traverser<Value> trav = yield -> {
-            if(src.isLeaf()) yield.ret(src.val);
+            if (src.isLeaf()) yield.ret(src.val);
             else {
-                if(src.left != null) getLeavesQuery(src.left).traverse(yield);
-                if(src.right != null) getLeavesQuery(src.right).traverse(yield);
+                if (src.left != null) getLeavesQuery(src.left).traverse(yield);
+                if (src.right != null) getLeavesQuery(src.right).traverse(yield);
             }
         };
         Stack<BinTree<Value>> stack = new Stack<>();
         stack.push(src);
         Advancer<Value> adv = yield -> {
             BinTree<Value> curr = advanceToLeaf(stack);
-            if(curr != null) {
+            if (curr != null) {
                 yield.ret(curr.val);
                 return true;
             } else
@@ -93,7 +95,7 @@ public class SameFringe {
 
     public static Stream<Value> getLeavesStream(BinTree<Value> src) {
         return StreamSupport
-                .stream(Spliterators.spliterator(src.iterator(), -1, 0), false);
+                .stream(Spliterators.spliteratorUnknownSize(src.iterator(), 0), false);
     }
 
     public static StreamEx<Value> getLeavesStreamEx(BinTree<Value> src) {
@@ -134,56 +136,90 @@ public class SameFringe {
 
     @Benchmark
     public boolean stream() {
-        return zip(getLeavesStream(treeA), getLeavesStream(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return streamPipeline()
                 .allMatch(f -> f);
+    }
+
+    @NotNull
+    public Stream<Boolean> streamPipeline() {
+        return zip(getLeavesStream(treeA), getLeavesStream(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean streamEx() {
-        return getLeavesStreamEx(treeA)
-                .zipWith(getLeavesStreamEx(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return streamExPipeline()
                 .allMatch(f -> f);
+    }
+
+    public StreamEx<Boolean> streamExPipeline() {
+        return getLeavesStreamEx(treeA)
+                .zipWith(getLeavesStreamEx(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark()
     public boolean jayield() {
-        return getLeavesQuery(treeA)
-                .zip(getLeavesQuery(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return jayieldPipeline()
                 .allMatch(f -> f);
+    }
+
+    @NotNull
+    public Query<Boolean> jayieldPipeline() {
+        return getLeavesQuery(treeA)
+                .zip(getLeavesQuery(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean jool() {
-        return getLeavesJool(treeA)
-                .zip(getLeavesJool(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return joolPipeline()
                 .allMatch(f -> f);
+    }
+
+    public Seq<Boolean> joolPipeline() {
+        return getLeavesJool(treeA)
+                .zip(getLeavesJool(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean vavr() {
-        return getLeavesVavr(treeA)
-                .zipWith(getLeavesVavr(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return vavrPipeline()
                 .forAll(f -> f);
+    }
+
+    public io.vavr.collection.Stream<Boolean> vavrPipeline() {
+        return getLeavesVavr(treeA)
+                .zipWith(getLeavesVavr(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean protonpack() {
-        return StreamUtils.zip(getLeavesProtonpack(treeA), getLeavesProtonpack(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
-                .allMatch(f -> f);
+        return protonpackPipeline().allMatch(f -> f);
+    }
+
+    public Stream<Boolean> protonpackPipeline() {
+        return StreamUtils.zip(getLeavesProtonpack(treeA), getLeavesProtonpack(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean guava() {
-        return Streams.zip(getLeavesGuava(treeA), getLeavesGuava(treeB), (t1, t2) -> t1.compareTo(t2) == 0)
+        return guavaPipeline()
                 .allMatch(f -> f);
+    }
+
+    public Stream<Boolean> guavaPipeline() {
+        return Streams.zip(getLeavesGuava(treeA), getLeavesGuava(treeB), (t1, t2) -> t1.compareTo(t2) == 0);
     }
 
     @Benchmark
     public boolean zipline() {
+        return ziplinePipe()
+                .allMatch(Boolean.TRUE::equals);
+    }
+
+    @NotNull
+    public Stream<Boolean> ziplinePipe() {
         Iterator<Value> it = treeB.iterator();
         return getLeavesStream(treeA)
-                .map(t -> t.equals(it.next()))
-                .allMatch(Boolean.TRUE::equals);
+                .map(t -> t.equals(it.next()));
     }
 
     @Benchmark
@@ -193,22 +229,35 @@ public class SameFringe {
 
     @Benchmark
     public boolean jkotlin() {
-        return all(zip(SameFringeKt.getLeaves(treeA), SameFringeKt.getLeaves(treeB), Value::equals), Boolean.TRUE::equals);
+        return all(jkotlinPipeline(), Boolean.TRUE::equals);
+    }
+
+    @NotNull
+    public Sequence<Boolean> jkotlinPipeline() {
+        return zip(SameFringeKt.getLeaves(treeA), SameFringeKt.getLeaves(treeB), Value::equals);
     }
 
     @Benchmark
     public boolean eclipse() {
+        return eclipsePipeline()
+                .allSatisfy(Boolean.TRUE::equals);
+    }
+
+    public LazyIterable<Boolean> eclipsePipeline() {
         return Lists.immutable.ofAll(treeA).asLazy()
                 .zip(Lists.immutable.ofAll(treeB).asLazy())
-                .collect(p -> p.getOne().equals(p.getTwo()))
-                .allSatisfy(Boolean.TRUE::equals);
+                .collect(p -> p.getOne().equals(p.getTwo()));
     }
 
     @Benchmark
     public final boolean sek() {
+        return sekPipeline()
+                .all(Boolean.TRUE::equals);
+    }
+
+    public Sek<Boolean> sekPipeline() {
         Sek<Value> src = SameFringeKt.getLeaves(treeA)::iterator;
         return src
-                .zip(SameFringeKt.getLeaves(treeB), Value::equals)
-                .all(Boolean.TRUE::equals);
+                .zip(SameFringeKt.getLeaves(treeB), Value::equals);
     }
 }
