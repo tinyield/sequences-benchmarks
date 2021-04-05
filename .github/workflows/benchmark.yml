@@ -25,9 +25,6 @@ jobs:
       - name: Run Benchmark [COLLECTION_SIZE = 1K]
         run: java -jar target/benchmarks.jar -rf text -rff Benchmark-1K.log -i 4 -wi 3 -f 1 -r 2 -w 1 -tu s --jvmArgs "-Xms6G -Xmx6G" -p COLLECTION_SIZE=1000
 
-      - name: Run Benchmark [COLLECTION_SIZE = 100K]
-        run: java -jar target/benchmarks.jar -rf text -rff Benchmark-100K.log -i 4 -wi 3 -f 1 -r 2 -w 1 -tu s --jvmArgs "-Xms6G -Xmx6G" -p COLLECTION_SIZE=100000
-
       - name: Upload results
         uses: actions/upload-artifact@v2
         with:
