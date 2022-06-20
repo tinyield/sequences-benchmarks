@@ -16,7 +16,7 @@
         jOOL, vavr and protonpack in small data sets from Rest Countries and Last.fm.
     </description>
     <properties>
-        <kotlin.version>1.4.20</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
         <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmh.version>1.20</jmh.version>
